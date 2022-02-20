@@ -1,3 +1,5 @@
+using SML.Matrix.Exceptions;
+
 namespace SML.Matrix;
 
 public class Matrix : ICloneable
@@ -12,12 +14,12 @@ public class Matrix : ICloneable
     {
         if (rows < 0 || columns < 0)
         {
-            throw new ArgumentOutOfRangeException("rows",
+            throw new ArgumentOutOfRangeException(nameof(rows),
                 "Rows should be more than 0");
         }
         else if (columns < 0)
         {
-            throw new ArgumentOutOfRangeException("columns",
+            throw new ArgumentOutOfRangeException(nameof(columns),
                 "Columns should be more than 0");
         }
 
@@ -66,12 +68,12 @@ public class Matrix : ICloneable
     {
         if (matrix1 == null)
         {
-            throw new ArgumentNullException("matrix1",
+            throw new ArgumentNullException(nameof(matrix1),
                 "matrix1 shouldn't be null");
         }
         else if (matrix2 == null)
         {
-            throw new ArgumentNullException("matrix2",
+            throw new ArgumentNullException(nameof(matrix2),
                 "matrix2 shouldn't be null");
         }
 
@@ -81,7 +83,7 @@ public class Matrix : ICloneable
             throw new MatrixException("Matrixes should have same dimensions");
         }
 
-        Matrix result = new Matrix(matrix1.Rows, matrix1.Columns);
+        Matrix result = new(matrix1.Rows, matrix1.Columns);
 
         for (int i = 0; i < result.Rows; i++)
         {
@@ -98,12 +100,12 @@ public class Matrix : ICloneable
     {
         if (matrix1 == null)
         {
-            throw new ArgumentNullException("matrix1",
+            throw new ArgumentNullException(nameof(matrix1),
                 "matrix1 shouldn't be null");
         }
         else if (matrix2 == null)
         {
-            throw new ArgumentNullException("matrix2",
+            throw new ArgumentNullException(nameof(matrix2),
                 "matrix2 shouldn't be null");
         }
 
@@ -113,7 +115,7 @@ public class Matrix : ICloneable
             throw new MatrixException("Matrixes should have same dimensions");
         }
 
-        Matrix result = new Matrix(matrix1.Rows, matrix1.Columns);
+        Matrix result = new(matrix1.Rows, matrix1.Columns);
 
         for (int i = 0; i < result.Rows; i++)
         {
@@ -130,12 +132,12 @@ public class Matrix : ICloneable
     {
         if (matrix1 == null)
         {
-            throw new ArgumentNullException("matrix1",
+            throw new ArgumentNullException(nameof(matrix1),
                 "matrix1 shouldn't be null");
         }
         else if (matrix2 == null)
         {
-            throw new ArgumentNullException("matrix2",
+            throw new ArgumentNullException(nameof(matrix2),
                 "matrix2 shouldn't be null");
         }
 
@@ -144,7 +146,7 @@ public class Matrix : ICloneable
             throw new MatrixException("Matrixes should have same dimensions");
         }
 
-        Matrix result = new Matrix(matrix1.Rows, matrix2.Columns);
+        Matrix result = new(matrix1.Rows, matrix2.Columns);
 
         for (int i = 0; i < result.Rows; i++)
         {
@@ -164,7 +166,7 @@ public class Matrix : ICloneable
     {
         if (matrix == null)
         {
-            throw new ArgumentNullException("matrix",
+            throw new ArgumentNullException(nameof(matrix),
                 "matrix shouldn't be null");
         }
 
@@ -189,7 +191,7 @@ public class Matrix : ICloneable
     {
         if (matrix == null)
         {
-            throw new ArgumentNullException("matrix",
+            throw new ArgumentNullException(nameof(matrix),
                 "matrix shouldn't be null");
         }
 
@@ -214,7 +216,7 @@ public class Matrix : ICloneable
     {
         if (matrix == null)
         {
-            throw new ArgumentNullException("matrix",
+            throw new ArgumentNullException(nameof(matrix),
                 "matrix shouldn't be null");
         }
 
@@ -223,7 +225,7 @@ public class Matrix : ICloneable
             throw new MatrixException("Matrixes should have same dimensions");
         }
 
-        Matrix result = new Matrix(Rows, matrix.Columns);
+        Matrix result = new(Rows, matrix.Columns);
 
         for (int i = 0; i < result.Rows; i++)
         {
@@ -244,7 +246,8 @@ public class Matrix : ICloneable
         bool areEqual = false;
 
         if (obj is Matrix matrix &&
-            Rows == matrix.Rows && Columns == matrix.Columns)
+            Rows == matrix.Rows &&
+            Columns == matrix.Columns)
         {
             for (int i = 0; i < matrix.Rows; i++)
             {
