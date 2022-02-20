@@ -4,34 +4,9 @@ namespace SML.Polynomial;
 
 public sealed class Polynomial
 {
+    #region Fields
+
     private readonly List<PolynomialMember> _monomials;
-
-    public Polynomial()
-    {
-        _monomials = new List<PolynomialMember>();
-    }
-
-    public Polynomial(PolynomialMember member) : this()
-    {
-        _monomials.Add(member);
-    }
-
-    public Polynomial(IEnumerable<PolynomialMember> members) : this()
-    {
-        foreach (PolynomialMember member in members)
-        {
-            _monomials.Add(member);
-        }
-    }
-
-    public Polynomial((double degree, double coefficient) member) :
-        this(new PolynomialMember(member.degree, member.coefficient))
-    { }
-
-    public Polynomial(IEnumerable<(double degree, double coefficient)> members) :
-        this(members.Select(member => new
-        PolynomialMember(member.degree, member.coefficient)))
-    { }
 
     public int Count
     {
@@ -68,6 +43,41 @@ public sealed class Polynomial
             return maxDegree;
         }
     }
+
+    #endregion Fields
+
+    #region Constructors
+
+    public Polynomial()
+    {
+        _monomials = new List<PolynomialMember>();
+    }
+
+    public Polynomial(PolynomialMember member) : this()
+    {
+        _monomials.Add(member);
+    }
+
+    public Polynomial(IEnumerable<PolynomialMember> members) : this()
+    {
+        foreach (PolynomialMember member in members)
+        {
+            _monomials.Add(member);
+        }
+    }
+
+    public Polynomial((double degree, double coefficient) member) :
+        this(new PolynomialMember(member.degree, member.coefficient))
+    { }
+
+    public Polynomial(IEnumerable<(double degree, double coefficient)> members) :
+        this(members.Select(member => new
+        PolynomialMember(member.degree, member.coefficient)))
+    { }
+
+    #endregion Constructors
+
+    #region Methods
 
     public void AddMember(PolynomialMember member)
     {
@@ -180,6 +190,45 @@ public sealed class Polynomial
         return _monomials.ToArray();
     }
 
+    public Polynomial Add(Polynomial polynomial)
+    {
+        if (polynomial is null)
+        {
+            throw new PolynomialArgumentNullException();
+        }
+
+        return this + polynomial;
+    }
+
+    public Polynomial Subtraction(Polynomial polynomial)
+    {
+        return this - polynomial;
+    }
+
+    public Polynomial Multiply(Polynomial polynomial)
+    {
+        return this * polynomial;
+    }
+
+    public Polynomial Add((double degree, double coefficient) member)
+    {
+        return Add(new Polynomial(member));
+    }
+
+    public Polynomial Subtraction((double degree, double coefficient) member)
+    {
+        return Subtraction(new Polynomial(member));
+    }
+
+    public Polynomial Multiply((double degree, double coefficient) member)
+    {
+        return Multiply(new Polynomial(member));
+    }
+
+    #endregion Methods
+
+    #region Operators
+
     public static Polynomial operator +(Polynomial a, Polynomial b)
     {
         if (a == null || b == null)
@@ -256,26 +305,6 @@ public sealed class Polynomial
         return result;
     }
 
-    public Polynomial Add(Polynomial polynomial)
-    {
-        if (polynomial is null)
-        {
-            throw new PolynomialArgumentNullException();
-        }
-
-        return this + polynomial;
-    }
-
-    public Polynomial Subtraction(Polynomial polynomial)
-    {
-        return this - polynomial;
-    }
-
-    public Polynomial Multiply(Polynomial polynomial)
-    {
-        return this * polynomial;
-    }
-
     public static Polynomial operator +(Polynomial a,
         (double degree, double coefficient) b)
     {
@@ -294,18 +323,5 @@ public sealed class Polynomial
         return a * new Polynomial(b);
     }
 
-    public Polynomial Add((double degree, double coefficient) member)
-    {
-        return Add(new Polynomial(member));
-    }
-
-    public Polynomial Subtraction((double degree, double coefficient) member)
-    {
-        return Subtraction(new Polynomial(member));
-    }
-
-    public Polynomial Multiply((double degree, double coefficient) member)
-    {
-        return Multiply(new Polynomial(member));
-    }
+    #endregion Operators
 }

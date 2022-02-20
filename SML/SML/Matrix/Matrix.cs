@@ -4,11 +4,17 @@ namespace SML.Matrix;
 
 public class Matrix : ICloneable
 {
+    #region Fields
+
     public int Rows { get; }
 
     public int Columns { get; }
 
     public double[,] Array { get; }
+
+    #endregion Fields
+
+    #region Constructors
 
     public Matrix(int rows, int columns)
     {
@@ -40,6 +46,10 @@ public class Matrix : ICloneable
         Columns = Array.GetLength(1);
     }
 
+    #endregion Constructors
+
+    #region Methods
+
     public double this[int row, int column]
     {
         get
@@ -63,104 +73,6 @@ public class Matrix : ICloneable
     }
 
     public object Clone() => new Matrix(Array);
-
-    public static Matrix operator +(Matrix matrix1, Matrix matrix2)
-    {
-        if (matrix1 == null)
-        {
-            throw new ArgumentNullException(nameof(matrix1),
-                "matrix1 shouldn't be null");
-        }
-        else if (matrix2 == null)
-        {
-            throw new ArgumentNullException(nameof(matrix2),
-                "matrix2 shouldn't be null");
-        }
-
-        if (matrix1.Rows != matrix2.Rows ||
-            matrix1.Columns != matrix2.Columns)
-        {
-            throw new MatrixException("Matrixes should have same dimensions");
-        }
-
-        Matrix result = new(matrix1.Rows, matrix1.Columns);
-
-        for (int i = 0; i < result.Rows; i++)
-        {
-            for (int j = 0; j < result.Columns; j++)
-            {
-                result[i, j] = matrix1[i, j] + matrix2[i, j];
-            }
-        }
-
-        return result;
-    }
-
-    public static Matrix operator -(Matrix matrix1, Matrix matrix2)
-    {
-        if (matrix1 == null)
-        {
-            throw new ArgumentNullException(nameof(matrix1),
-                "matrix1 shouldn't be null");
-        }
-        else if (matrix2 == null)
-        {
-            throw new ArgumentNullException(nameof(matrix2),
-                "matrix2 shouldn't be null");
-        }
-
-        if (matrix1.Rows != matrix2.Rows ||
-            matrix1.Columns != matrix2.Columns)
-        {
-            throw new MatrixException("Matrixes should have same dimensions");
-        }
-
-        Matrix result = new(matrix1.Rows, matrix1.Columns);
-
-        for (int i = 0; i < result.Rows; i++)
-        {
-            for (int j = 0; j < result.Columns; j++)
-            {
-                result[i, j] = matrix1[i, j] - matrix2[i, j];
-            }
-        }
-
-        return result;
-    }
-
-    public static Matrix operator *(Matrix matrix1, Matrix matrix2)
-    {
-        if (matrix1 == null)
-        {
-            throw new ArgumentNullException(nameof(matrix1),
-                "matrix1 shouldn't be null");
-        }
-        else if (matrix2 == null)
-        {
-            throw new ArgumentNullException(nameof(matrix2),
-                "matrix2 shouldn't be null");
-        }
-
-        if (matrix1.Columns != matrix2.Rows)
-        {
-            throw new MatrixException("Matrixes should have same dimensions");
-        }
-
-        Matrix result = new(matrix1.Rows, matrix2.Columns);
-
-        for (int i = 0; i < result.Rows; i++)
-        {
-            for (int j = 0; j < result.Columns; j++)
-            {
-                for (int k = 0; k < matrix2.Rows; k++)
-                {
-                    result[i, j] += matrix1[i, k] * matrix2[k, j];
-                }
-            }
-        }
-
-        return result;
-    }
 
     public Matrix Add(Matrix matrix)
     {
@@ -268,4 +180,108 @@ public class Matrix : ICloneable
     {
         return base.GetHashCode();
     }
+
+    #endregion Methods
+
+    #region Operators
+
+    public static Matrix operator +(Matrix matrix1, Matrix matrix2)
+    {
+        if (matrix1 == null)
+        {
+            throw new ArgumentNullException(nameof(matrix1),
+                "matrix1 shouldn't be null");
+        }
+        else if (matrix2 == null)
+        {
+            throw new ArgumentNullException(nameof(matrix2),
+                "matrix2 shouldn't be null");
+        }
+
+        if (matrix1.Rows != matrix2.Rows ||
+            matrix1.Columns != matrix2.Columns)
+        {
+            throw new MatrixException("Matrixes should have same dimensions");
+        }
+
+        Matrix result = new(matrix1.Rows, matrix1.Columns);
+
+        for (int i = 0; i < result.Rows; i++)
+        {
+            for (int j = 0; j < result.Columns; j++)
+            {
+                result[i, j] = matrix1[i, j] + matrix2[i, j];
+            }
+        }
+
+        return result;
+    }
+
+    public static Matrix operator -(Matrix matrix1, Matrix matrix2)
+    {
+        if (matrix1 == null)
+        {
+            throw new ArgumentNullException(nameof(matrix1),
+                "matrix1 shouldn't be null");
+        }
+        else if (matrix2 == null)
+        {
+            throw new ArgumentNullException(nameof(matrix2),
+                "matrix2 shouldn't be null");
+        }
+
+        if (matrix1.Rows != matrix2.Rows ||
+            matrix1.Columns != matrix2.Columns)
+        {
+            throw new MatrixException("Matrixes should have same dimensions");
+        }
+
+        Matrix result = new(matrix1.Rows, matrix1.Columns);
+
+        for (int i = 0; i < result.Rows; i++)
+        {
+            for (int j = 0; j < result.Columns; j++)
+            {
+                result[i, j] = matrix1[i, j] - matrix2[i, j];
+            }
+        }
+
+        return result;
+    }
+
+    public static Matrix operator *(Matrix matrix1, Matrix matrix2)
+    {
+        if (matrix1 == null)
+        {
+            throw new ArgumentNullException(nameof(matrix1),
+                "matrix1 shouldn't be null");
+        }
+        else if (matrix2 == null)
+        {
+            throw new ArgumentNullException(nameof(matrix2),
+                "matrix2 shouldn't be null");
+        }
+
+        if (matrix1.Columns != matrix2.Rows)
+        {
+            throw new MatrixException("Matrixes should have same dimensions");
+        }
+
+        Matrix result = new(matrix1.Rows, matrix2.Columns);
+
+        for (int i = 0; i < result.Rows; i++)
+        {
+            for (int j = 0; j < result.Columns; j++)
+            {
+                for (int k = 0; k < matrix2.Rows; k++)
+                {
+                    result[i, j] += matrix1[i, k] * matrix2[k, j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    #endregion Operators
 }

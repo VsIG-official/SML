@@ -2,7 +2,7 @@
 
 namespace SML.Tests;
 
-public class polynomialTests
+public class PolynomialTests
 {
     [Fact]
     public void Test1()
