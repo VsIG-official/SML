@@ -35,7 +35,9 @@ public class MatrixTests
     {
         double[,] nums1 =
             {
-                { 0, 1, 2 }
+                { 0, 1, 2 },
+                { 3, 4, 5 },
+                { 6, 7, 8 }
             };
 
         double[,] nums2 =
@@ -48,8 +50,39 @@ public class MatrixTests
         double[,] expectedNums =
             {
                 { 0, 1, 4 },
-                { 0, 4, 10 },
-                { 0, 7, 16 }
+                { 9, 16, 25 },
+                { 36, 49, 64 }
+            };
+
+        Matrix expected = new(expectedNums);
+
+        Matrix firstMatrix = new(nums1);
+        Matrix secondMatrix = new(nums2);
+
+        Matrix actual = firstMatrix.Hadamard(secondMatrix);
+
+        Assert.Equal(actual.Array, expected.Array);
+    }
+
+    [Fact]
+    public void Hadamard3_ShouldReturnTrue()
+    {
+        double[,] nums1 =
+            {
+                { 0, 1, 2 },
+                { 3, 4, 5 }
+            };
+
+        double[,] nums2 =
+            {
+                { 0, 1, 2 },
+                { 3, 4, 5 }
+            };
+
+        double[,] expectedNums =
+            {
+                { 0, 1, 4 },
+                { 9, 16, 25 }
             };
 
         Matrix expected = new(expectedNums);
