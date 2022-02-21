@@ -1,3 +1,4 @@
+using SML.Matrices;
 using Xunit;
 
 namespace SML.Tests;
@@ -5,10 +6,62 @@ namespace SML.Tests;
 public class MatrixTests
 {
 	[Fact]
-	public void Test1()
+	public void Hadamard1_ShouldReturnTrue()
 	{
+        double[,] nums =
+            {
+                { 2, 2 },
+                { 2, 2 }
+            };
 
-	}
+        double[,] expectedNums =
+            {
+                { 4, 4 },
+                { 4, 4 }
+            };
+
+        Matrix expected = new (expectedNums);
+
+        Matrix firstMatrix = new(nums);
+        Matrix secondMatrix = new(nums);
+
+        Matrix actual = firstMatrix.Hadamard(secondMatrix);
+
+        Assert.Equal(actual.Array, expected.Array);
+    }
+
+    [Fact]
+    public void Hadamard2_ShouldReturnTrue()
+    {
+        double[,] nums1 =
+            {
+                { 0, 1, 2 }
+            };
+
+        double[,] nums2 =
+            {
+                { 0, 1, 2 },
+                { 3, 4, 5 },
+                { 6, 7, 8 }
+            };
+
+        double[,] expectedNums =
+            {
+                { 0, 1, 4 },
+                { 0, 4, 10 },
+                { 0, 7, 16 }
+            };
+
+        Matrix expected = new(expectedNums);
+
+        Matrix firstMatrix = new(nums1);
+        Matrix secondMatrix = new(nums2);
+
+        Matrix actual = firstMatrix.Hadamard(secondMatrix);
+
+        Assert.Equal(actual.Array, expected.Array);
+    }
+
     [Fact]
     public void Transpose1_ShouldReturnTrue()
     {
