@@ -163,7 +163,7 @@ public class Matrix : ICloneable
                 "matrix shouldn't be null");
         }
 
-        if (Columns != matrix.Rows || Rows != matrix.Columns)
+        if (Columns != matrix.Columns || Rows != matrix.Rows)
         {
             throw new MatrixException("Matrixes should have same dimensions");
         }
@@ -174,10 +174,7 @@ public class Matrix : ICloneable
         {
             for (int j = 0; j < result.Columns; j++)
             {
-                for (int k = 0; k < matrix.Rows; k++)
-                {
-                    result[i, j] = Array[i, k] * matrix[k, j];
-                }
+                result[i, j] = Array[i, j] * matrix[i, j];
             }
         }
 
