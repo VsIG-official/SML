@@ -184,6 +184,21 @@ public class Matrix : ICloneable
         return result;
     }
 
+    public Matrix Transpose()
+    {
+        Matrix matrix = new(Columns, Rows);
+
+        for (int i = 0; i < Columns; i++)
+        {
+            for (int j = 0; j < Rows; j++)
+            {
+                matrix[i, j] = Array[j, i];
+            }
+        }
+
+        return matrix;
+    }
+
     public override bool Equals(object obj)
     {
         bool areEqual = false;
