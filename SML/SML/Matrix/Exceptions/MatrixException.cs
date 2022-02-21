@@ -1,4 +1,4 @@
-﻿namespace SML.Matrix.Exceptions;
+﻿namespace SML.Matrices.Exceptions;
 
 public class MatrixException : Exception
 {

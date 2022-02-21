@@ -1,4 +1,4 @@
-namespace SML.Polynomial.Exceptions;
+namespace SML.Polynomials.Exceptions;
 
 [Serializable]
 public class PolynomialArgumentNullException : Exception

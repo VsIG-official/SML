@@ -1,6 +1,6 @@
-using SML.Matrix.Exceptions;
+using SML.Matrices.Exceptions;
 
-namespace SML.Matrix;
+namespace SML.Matrices;
 
 public class Matrix : ICloneable
 {
@@ -124,7 +124,38 @@ public class Matrix : ICloneable
         return this;
     }
 
+    // Dot product
     public Matrix Multiply(Matrix matrix)
+    {
+        if (matrix == null)
+        {
+            throw new ArgumentNullException(nameof(matrix),
+                "matrix shouldn't be null");
+        }
+
+        if (Columns != matrix.Rows)
+        {
+            throw new MatrixException("Matrixes should have same dimensions");
+        }
+
+        Matrix result = new(Rows, matrix.Columns);
+
+        for (int i = 0; i < result.Rows; i++)
+        {
+            for (int j = 0; j < result.Columns; j++)
+            {
+                for (int k = 0; k < matrix.Rows; k++)
+                {
+                    result[i, j] += Array[i, k] * matrix[k, j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // TODO: Hadamard product (element-wise multiplication)
+    public Matrix Hadamard(Matrix matrix)
     {
         if (matrix == null)
         {

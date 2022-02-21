@@ -1,4 +1,4 @@
-﻿namespace SML.Polynomial;
+﻿namespace SML.Polynomials;
 
 public class PolynomialMember : ICloneable
 {

@@ -1,6 +1,6 @@
-﻿using SML.Polynomial.Exceptions;
+﻿using SML.Polynomials.Exceptions;
 
-namespace SML.Polynomial;
+namespace SML.Polynomials;
 
 public sealed class Polynomial
 {
