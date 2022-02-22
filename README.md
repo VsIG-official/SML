@@ -22,6 +22,14 @@ SML - Small Math Library for .NET. I decided to create this library, because som
 
 ---
 
+### Features
+- [Matrices](https://github.com/VsIG-official/SML/tree/master/SML/SML/Matrix)
+    - [Tests](https://github.com/VsIG-official/SML/blob/master/SML/SML.Tests/MatrixTests.cs)
+- [Polynomials](https://github.com/VsIG-official/SML/tree/master/SML/SML/Polynomial)
+    - [Tests](https://github.com/VsIG-official/SML/blob/master/SML/SML.Tests/PolynomialTests.cs)
+- [Perceptron](https://github.com/VsIG-official/SML/tree/master/SML/SML/Perceptron)
+    - [Tests](https://github.com/VsIG-official/SML/blob/master/SML/SML.Tests/PerceptronTests.cs)
+
 ## Contributing
 
 > To get started...
