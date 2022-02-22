@@ -1,3 +1,4 @@
+using System;
 using SML.Matrices;
 using Xunit;
 
@@ -182,7 +183,7 @@ public class MatrixTests
 
         Matrix matrix = new(nums);
 
-        string expected = "2 2 \r\n2 2 \r\n";
+        string expected = $"2 2 {Environment.NewLine}2 2 {Environment.NewLine}";
         string actual = matrix.ToString();
 
         Assert.Equal(actual, expected);
@@ -199,7 +200,7 @@ public class MatrixTests
 
         Matrix matrix = new(nums);
 
-        string expected = "0 1 2 \r\n3 4 5 \r\n";
+        string expected = $"0 1 2 {Environment.NewLine}3 4 5 {Environment.NewLine}";
         string actual = matrix.ToString();
 
         Assert.Equal(actual, expected);
