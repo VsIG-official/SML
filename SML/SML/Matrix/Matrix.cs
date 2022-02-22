@@ -1,4 +1,5 @@
 using SML.Matrices.Exceptions;
+using System.Text;
 
 namespace SML.Matrices;
 
@@ -154,7 +155,7 @@ public class Matrix : ICloneable
         return result;
     }
 
-    // TODO: Hadamard product (element-wise multiplication)
+    // Hadamard product (element-wise multiplication)
     public Matrix Hadamard(Matrix matrix)
     {
         if (matrix == null)
@@ -222,6 +223,23 @@ public class Matrix : ICloneable
     public override int GetHashCode()
     {
         return base.GetHashCode();
+    }
+
+    public override string ToString()
+    {
+        StringBuilder matrix = new();
+
+        for (int i = 0; i < Rows; i++)
+        {
+            for (int j = 0; j < Columns; j++)
+            {
+                matrix.Append(Array[i, j]);
+                matrix.Append(' ');
+            }
+            matrix.Append(Environment.NewLine + Environment.NewLine);
+        }
+
+        return matrix.ToString();
     }
 
     #endregion Methods
