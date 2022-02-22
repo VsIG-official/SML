@@ -169,4 +169,39 @@ public class MatrixTests
 
         Assert.Equal(actual.Array, expected.Array);
     }
+
+    [Fact]
+
+    public void ToString1_ShouldReturnTrue()
+    {
+        double[,] nums =
+            {
+                { 2, 2 },
+                { 2, 2 }
+            };
+
+        Matrix matrix = new(nums);
+
+        string expected = "2 2 \r\n\r\n2 2 \r\n\r\n";
+        string actual = matrix.ToString();
+
+        Assert.Equal(actual, expected);
+    }
+
+    [Fact]
+    public void ToString2_ShouldReturnTrue()
+    {
+        double[,] nums =
+            {
+                { 0, 1, 2 },
+                { 3, 4, 5 }
+            };
+
+        Matrix matrix = new(nums);
+
+        string expected = "0 1 2 \r\n\r\n3 4 5 \r\n\r\n";
+        string actual = matrix.ToString();
+
+        Assert.Equal(actual, expected);
+    }
 }
