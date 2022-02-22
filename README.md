@@ -13,7 +13,7 @@
 
 ### Description
 
-SML - Small Math Library for .NET. I decided to create this library, because sometimes the functions I need are simply not available, and I do not know the known mathematical extensions
+SML - Small Math Library for .NET. I decided to create this library, because sometimes the functions I need are simply not available, and I do not know any popular mathematical extensions
 
 ## Badges
 
