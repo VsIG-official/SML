@@ -236,7 +236,7 @@ public class Matrix : ICloneable
                 matrix.Append(Array[i, j]);
                 matrix.Append(' ');
             }
-            matrix.Append(Environment.NewLine + Environment.NewLine);
+            matrix.Append(Environment.NewLine);
         }
 
         return matrix.ToString();

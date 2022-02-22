@@ -182,7 +182,7 @@ public class MatrixTests
 
         Matrix matrix = new(nums);
 
-        string expected = "2 2 \r\n\r\n2 2 \r\n\r\n";
+        string expected = "2 2 \r\n2 2 \r\n";
         string actual = matrix.ToString();
 
         Assert.Equal(actual, expected);
@@ -199,7 +199,7 @@ public class MatrixTests
 
         Matrix matrix = new(nums);
 
-        string expected = "0 1 2 \r\n\r\n3 4 5 \r\n\r\n";
+        string expected = "0 1 2 \r\n3 4 5 \r\n";
         string actual = matrix.ToString();
 
         Assert.Equal(actual, expected);
