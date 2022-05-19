@@ -21,6 +21,10 @@ public class Matrix : ICloneable
         "Indexes can't be less than 0";
     private const string NullMatrixExceptionMessage =
         "Matrix shouldn't be null";
+    private const string RowsLessThanZeroExceptionMessage =
+        "Rows should be more than 0";
+    private const string ColumnsLessThanZeroExceptionMessage =
+       "Columns should be more than 0";
 
     #endregion Consts
 
@@ -30,16 +34,7 @@ public class Matrix : ICloneable
 
     public Matrix(int rows, int columns)
     {
-        if (rows < 0 || columns < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(rows),
-                "Rows should be more than 0");
-        }
-        else if (columns < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(columns),
-                "Columns should be more than 0");
-        }
+        CheckMatrixDimensions(rows, columns);
 
         Rows = rows;
         Columns = columns;
@@ -66,23 +61,39 @@ public class Matrix : ICloneable
     {
         get
         {
-            CheckIndexes(row, column);
+            CheckMatrixDimensions(row, column);
 
             return Array[row, column];
         }
         set
         {
-            CheckIndexes(row, column);
+            CheckMatrixDimensions(row, column);
 
             Array[row, column] = value;
         }
     }
 
-    private static void CheckIndexes(int row, int column)
+    private static void CheckMatrixDimensions(int rows, int columns)
     {
-        if (row < 0 || column < 0)
+        CheckRowsNum(rows);
+        CheckColumnsNum(columns);
+    }
+
+    private static void CheckRowsNum(int rows)
+    {
+        if (rows < 0)
         {
-            throw new ArgumentException(IndexLessThanZeroExceptionMessage);
+            throw new ArgumentOutOfRangeException
+                (RowsLessThanZeroExceptionMessage);
+        }
+    }
+
+    private static void CheckColumnsNum(int columns)
+    {
+        if (columns < 0)
+        {
+            throw new ArgumentOutOfRangeException
+                (ColumnsLessThanZeroExceptionMessage);
         }
     }
 
