@@ -69,14 +69,14 @@ public class MatrixTests
         },
     };
 
-
     #endregion PremadeData
 
     #region Constructor
 
     [Theory]
     [MemberData(nameof(SquareMatrixData))]
-    public void Constructor_SameSize_SquareMatrix_ReturnsTrue(double[,] array)
+    [MemberData(nameof(DifferentDimensionsMatrixData))]
+    public void ConstructorMatrix_SameSize_ReturnsTrue(double[,] array)
     {
         // Arrange
         var matrix = new Matrix(array);
@@ -91,22 +91,33 @@ public class MatrixTests
     }
 
     [Theory]
+    [MemberData(nameof(SquareMatrixData))]
     [MemberData(nameof(DifferentDimensionsMatrixData))]
-    public void Constructor_DifferentDimensions_SquareMatrix_ReturnsTrue
-        (double[,] array)
+    public void ConstructorValues_SameSize_ReturnsTrue(double[,] array)
     {
         // Arrange
-        var matrix = new Matrix(array);
+        var arrayRows = array.GetLength(0);
+        var arrayColumns = array.GetLength(1);
+        var matrix = new Matrix(arrayRows, arrayColumns);
 
         // Act
-        var rows = matrix.Rows;
-        var columns = matrix.Columns;
+        var matrixRows = matrix.Rows;
+        var matrixColumns = matrix.Columns;
 
         // Assert
-        Assert.Equal(array.GetLength(0), rows);
-        Assert.Equal(array.GetLength(1), columns);
+        Assert.Equal(arrayRows, matrixRows);
+        Assert.Equal(arrayColumns, matrixColumns);
     }
 
+    [Fact]
+    public void ConstructorMatrix_NullArray_ReturnsException()
+    {
+        // Arrange
+        double[,] array = null;
+
+        // Assert
+        Assert.Throws<ArgumentNullException>(() => new Matrix(array));
+    }
 
     #endregion Constructor
 
