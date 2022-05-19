@@ -99,13 +99,18 @@ public class Matrix : ICloneable
 
     public object Clone() => new Matrix(Array);
 
-    public Matrix Add(Matrix matrix)
+    private static void CheckNullMatrix(Matrix matrix)
     {
         if (matrix == null)
         {
             throw new ArgumentNullException(nameof(matrix),
                 NullMatrixExceptionMessage);
         }
+    }
+
+    public Matrix Add(Matrix matrix)
+    {
+        CheckNullMatrix(matrix);
 
         if (Rows != matrix.Rows ||
             Columns != matrix.Columns)
@@ -126,11 +131,7 @@ public class Matrix : ICloneable
 
     public Matrix Subtract(Matrix matrix)
     {
-        if (matrix == null)
-        {
-            throw new ArgumentNullException(nameof(matrix),
-                NullMatrixExceptionMessage);
-        }
+        CheckNullMatrix(matrix);
 
         if (Rows != matrix.Rows ||
             Columns != matrix.Columns)
@@ -152,11 +153,7 @@ public class Matrix : ICloneable
     // Dot product
     public Matrix Multiply(Matrix matrix)
     {
-        if (matrix == null)
-        {
-            throw new ArgumentNullException(nameof(matrix),
-                NullMatrixExceptionMessage);
-        }
+        CheckNullMatrix(matrix);
 
         if (Columns != matrix.Rows)
         {
@@ -182,11 +179,7 @@ public class Matrix : ICloneable
     // Hadamard product (element-wise multiplication)
     public Matrix Hadamard(Matrix matrix)
     {
-        if (matrix == null)
-        {
-            throw new ArgumentNullException(nameof(matrix),
-                NullMatrixExceptionMessage);
-        }
+        CheckNullMatrix(matrix);
 
         if (Columns != matrix.Columns || Rows != matrix.Rows)
         {
@@ -272,16 +265,8 @@ public class Matrix : ICloneable
 
     public static Matrix operator +(Matrix matrix1, Matrix matrix2)
     {
-        if (matrix1 == null)
-        {
-            throw new ArgumentNullException(nameof(matrix1),
-                "matrix1 shouldn't be null");
-        }
-        else if (matrix2 == null)
-        {
-            throw new ArgumentNullException(nameof(matrix2),
-                "matrix2 shouldn't be null");
-        }
+        CheckNullMatrix(matrix1);
+        CheckNullMatrix(matrix2);
 
         if (matrix1.Rows != matrix2.Rows ||
             matrix1.Columns != matrix2.Columns)
@@ -304,16 +289,8 @@ public class Matrix : ICloneable
 
     public static Matrix operator -(Matrix matrix1, Matrix matrix2)
     {
-        if (matrix1 == null)
-        {
-            throw new ArgumentNullException(nameof(matrix1),
-                "matrix1 shouldn't be null");
-        }
-        else if (matrix2 == null)
-        {
-            throw new ArgumentNullException(nameof(matrix2),
-                "matrix2 shouldn't be null");
-        }
+        CheckNullMatrix(matrix1);
+        CheckNullMatrix(matrix2);
 
         if (matrix1.Rows != matrix2.Rows ||
             matrix1.Columns != matrix2.Columns)
@@ -336,16 +313,8 @@ public class Matrix : ICloneable
 
     public static Matrix operator *(Matrix matrix1, Matrix matrix2)
     {
-        if (matrix1 == null)
-        {
-            throw new ArgumentNullException(nameof(matrix1),
-                "matrix1 shouldn't be null");
-        }
-        else if (matrix2 == null)
-        {
-            throw new ArgumentNullException(nameof(matrix2),
-                "matrix2 shouldn't be null");
-        }
+        CheckNullMatrix(matrix1);
+        CheckNullMatrix(matrix2);
 
         if (matrix1.Columns != matrix2.Rows)
         {
