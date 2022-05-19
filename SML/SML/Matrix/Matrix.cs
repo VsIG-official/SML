@@ -163,10 +163,7 @@ public class Matrix : ICloneable
     {
         CheckNullMatrix(matrix);
 
-        if (Columns != matrix.Rows)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
+        CheckMultiplyAvaibility(matrix);
 
         Matrix result = new(Rows, matrix.Columns);
 
@@ -182,6 +179,22 @@ public class Matrix : ICloneable
         }
 
         return result;
+    }
+
+    private void CheckMultiplyAvaibility(Matrix matrix)
+    {
+        if (Columns != matrix.Rows)
+        {
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+        }
+    }
+
+    private static void CheckMultiplyAvailability(Matrix matrix1, Matrix matrix2)
+    {
+        if (matrix1.Columns != matrix2.Rows)
+        {
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+        }
     }
 
     // Hadamard product (element-wise multiplication)
@@ -272,7 +285,6 @@ public class Matrix : ICloneable
     {
         CheckNullMatrix(matrix1);
         CheckNullMatrix(matrix2);
-
         CheckSquareMatrix(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix1.Columns);
@@ -292,7 +304,6 @@ public class Matrix : ICloneable
     {
         CheckNullMatrix(matrix1);
         CheckNullMatrix(matrix2);
-
         CheckSquareMatrix(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix1.Columns);
@@ -312,11 +323,7 @@ public class Matrix : ICloneable
     {
         CheckNullMatrix(matrix1);
         CheckNullMatrix(matrix2);
-
-        if (matrix1.Columns != matrix2.Rows)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
+        CheckMultiplyAvailability(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix2.Columns);
 
