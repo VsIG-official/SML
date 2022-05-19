@@ -17,8 +17,6 @@ public class Matrix : ICloneable
 
     private const string MatricesDifferentDimensionsExceptionMessage =
         "Matrices should have same dimensions";
-    private const string IndexLessThanZeroExceptionMessage =
-        "Indexes can't be less than 0";
     private const string NullMatrixExceptionMessage =
         "Matrix shouldn't be null";
     private const string RowsLessThanZeroExceptionMessage =
@@ -97,6 +95,24 @@ public class Matrix : ICloneable
         }
     }
 
+    private void CheckSquareMatrix(Matrix matrix)
+    {
+        if (Rows != matrix.Rows ||
+            Columns != matrix.Columns)
+        {
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+        }
+    }
+
+    private static void CheckSquareMatrix(Matrix matrix1, Matrix matrix2)
+    {
+        if (matrix1.Rows != matrix2.Rows ||
+            matrix1.Columns != matrix2.Columns)
+        {
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+        }
+    }
+
     public object Clone() => new Matrix(Array);
 
     private static void CheckNullMatrix(Matrix matrix)
@@ -112,11 +128,7 @@ public class Matrix : ICloneable
     {
         CheckNullMatrix(matrix);
 
-        if (Rows != matrix.Rows ||
-            Columns != matrix.Columns)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
+        CheckSquareMatrix(matrix);
 
         for (int i = 0; i < Rows; i++)
         {
@@ -133,11 +145,7 @@ public class Matrix : ICloneable
     {
         CheckNullMatrix(matrix);
 
-        if (Rows != matrix.Rows ||
-            Columns != matrix.Columns)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
+        CheckSquareMatrix(matrix);
 
         for (int i = 0; i < Rows; i++)
         {
@@ -181,10 +189,7 @@ public class Matrix : ICloneable
     {
         CheckNullMatrix(matrix);
 
-        if (Columns != matrix.Columns || Rows != matrix.Rows)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
+        CheckSquareMatrix(matrix);
 
         Matrix result = new(Rows, matrix.Columns);
 
@@ -268,11 +273,7 @@ public class Matrix : ICloneable
         CheckNullMatrix(matrix1);
         CheckNullMatrix(matrix2);
 
-        if (matrix1.Rows != matrix2.Rows ||
-            matrix1.Columns != matrix2.Columns)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
+        CheckSquareMatrix(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix1.Columns);
 
@@ -292,11 +293,7 @@ public class Matrix : ICloneable
         CheckNullMatrix(matrix1);
         CheckNullMatrix(matrix2);
 
-        if (matrix1.Rows != matrix2.Rows ||
-            matrix1.Columns != matrix2.Columns)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
+        CheckSquareMatrix(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix1.Columns);
 
