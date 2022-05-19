@@ -13,6 +13,17 @@ public class Matrix : ICloneable
 
     public double[,] Array { get; }
 
+    #region Consts
+
+    private const string MatricesDifferentDimensionsExceptionMessage =
+        "Matrices should have same dimensions";
+    private const string IndexLessThanZeroExceptionMessage =
+        "Indexes can't be less than 0";
+    private const string NullMatrixExceptionMessage =
+        "Matrix shouldn't be null";
+
+    #endregion Consts
+
     #endregion Fields
 
     #region Constructors
@@ -57,7 +68,7 @@ public class Matrix : ICloneable
         {
             if (row < 0 || column < 0)
             {
-                throw new ArgumentException("indexes can't be less than 0");
+                throw new ArgumentException(IndexLessThanZeroExceptionMessage);
             }
 
             return Array[row, column];
@@ -66,7 +77,7 @@ public class Matrix : ICloneable
         {
             if (row < 0 || column < 0)
             {
-                throw new ArgumentException("indexes can't be less than 0");
+                throw new ArgumentException(IndexLessThanZeroExceptionMessage);
             }
 
             Array[row, column] = value;
@@ -80,7 +91,7 @@ public class Matrix : ICloneable
         if (matrix == null)
         {
             throw new ArgumentNullException(nameof(matrix),
-                "matrix shouldn't be null");
+                NullMatrixExceptionMessage);
         }
 
         if (Rows != matrix.Rows ||
@@ -111,7 +122,7 @@ public class Matrix : ICloneable
         if (Rows != matrix.Rows ||
             Columns != matrix.Columns)
         {
-            throw new MatrixException("Matrixes should have same dimensions");
+            throw new MatrixException("Matrices should have same dimensions");
         }
 
         for (int i = 0; i < Rows; i++)
@@ -131,7 +142,7 @@ public class Matrix : ICloneable
         if (matrix == null)
         {
             throw new ArgumentNullException(nameof(matrix),
-                "matrix shouldn't be null");
+                NullMatrixExceptionMessage);
         }
 
         if (Columns != matrix.Rows)
@@ -161,12 +172,12 @@ public class Matrix : ICloneable
         if (matrix == null)
         {
             throw new ArgumentNullException(nameof(matrix),
-                "matrix shouldn't be null");
+                NullMatrixExceptionMessage);
         }
 
         if (Columns != matrix.Columns || Rows != matrix.Rows)
         {
-            throw new MatrixException("Matrixes should have same dimensions");
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
         }
 
         Matrix result = new(Rows, matrix.Columns);
@@ -262,7 +273,7 @@ public class Matrix : ICloneable
         if (matrix1.Rows != matrix2.Rows ||
             matrix1.Columns != matrix2.Columns)
         {
-            throw new MatrixException("Matrixes should have same dimensions");
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
         }
 
         Matrix result = new(matrix1.Rows, matrix1.Columns);
@@ -294,7 +305,7 @@ public class Matrix : ICloneable
         if (matrix1.Rows != matrix2.Rows ||
             matrix1.Columns != matrix2.Columns)
         {
-            throw new MatrixException("Matrixes should have same dimensions");
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
         }
 
         Matrix result = new(matrix1.Rows, matrix1.Columns);
@@ -325,7 +336,7 @@ public class Matrix : ICloneable
 
         if (matrix1.Columns != matrix2.Rows)
         {
-            throw new MatrixException("Matrixes should have same dimensions");
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
         }
 
         Matrix result = new(matrix1.Rows, matrix2.Columns);
