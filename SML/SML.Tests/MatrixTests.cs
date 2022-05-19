@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SML.Matrices;
 using Xunit;
 
@@ -6,8 +7,111 @@ namespace SML.Tests.MatrixTests;
 
 public class MatrixTests
 {
-	[Fact]
-	public void Hadamard1_ShouldReturnTrue()
+    #region PremadeData
+
+    public static IEnumerable<object[]> SquareMatrixData => new List<object[]>
+    {
+        new object[]
+        {
+            new double[1, 1]
+            {
+                { 1 }
+            }
+        },
+        new object[]
+        {
+            new double[2, 2]
+            {
+                { 2, 2 },
+                { 2, 2 }
+            }
+        },
+        new object[]
+        {
+            new double[5, 5]
+            {
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 }
+            }
+        },
+    };
+
+    public static IEnumerable<object[]> DifferentDimensionsMatrixData => new List<object[]>
+    {
+        new object[]
+        {
+            new double[1, 2]
+            {
+                { 1, 2 }
+            }
+        },
+        new object[]
+        {
+            new double[2, 3]
+            {
+                { 2, 3, 4 },
+                { 2, 3, 4 }
+            }
+        },
+        new object[]
+        {
+            new double[5, 1]
+            {
+                { 1 },
+                { 2 },
+                { 3 },
+                { 4 },
+                { 5 }
+            }
+        },
+    };
+
+
+    #endregion PremadeData
+
+    #region Constructor
+
+    [Theory]
+    [MemberData(nameof(SquareMatrixData))]
+    public void Constructor_SameSize_SquareMatrix_ReturnsTrue(double[,] array)
+    {
+        // Arrange
+        var matrix = new Matrix(array);
+
+        // Act
+        var rows = matrix.Rows;
+        var columns = matrix.Columns;
+
+        // Assert
+        Assert.Equal(array.GetLength(0), rows);
+        Assert.Equal(array.GetLength(1), columns);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentDimensionsMatrixData))]
+    public void Constructor_DifferentDimensions_SquareMatrix_ReturnsTrue
+        (double[,] array)
+    {
+        // Arrange
+        var matrix = new Matrix(array);
+
+        // Act
+        var rows = matrix.Rows;
+        var columns = matrix.Columns;
+
+        // Assert
+        Assert.Equal(array.GetLength(0), rows);
+        Assert.Equal(array.GetLength(1), columns);
+    }
+
+
+    #endregion Constructor
+
+    [Fact]
+	public void Hadamard2x2_ShouldReturnTrue()
 	{
         double[,] nums =
             {
@@ -32,7 +136,7 @@ public class MatrixTests
     }
 
     [Fact]
-    public void Hadamard2_ShouldReturnTrue()
+    public void Hadamard3x3_ShouldReturnTrue()
     {
         double[,] nums1 =
             {
@@ -66,7 +170,7 @@ public class MatrixTests
     }
 
     [Fact]
-    public void Hadamard3_ShouldReturnTrue()
+    public void Hadamard3x2_ShouldReturnTrue()
     {
         double[,] nums1 =
             {
@@ -97,7 +201,7 @@ public class MatrixTests
     }
 
     [Fact]
-    public void Transpose1_ShouldReturnTrue()
+    public void Transpose3x1_ShouldReturnTrue()
     {
         double[,] nums1 =
             {
@@ -121,7 +225,7 @@ public class MatrixTests
     }
 
     [Fact]
-    public void Transpose2_ShouldReturnTrue()
+    public void Transpose3x3_ShouldReturnTrue()
     {
         double[,] nums1 =
             {
@@ -147,7 +251,7 @@ public class MatrixTests
     }
 
     [Fact]
-    public void Transpose3_ShouldReturnTrue()
+    public void Transpose2x3_ShouldReturnTrue()
     {
         double[,] nums1 =
             {
@@ -173,7 +277,7 @@ public class MatrixTests
 
     [Fact]
 
-    public void ToString1_ShouldReturnTrue()
+    public void ToString2x2_ShouldReturnTrue()
     {
         double[,] nums =
             {
@@ -190,7 +294,7 @@ public class MatrixTests
     }
 
     [Fact]
-    public void ToString2_ShouldReturnTrue()
+    public void ToString3x2_ShouldReturnTrue()
     {
         double[,] nums =
             {
