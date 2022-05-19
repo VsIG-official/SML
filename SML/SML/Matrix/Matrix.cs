@@ -66,21 +66,23 @@ public class Matrix : ICloneable
     {
         get
         {
-            if (row < 0 || column < 0)
-            {
-                throw new ArgumentException(IndexLessThanZeroExceptionMessage);
-            }
+            CheckIndexes(row, column);
 
             return Array[row, column];
         }
         set
         {
-            if (row < 0 || column < 0)
-            {
-                throw new ArgumentException(IndexLessThanZeroExceptionMessage);
-            }
+            CheckIndexes(row, column);
 
             Array[row, column] = value;
+        }
+    }
+
+    private static void CheckIndexes(int row, int column)
+    {
+        if (row < 0 || column < 0)
+        {
+            throw new ArgumentException(IndexLessThanZeroExceptionMessage);
         }
     }
 
@@ -97,7 +99,7 @@ public class Matrix : ICloneable
         if (Rows != matrix.Rows ||
             Columns != matrix.Columns)
         {
-            throw new MatrixException("Matrixes should have same dimensions");
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
         }
 
         for (int i = 0; i < Rows; i++)
@@ -116,13 +118,13 @@ public class Matrix : ICloneable
         if (matrix == null)
         {
             throw new ArgumentNullException(nameof(matrix),
-                "matrix shouldn't be null");
+                NullMatrixExceptionMessage);
         }
 
         if (Rows != matrix.Rows ||
             Columns != matrix.Columns)
         {
-            throw new MatrixException("Matrices should have same dimensions");
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
         }
 
         for (int i = 0; i < Rows; i++)
@@ -147,7 +149,7 @@ public class Matrix : ICloneable
 
         if (Columns != matrix.Rows)
         {
-            throw new MatrixException("Matrixes should have same dimensions");
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
         }
 
         Matrix result = new(Rows, matrix.Columns);
