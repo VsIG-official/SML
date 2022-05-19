@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace SML.Tests;
+namespace SML.Tests.PolynomialTests;
 
 public class PolynomialTests
 {

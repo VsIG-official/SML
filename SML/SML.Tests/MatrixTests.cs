@@ -2,7 +2,7 @@ using System;
 using SML.Matrices;
 using Xunit;
 
-namespace SML.Tests;
+namespace SML.Tests.MatrixTests;
 
 public class MatrixTests
 {

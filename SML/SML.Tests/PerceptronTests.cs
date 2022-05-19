@@ -2,7 +2,7 @@
 using SML.Perceptrons;
 using Xunit;
 
-namespace SML.Tests;
+namespace SML.Tests.PerceptronTests;
 
 public class PerceptronTests
 {

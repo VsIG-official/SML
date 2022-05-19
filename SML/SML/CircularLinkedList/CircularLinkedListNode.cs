@@ -1,4 +1,4 @@
-﻿namespace SML.CircularLinkedList.CircularLinkedListNode;
+﻿namespace SML.CircularLinkedList;
 
 public class CircularLinkedListNode<T>
 {
