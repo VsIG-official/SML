@@ -970,6 +970,25 @@ public class MatrixTests
 
     #endregion Transpose
 
+    #region Clone
+
+    [Theory]
+    [MemberData(nameof(SquareMatrixData))]
+    public void Clone_ReturnsTrue(double[,] array)
+    {
+        // Arrange
+        Matrix expected = new(array);
+
+        // Act
+        Matrix matrix = (Matrix)expected.Clone();
+
+        // Assert
+        Assert.Equal(expected.Array, matrix.Array);
+        Assert.Equal(expected, matrix);
+    }
+
+    #endregion Clone
+
     #region ToString
 
     [Fact]
