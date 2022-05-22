@@ -71,138 +71,28 @@ public class Matrix : ICloneable
         }
     }
 
-    private static void CheckMatrixDimensions(int rows, int columns)
-    {
-        CheckRowsNum(rows);
-        CheckColumnsNum(columns);
-    }
-
-    private static void CheckRowsNum(int rows)
-    {
-        if (rows < 0)
-        {
-            throw new ArgumentOutOfRangeException
-                (RowsLessThanZeroExceptionMessage);
-        }
-    }
-
-    private static void CheckColumnsNum(int columns)
-    {
-        if (columns < 0)
-        {
-            throw new ArgumentOutOfRangeException
-                (ColumnsLessThanZeroExceptionMessage);
-        }
-    }
-
-    private void CheckSquareMatrix(Matrix matrix)
-    {
-        if (Rows != matrix.Rows ||
-            Columns != matrix.Columns)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
-    }
-
-    private static void CheckSquareMatrix(Matrix matrix1, Matrix matrix2)
-    {
-        if (matrix1.Rows != matrix2.Rows ||
-            matrix1.Columns != matrix2.Columns)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
-    }
-
     public object Clone() => new Matrix(Array);
-
-    private static void CheckNullMatrix(Matrix matrix)
-    {
-        if (matrix == null)
-        {
-            throw new ArgumentNullException(nameof(matrix),
-                NullMatrixExceptionMessage);
-        }
-    }
 
     public Matrix Add(Matrix matrix)
     {
-        CheckNullMatrix(matrix);
-
-        CheckSquareMatrix(matrix);
-
-        for (int i = 0; i < Rows; i++)
-        {
-            for (int j = 0; j < Columns; j++)
-            {
-                Array[i, j] = Array[i, j] + matrix[i, j];
-            }
-        }
-
-        return this;
+        return this + matrix;
     }
 
     public Matrix Subtract(Matrix matrix)
     {
-        CheckNullMatrix(matrix);
-
-        CheckSquareMatrix(matrix);
-
-        for (int i = 0; i < Rows; i++)
-        {
-            for (int j = 0; j < Columns; j++)
-            {
-                Array[i, j] = Array[i, j] - matrix[i, j];
-            }
-        }
-
-        return this;
+        return this - matrix;
     }
 
     // Dot product
     public Matrix Multiply(Matrix matrix)
     {
-        CheckNullMatrix(matrix);
-
-        CheckMultiplyAvaibility(matrix);
-
-        Matrix result = new(Rows, matrix.Columns);
-
-        for (int i = 0; i < result.Rows; i++)
-        {
-            for (int j = 0; j < result.Columns; j++)
-            {
-                for (int k = 0; k < matrix.Rows; k++)
-                {
-                    result[i, j] += Array[i, k] * matrix[k, j];
-                }
-            }
-        }
-
-        return result;
-    }
-
-    private void CheckMultiplyAvaibility(Matrix matrix)
-    {
-        if (Columns != matrix.Rows)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
-    }
-
-    private static void CheckMultiplyAvailability(Matrix matrix1, Matrix matrix2)
-    {
-        if (matrix1.Columns != matrix2.Rows)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
+        return this * matrix;
     }
 
     // Hadamard product (element-wise multiplication)
     public Matrix Hadamard(Matrix matrix)
     {
-        CheckNullMatrix(matrix);
-
-        CheckSquareMatrix(matrix);
+        CheckForHadamardOperation(matrix);
 
         Matrix result = new(Rows, matrix.Columns);
 
@@ -215,6 +105,12 @@ public class Matrix : ICloneable
         }
 
         return result;
+    }
+
+    private void CheckForHadamardOperation(Matrix matrix)
+    {
+        CheckNullMatrix(matrix);
+        CheckSquareMatrix(matrix);
     }
 
     public Matrix Transpose()
@@ -283,9 +179,7 @@ public class Matrix : ICloneable
 
     public static Matrix operator +(Matrix matrix1, Matrix matrix2)
     {
-        CheckNullMatrix(matrix1);
-        CheckNullMatrix(matrix2);
-        CheckSquareMatrix(matrix1, matrix2);
+        CheckForAddOrSubOperations(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix1.Columns);
 
@@ -302,9 +196,7 @@ public class Matrix : ICloneable
 
     public static Matrix operator -(Matrix matrix1, Matrix matrix2)
     {
-        CheckNullMatrix(matrix1);
-        CheckNullMatrix(matrix2);
-        CheckSquareMatrix(matrix1, matrix2);
+        CheckForAddOrSubOperations(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix1.Columns);
 
@@ -319,11 +211,16 @@ public class Matrix : ICloneable
         return result;
     }
 
-    public static Matrix operator *(Matrix matrix1, Matrix matrix2)
+    private static void CheckForAddOrSubOperations(Matrix matrix1, Matrix matrix2)
     {
         CheckNullMatrix(matrix1);
         CheckNullMatrix(matrix2);
-        CheckMultiplyAvailability(matrix1, matrix2);
+        CheckSameDimensionsMatrix(matrix1, matrix2);
+    }
+
+    public static Matrix operator *(Matrix matrix1, Matrix matrix2)
+    {
+        CheckForMultiplyOperation(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix2.Columns);
 
@@ -341,5 +238,75 @@ public class Matrix : ICloneable
         return result;
     }
 
+    private static void CheckForMultiplyOperation(Matrix matrix1, Matrix matrix2)
+    {
+        CheckNullMatrix(matrix1);
+        CheckNullMatrix(matrix2);
+        CheckMultiplyAvailability(matrix1, matrix2);
+    }
+
     #endregion Operators
+
+    #region Asserts
+
+    private static void CheckMatrixDimensions(int rows, int columns)
+    {
+        CheckRowsNum(rows);
+        CheckColumnsNum(columns);
+    }
+
+    private static void CheckRowsNum(int rows)
+    {
+        if (rows < 0)
+        {
+            throw new ArgumentOutOfRangeException
+                (RowsLessThanZeroExceptionMessage);
+        }
+    }
+
+    private static void CheckColumnsNum(int columns)
+    {
+        if (columns < 0)
+        {
+            throw new ArgumentOutOfRangeException
+                (ColumnsLessThanZeroExceptionMessage);
+        }
+    }
+
+    private void CheckSquareMatrix(Matrix matrix)
+    {
+        if (Rows != matrix.Rows ||
+            Columns != matrix.Columns)
+        {
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+        }
+    }
+
+    private static void CheckSameDimensionsMatrix(Matrix matrix1, Matrix matrix2)
+    {
+        if (matrix1.Rows != matrix2.Rows ||
+            matrix1.Columns != matrix2.Columns)
+        {
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+        }
+    }
+
+    private static void CheckNullMatrix(Matrix matrix)
+    {
+        if (matrix == null)
+        {
+            throw new ArgumentNullException(nameof(matrix),
+                NullMatrixExceptionMessage);
+        }
+    }
+
+    private static void CheckMultiplyAvailability(Matrix matrix1, Matrix matrix2)
+    {
+        if (matrix1.Columns != matrix2.Rows)
+        {
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+        }
+    }
+
+    #endregion Asserts
 }
