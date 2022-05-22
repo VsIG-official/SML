@@ -71,63 +71,11 @@ public class Matrix : ICloneable
         }
     }
 
-    private static void CheckMatrixDimensions(int rows, int columns)
-    {
-        CheckRowsNum(rows);
-        CheckColumnsNum(columns);
-    }
-
-    private static void CheckRowsNum(int rows)
-    {
-        if (rows < 0)
-        {
-            throw new ArgumentOutOfRangeException
-                (RowsLessThanZeroExceptionMessage);
-        }
-    }
-
-    private static void CheckColumnsNum(int columns)
-    {
-        if (columns < 0)
-        {
-            throw new ArgumentOutOfRangeException
-                (ColumnsLessThanZeroExceptionMessage);
-        }
-    }
-
-    private void CheckSquareMatrix(Matrix matrix)
-    {
-        if (Rows != matrix.Rows ||
-            Columns != matrix.Columns)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
-    }
-
-    private static void CheckSquareMatrix(Matrix matrix1, Matrix matrix2)
-    {
-        if (matrix1.Rows != matrix2.Rows ||
-            matrix1.Columns != matrix2.Columns)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
-    }
-
     public object Clone() => new Matrix(Array);
-
-    private static void CheckNullMatrix(Matrix matrix)
-    {
-        if (matrix == null)
-        {
-            throw new ArgumentNullException(nameof(matrix),
-                NullMatrixExceptionMessage);
-        }
-    }
 
     public Matrix Add(Matrix matrix)
     {
         CheckNullMatrix(matrix);
-
         CheckSquareMatrix(matrix);
 
         for (int i = 0; i < Rows; i++)
@@ -179,22 +127,6 @@ public class Matrix : ICloneable
         }
 
         return result;
-    }
-
-    private void CheckMultiplyAvaibility(Matrix matrix)
-    {
-        if (Columns != matrix.Rows)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
-    }
-
-    private static void CheckMultiplyAvailability(Matrix matrix1, Matrix matrix2)
-    {
-        if (matrix1.Columns != matrix2.Rows)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
-        }
     }
 
     // Hadamard product (element-wise multiplication)
@@ -342,4 +274,75 @@ public class Matrix : ICloneable
     }
 
     #endregion Operators
+
+    #region Asserts
+
+    private static void CheckMatrixDimensions(int rows, int columns)
+    {
+        CheckRowsNum(rows);
+        CheckColumnsNum(columns);
+    }
+
+    private static void CheckRowsNum(int rows)
+    {
+        if (rows < 0)
+        {
+            throw new ArgumentOutOfRangeException
+                (RowsLessThanZeroExceptionMessage);
+        }
+    }
+
+    private static void CheckColumnsNum(int columns)
+    {
+        if (columns < 0)
+        {
+            throw new ArgumentOutOfRangeException
+                (ColumnsLessThanZeroExceptionMessage);
+        }
+    }
+
+    private void CheckSquareMatrix(Matrix matrix)
+    {
+        if (Rows != matrix.Rows ||
+            Columns != matrix.Columns)
+        {
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+        }
+    }
+
+    private static void CheckSquareMatrix(Matrix matrix1, Matrix matrix2)
+    {
+        if (matrix1.Rows != matrix2.Rows ||
+            matrix1.Columns != matrix2.Columns)
+        {
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+        }
+    }
+
+    private static void CheckNullMatrix(Matrix matrix)
+    {
+        if (matrix == null)
+        {
+            throw new ArgumentNullException(nameof(matrix),
+                NullMatrixExceptionMessage);
+        }
+    }
+
+    private void CheckMultiplyAvaibility(Matrix matrix)
+    {
+        if (Columns != matrix.Rows)
+        {
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+        }
+    }
+
+    private static void CheckMultiplyAvailability(Matrix matrix1, Matrix matrix2)
+    {
+        if (matrix1.Columns != matrix2.Rows)
+        {
+            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+        }
+    }
+
+    #endregion Asserts
 }

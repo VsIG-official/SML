@@ -9,7 +9,8 @@ public class MatrixTests
 {
     #region PremadeData
 
-    public static IEnumerable<object[]> SquareMatrixData => new List<object[]>
+    public static IEnumerable<object[]> SquareMatrixData =>
+        new List<object[]>
     {
         new object[]
         {
@@ -39,7 +40,8 @@ public class MatrixTests
         },
     };
 
-    public static IEnumerable<object[]> DifferentDimensionsMatrixData => new List<object[]>
+    public static IEnumerable<object[]> DifferentDimensionsMatrixData =>
+        new List<object[]>
     {
         new object[]
         {
@@ -65,6 +67,54 @@ public class MatrixTests
                 { 3 },
                 { 4 },
                 { 5 }
+            }
+        },
+    };
+
+    public static IEnumerable<object[]> SquareAddMatrixData =>
+        new List<object[]>
+    {
+        new object[]
+        {
+            new double[1, 1]
+            {
+                { 1 }
+            },
+            new double[1, 1]
+            {
+                { 2 }
+            }
+        },
+        new object[]
+        {
+            new double[2, 2]
+            {
+                { 2, 2 },
+                { 2, 2 }
+            },
+            new double[2, 2]
+            {
+                { 4, 4 },
+                { 4, 4 }
+            }
+        },
+        new object[]
+        {
+            new double[5, 5]
+            {
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 }
+            },
+            new double[5, 5]
+            {
+                { 2, 4, 6, 8, 10 },
+                { 2, 4, 6, 8, 10 },
+                { 2, 4, 6, 8, 10 },
+                { 2, 4, 6, 8, 10 },
+                { 2, 4, 6, 8, 10 }
             }
         },
     };
@@ -120,6 +170,47 @@ public class MatrixTests
     }
 
     #endregion Constructor
+
+    #region Add
+
+    [Theory]
+    [MemberData(nameof(SquareAddMatrixData))]
+    public void Add_ShouldReturnTrue(double[,] addMatrix, double[,] expectedMatrix)
+    {
+        // Arrange
+        Matrix matrix = new(addMatrix);
+        Matrix expected = new(expectedMatrix);
+
+        // Act
+        Matrix result = matrix.Add(matrix);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+    #endregion Add
+
+    #region PlusOperation
+
+    [Theory]
+    [MemberData(nameof(SquareAddMatrixData))]
+    public void PlusOperation_ShouldReturnTrue(double[,] addMatrix,
+        double[,] expectedMatrix)
+    {
+        // Arrange
+        Matrix matrix = new(addMatrix);
+        Matrix expected = new(expectedMatrix);
+
+        // Act
+        Matrix result = matrix + matrix;
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+    #endregion PlusOperation
+
+    #region Hadamard
 
     [Fact]
 	public void Hadamard2x2_ShouldReturnTrue()
@@ -211,6 +302,10 @@ public class MatrixTests
         Assert.Equal(actual.Array, expected.Array);
     }
 
+    #endregion Hadamard
+
+    #region Transpose
+    
     [Fact]
     public void Transpose3x1_ShouldReturnTrue()
     {
@@ -286,6 +381,10 @@ public class MatrixTests
         Assert.Equal(actual.Array, expected.Array);
     }
 
+    #endregion Transpose
+
+    #region ToString
+
     [Fact]
 
     public void ToString2x2_ShouldReturnTrue()
@@ -320,4 +419,6 @@ public class MatrixTests
 
         Assert.Equal(actual, expected);
     }
+
+    #endregion ToString
 }
