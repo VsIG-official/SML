@@ -526,6 +526,63 @@ public class MatrixTests
         }
     };
 
+    public static IEnumerable<object[]> SameDimensionsHadamardMatrixData =>
+    new List<object[]>
+    {
+        new object[]
+        {
+            new double[1, 1]
+            {
+                { 1 }
+            },
+            new double[1, 1]
+            {
+                { 1 }
+            }
+        },
+        new object[]
+        {
+            new double[2, 2]
+            {
+                { 2, 2 },
+                { 2, 2 }
+            },
+            new double[2, 2]
+            {
+                { 4, 4 },
+                { 4, 4 }
+            }
+        },
+        new object[]
+        {
+            new double[3, 3]
+            {
+                { 0, -1, 2 },
+                { 3, 4, 5 },
+                { 6, 7, -8 }
+            },
+            new double[3, 3]
+            {
+                { 0, 1, 4 },
+                { 9, 16, 25 },
+                { 36, 49, 64 }
+            }
+        },
+        new object[]
+        {
+            new double[2, 3]
+            {
+                { 0, 1, -2 },
+                { 3, 4, 5 }
+            },
+            new double[2, 3]
+            {
+                { 0, 1, 4 },
+                { 9, 16, 25 }
+            }
+        }
+    };
+
     #endregion PremadeData
 
     #region Constructor
@@ -875,94 +932,20 @@ public class MatrixTests
 
     #region Hadamard
 
-    [Fact]
-	public void Hadamard2x2_ReturnsTrue()
+    [Theory]
+    [MemberData(nameof(SameDimensionsHadamardMatrixData))]
+    public void Hadamard2x2_ReturnsTrue(double[,] array, double[,] expectedArray)
 	{
-        double[,] nums =
-            {
-                { 2, 2 },
-                { 2, 2 }
-            };
+        // Arrange
+        Matrix matrix = new(array);
+        Matrix expected = new (expectedArray);
 
-        double[,] expectedNums =
-            {
-                { 4, 4 },
-                { 4, 4 }
-            };
+        // Act
+        Matrix actual = matrix.Hadamard(matrix);
 
-        Matrix expected = new (expectedNums);
-
-        Matrix firstMatrix = new(nums);
-        Matrix secondMatrix = new(nums);
-
-        Matrix actual = firstMatrix.Hadamard(secondMatrix);
-
-        Assert.Equal(actual.Array, expected.Array);
-    }
-
-    [Fact]
-    public void Hadamard3x3_ReturnsTrue()
-    {
-        double[,] nums1 =
-            {
-                { 0, 1, 2 },
-                { 3, 4, 5 },
-                { 6, 7, 8 }
-            };
-
-        double[,] nums2 =
-            {
-                { 0, 1, 2 },
-                { 3, 4, 5 },
-                { 6, 7, 8 }
-            };
-
-        double[,] expectedNums =
-            {
-                { 0, 1, 4 },
-                { 9, 16, 25 },
-                { 36, 49, 64 }
-            };
-
-        Matrix expected = new(expectedNums);
-
-        Matrix firstMatrix = new(nums1);
-        Matrix secondMatrix = new(nums2);
-
-        Matrix actual = firstMatrix.Hadamard(secondMatrix);
-
-        Assert.Equal(actual.Array, expected.Array);
-    }
-
-    [Fact]
-    public void Hadamard3x2_ReturnsTrue()
-    {
-        double[,] nums1 =
-            {
-                { 0, 1, 2 },
-                { 3, 4, 5 }
-            };
-
-        double[,] nums2 =
-            {
-                { 0, 1, 2 },
-                { 3, 4, 5 }
-            };
-
-        double[,] expectedNums =
-            {
-                { 0, 1, 4 },
-                { 9, 16, 25 }
-            };
-
-        Matrix expected = new(expectedNums);
-
-        Matrix firstMatrix = new(nums1);
-        Matrix secondMatrix = new(nums2);
-
-        Matrix actual = firstMatrix.Hadamard(secondMatrix);
-
-        Assert.Equal(actual.Array, expected.Array);
+        // Assert
+        Assert.Equal(expected.Array, actual.Array);
+        Assert.Equal(expected, actual);
     }
 
     #endregion Hadamard
@@ -981,8 +964,8 @@ public class MatrixTests
         Matrix actual = matrix.Transpose();
 
         // Assert
-        Assert.Equal(actual.Array, expected.Array);
-        Assert.Equal(actual, expected);
+        Assert.Equal(expected.Array, actual.Array);
+        Assert.Equal(expected, actual);
     }
 
     #endregion Transpose
