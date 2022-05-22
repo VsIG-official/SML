@@ -166,6 +166,54 @@ public class MatrixTests
         },
     };
 
+    public static IEnumerable<object[]> SameDimensionsSubtractMatrixData =>
+    new List<object[]>
+{
+        new object[]
+        {
+            new double[1, 1]
+            {
+                { 2 }
+            },
+            new double[1, 1]
+            {
+                { 1 }
+            },
+        },
+        new object[]
+        {
+            new double[2, 2]
+            {
+                { 4, 4 },
+                { 4, 4 }
+            },
+            new double[2, 2]
+            {
+                { 2, 2 },
+                { 2, 2 }
+            }
+        },
+        new object[]
+        {
+            new double[5, 5]
+            {
+                { 2, 4, 6, 8, 10 },
+                { 2, 4, 6, 8, 10 },
+                { 2, 4, 6, 8, 10 },
+                { 2, 4, 6, 8, 10 },
+                { 2, 4, 6, 8, 10 }
+            },
+            new double[5, 5]
+            {
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 }
+            }
+        },
+};
+
     public static IEnumerable<object[]> SameDimensionsSubMatrixData =>
     new List<object[]>
     {
@@ -371,6 +419,105 @@ public class MatrixTests
     #endregion PlusOperation
 
     #endregion Addition
+
+    #region Subtract
+
+    #region Sub
+
+    [Theory]
+    [MemberData(nameof(SameDimensionsSubtractMatrixData))]
+    public void Subtract_SameDimensions_ReturnsTrue(double[,] bigValuesArray,
+        double[,] smallValuesArray)
+    {
+        // Arrange
+        Matrix bigValuesMatrix = new(bigValuesArray);
+        Matrix expectedMatrix = new(smallValuesArray);
+
+        // Act
+        Matrix result = bigValuesMatrix - expectedMatrix;
+
+        // Assert
+        Assert.Equal(expectedMatrix, result);
+    }
+
+    [Theory]
+    [MemberData(nameof(SameDimensionsSubtractMatrixData))]
+    public void Subtract_NullMatrix_ThrowsArgumentNullException(double[,] array1,
+        double[,] array2)
+    {
+        // Arrange
+        Matrix matrix1 = new(array1);
+        Matrix matrix2 = new(array2);
+
+        // Act
+        matrix2 = null;
+
+        // Assert
+        Assert.Throws<ArgumentNullException>(() => matrix1.Subtract(matrix2));
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentDimensionsMatrixData))]
+    public void Subtract_DifferentDimensions_ThrowsMatrixException(
+        double[,] array1, double[,] array2)
+    {
+        // Arrange
+        Matrix matrix1 = new(array1);
+        Matrix matrix2 = new(array2);
+
+        // Assert
+        Assert.Throws<MatrixException>(() => matrix1.Subtract(matrix2));
+    }
+
+    #endregion Sub
+
+    #region MinusOperation
+
+    [Theory]
+    [MemberData(nameof(SameDimensionsSubtractMatrixData))]
+    public void MinusOperation_SameDimensions_ReturnsTrue(double[,] bigValuesArray,
+        double[,] smallValuesArray)
+    {
+        // Arrange
+        Matrix bigValuesMatrix = new(bigValuesArray);
+        Matrix expectedMatrix = new(smallValuesArray);
+
+        // Act
+        Matrix result = bigValuesMatrix - expectedMatrix;
+
+        // Assert
+        Assert.Equal(expectedMatrix, result);
+    }
+
+    [Fact]
+    public void MinusOperation_NullMatrix_ThrowsArgumentNullException()
+    {
+        // Arrange
+        Matrix matrix = new(2, 2);
+
+        // Act
+        matrix = null;
+
+        // Assert
+        Assert.Throws<ArgumentNullException>(() => matrix - matrix);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentDimensionsMatrixData))]
+    public void MinusOperation_DifferentDimensions_ThrowsMatrixException(
+    double[,] array1, double[,] array2)
+    {
+        // Arrange
+        Matrix matrix1 = new(array1);
+        Matrix matrix2 = new(array2);
+
+        // Assert
+        Assert.Throws<MatrixException>(() => matrix1 - matrix2);
+    }
+
+    #endregion MinusOperation
+
+    #endregion Subtract
 
     #region Hadamard
 
