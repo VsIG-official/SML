@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SML.Matrices;
+using SML.Matrices.Exceptions;
 using Xunit;
 
 namespace SML.Tests.MatrixTests;
@@ -40,7 +41,7 @@ public class MatrixTests
         },
     };
 
-    public static IEnumerable<object[]> DifferentDimensionsMatrixData =>
+    public static IEnumerable<object[]> NotSquareMatrixData =>
         new List<object[]>
     {
         new object[]
@@ -71,7 +72,53 @@ public class MatrixTests
         },
     };
 
-    public static IEnumerable<object[]> SquareAddMatrixData =>
+    public static IEnumerable<object[]> DifferentDimensionsMatrixData =>
+    new List<object[]>
+{
+        new object[]
+        {
+            new double[1, 2]
+            {
+                { 1, 2 }
+            },
+            new double[2, 1]
+            {
+                { 1 },
+                { 2 }
+            }
+        },
+        new object[]
+        {
+            new double[2, 3]
+            {
+                { 2, 3, 4 },
+                { 2, 3, 4 }
+            },
+            new double[3, 2]
+            {
+                { 2, 3 },
+                { 2, 3 },
+                { 2, 3 }
+            }
+        },
+        new object[]
+        {
+            new double[5, 1]
+            {
+                { 1 },
+                { 2 },
+                { 3 },
+                { 4 },
+                { 5 }
+            },
+            new double[1, 5]
+            {
+                { 1, 2, 3, 4, 5 }
+            }
+        },
+};
+
+    public static IEnumerable<object[]> SameDimensionsAddMatrixData =>
         new List<object[]>
     {
         new object[]
@@ -119,6 +166,54 @@ public class MatrixTests
         },
     };
 
+    public static IEnumerable<object[]> SameDimensionsSubMatrixData =>
+    new List<object[]>
+    {
+        new object[]
+        {
+            new double[1, 1]
+            {
+                { 2 }
+            },
+            new double[1, 1]
+            {
+                { 1 }
+            }
+        },
+        new object[]
+        {
+            new double[2, 2]
+            {
+                { 4, 4 },
+                { 4, 4 }
+            },
+            new double[2, 2]
+            {
+                { 2, 2 },
+                { 2, 2 }
+            }
+        },
+        new object[]
+        {
+            new double[5, 5]
+            {
+                { 2, 4, 6, 8, 10 },
+                { 2, 4, 6, 8, 10 },
+                { 2, 4, 6, 8, 10 },
+                { 2, 4, 6, 8, 10 },
+                { 2, 4, 6, 8, 10 }
+            },
+            new double[5, 5]
+            {
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 }
+            }
+        },
+    };
+
     public static IEnumerable<object[]> NullMatrixData =>
     new List<object[]>
     {
@@ -134,7 +229,7 @@ public class MatrixTests
 
     [Theory]
     [MemberData(nameof(SquareMatrixData))]
-    [MemberData(nameof(DifferentDimensionsMatrixData))]
+    [MemberData(nameof(NotSquareMatrixData))]
     public void ConstructorMatrix_SameSize_ReturnsTrue(double[,] array)
     {
         // Arrange
@@ -151,7 +246,7 @@ public class MatrixTests
 
     [Theory]
     [MemberData(nameof(SquareMatrixData))]
-    [MemberData(nameof(DifferentDimensionsMatrixData))]
+    [MemberData(nameof(NotSquareMatrixData))]
     public void ConstructorValues_SameSize_ReturnsTrue(double[,] array)
     {
         // Arrange
@@ -178,11 +273,13 @@ public class MatrixTests
 
     #endregion Constructor
 
+    #region Addition
+
     #region Add
 
     [Theory]
-    [MemberData(nameof(SquareAddMatrixData))]
-    public void Add_SameDimensions_ShouldReturnTrue(double[,] addMatrix,
+    [MemberData(nameof(SameDimensionsAddMatrixData))]
+    public void Add_SameDimensions_ReturnsTrue(double[,] addMatrix,
         double[,] expectedMatrix)
     {
         // Arrange
@@ -197,8 +294,8 @@ public class MatrixTests
     }
 
     [Theory]
-    [MemberData(nameof(SquareAddMatrixData))]
-    public void Add_NullMatrix_ShouldReturnTrue(double[,] array1,
+    [MemberData(nameof(SameDimensionsAddMatrixData))]
+    public void Add_NullMatrix_ThrowsArgumentNullException(double[,] array1,
         double[,] array2)
     {
         // Arrange
@@ -212,13 +309,26 @@ public class MatrixTests
         Assert.Throws<ArgumentNullException>(() => matrix1.Add(matrix2));
     }
 
+    [Theory]
+    [MemberData(nameof(DifferentDimensionsMatrixData))]
+    public void Add_DifferentDimensions_ThrowsMatrixException(
+        double[,] array1, double[,] array2)
+    {
+        // Arrange
+        Matrix matrix1 = new(array1);
+        Matrix matrix2 = new(array2);
+
+        // Assert
+        Assert.Throws<MatrixException>(() => matrix1.Add(matrix2));
+    }
+
     #endregion Add
 
     #region PlusOperation
 
     [Theory]
-    [MemberData(nameof(SquareAddMatrixData))]
-    public void PlusOperation_SameDimensions_ShouldReturnTrue(double[,] addMatrix,
+    [MemberData(nameof(SameDimensionsAddMatrixData))]
+    public void PlusOperation_SameDimensions_ReturnsTrue(double[,] addMatrix,
         double[,] expectedMatrix)
     {
         // Arrange
@@ -233,7 +343,7 @@ public class MatrixTests
     }
 
     [Fact]
-    public void PlusOperation_NullMatrix_ShouldThrow()
+    public void PlusOperation_NullMatrix_ThrowsArgumentNullException()
     {
         // Arrange
         Matrix matrix = new(2, 2);
@@ -245,12 +355,27 @@ public class MatrixTests
         Assert.Throws<ArgumentNullException>(() => matrix + matrix);
     }
 
+    [Theory]
+    [MemberData(nameof(DifferentDimensionsMatrixData))]
+    public void PlusOperation_DifferentDimensions_ThrowsMatrixException(
+    double[,] array1, double[,] array2)
+    {
+        // Arrange
+        Matrix matrix1 = new(array1);
+        Matrix matrix2 = new(array2);
+
+        // Assert
+        Assert.Throws<MatrixException>(() => matrix1 + matrix2);
+    }
+
     #endregion PlusOperation
+
+    #endregion Addition
 
     #region Hadamard
 
     [Fact]
-	public void Hadamard2x2_ShouldReturnTrue()
+	public void Hadamard2x2_ReturnsTrue()
 	{
         double[,] nums =
             {
@@ -275,7 +400,7 @@ public class MatrixTests
     }
 
     [Fact]
-    public void Hadamard3x3_ShouldReturnTrue()
+    public void Hadamard3x3_ReturnsTrue()
     {
         double[,] nums1 =
             {
@@ -309,7 +434,7 @@ public class MatrixTests
     }
 
     [Fact]
-    public void Hadamard3x2_ShouldReturnTrue()
+    public void Hadamard3x2_ReturnsTrue()
     {
         double[,] nums1 =
             {
@@ -344,7 +469,7 @@ public class MatrixTests
     #region Transpose
     
     [Fact]
-    public void Transpose3x1_ShouldReturnTrue()
+    public void Transpose3x1_ReturnsTrue()
     {
         double[,] nums1 =
             {
@@ -368,7 +493,7 @@ public class MatrixTests
     }
 
     [Fact]
-    public void Transpose3x3_ShouldReturnTrue()
+    public void Transpose3x3_ReturnsTrue()
     {
         double[,] nums1 =
             {
@@ -394,7 +519,7 @@ public class MatrixTests
     }
 
     [Fact]
-    public void Transpose2x3_ShouldReturnTrue()
+    public void Transpose2x3_ReturnsTrue()
     {
         double[,] nums1 =
             {
@@ -424,7 +549,7 @@ public class MatrixTests
 
     [Fact]
 
-    public void ToString2x2_ShouldReturnTrue()
+    public void ToString2x2_ReturnsTrue()
     {
         double[,] nums =
             {
@@ -441,7 +566,7 @@ public class MatrixTests
     }
 
     [Fact]
-    public void ToString3x2_ShouldReturnTrue()
+    public void ToString3x2_ReturnsTrue()
     {
         double[,] nums =
             {
