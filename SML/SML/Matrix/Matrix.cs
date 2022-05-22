@@ -75,18 +75,7 @@ public class Matrix : ICloneable
 
     public Matrix Add(Matrix matrix)
     {
-        CheckNullMatrix(matrix);
-        CheckSquareMatrix(matrix);
-
-        for (int i = 0; i < Rows; i++)
-        {
-            for (int j = 0; j < Columns; j++)
-            {
-                Array[i, j] = Array[i, j] + matrix[i, j];
-            }
-        }
-
-        return this;
+        return this + matrix;
     }
 
     public Matrix Subtract(Matrix matrix)
@@ -217,7 +206,7 @@ public class Matrix : ICloneable
     {
         CheckNullMatrix(matrix1);
         CheckNullMatrix(matrix2);
-        CheckSquareMatrix(matrix1, matrix2);
+        CheckSameDimensionsMatrix(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix1.Columns);
 
@@ -236,7 +225,7 @@ public class Matrix : ICloneable
     {
         CheckNullMatrix(matrix1);
         CheckNullMatrix(matrix2);
-        CheckSquareMatrix(matrix1, matrix2);
+        CheckSameDimensionsMatrix(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix1.Columns);
 
@@ -310,7 +299,7 @@ public class Matrix : ICloneable
         }
     }
 
-    private static void CheckSquareMatrix(Matrix matrix1, Matrix matrix2)
+    private static void CheckSameDimensionsMatrix(Matrix matrix1, Matrix matrix2)
     {
         if (matrix1.Rows != matrix2.Rows ||
             matrix1.Columns != matrix2.Columns)

@@ -119,6 +119,15 @@ public class MatrixTests
         },
     };
 
+    public static IEnumerable<object[]> NullMatrixData =>
+    new List<object[]>
+    {
+        new object[]
+        {
+            null
+        }
+    };
+
     #endregion PremadeData
 
     #region Constructor
@@ -159,14 +168,12 @@ public class MatrixTests
         Assert.Equal(arrayColumns, matrixColumns);
     }
 
-    [Fact]
-    public void ConstructorMatrix_NullArray_ReturnsException()
+    [Theory]
+    [MemberData(nameof(NullMatrixData))]
+    public void ConstructorMatrix_NullArray_ReturnsException(double[,] nullArray)
     {
-        // Arrange
-        double[,] array = null;
-
         // Assert
-        Assert.Throws<ArgumentNullException>(() => new Matrix(array));
+        Assert.Throws<ArgumentNullException>(() => new Matrix(nullArray));
     }
 
     #endregion Constructor
@@ -175,7 +182,8 @@ public class MatrixTests
 
     [Theory]
     [MemberData(nameof(SquareAddMatrixData))]
-    public void Add_ShouldReturnTrue(double[,] addMatrix, double[,] expectedMatrix)
+    public void Add_SameDimensions_ShouldReturnTrue(double[,] addMatrix,
+        double[,] expectedMatrix)
     {
         // Arrange
         Matrix matrix = new(addMatrix);
@@ -188,13 +196,29 @@ public class MatrixTests
         Assert.Equal(expected, result);
     }
 
+    [Theory]
+    [MemberData(nameof(SquareAddMatrixData))]
+    public void Add_NullMatrix_ShouldReturnTrue(double[,] array1,
+        double[,] array2)
+    {
+        // Arrange
+        Matrix matrix1 = new(array1);
+        Matrix matrix2 = new(array2);
+
+        // Act
+        matrix2 = null;
+
+        // Assert
+        Assert.Throws<ArgumentNullException>(() => matrix1.Add(matrix2));
+    }
+
     #endregion Add
 
     #region PlusOperation
 
     [Theory]
     [MemberData(nameof(SquareAddMatrixData))]
-    public void PlusOperation_ShouldReturnTrue(double[,] addMatrix,
+    public void PlusOperation_SameDimensions_ShouldReturnTrue(double[,] addMatrix,
         double[,] expectedMatrix)
     {
         // Arrange
@@ -206,6 +230,19 @@ public class MatrixTests
 
         // Assert
         Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void PlusOperation_NullMatrix_ShouldThrow()
+    {
+        // Arrange
+        Matrix matrix = new(2, 2);
+
+        // Act
+        matrix = null;
+
+        // Assert
+        Assert.Throws<ArgumentNullException>(() => matrix + matrix);
     }
 
     #endregion PlusOperation
