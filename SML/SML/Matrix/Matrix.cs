@@ -86,30 +86,13 @@ public class Matrix : ICloneable
     // Dot product
     public Matrix Multiply(Matrix matrix)
     {
-        CheckNullMatrix(matrix);
-        CheckMultiplyAvaibility(matrix);
-
-        Matrix result = new(Rows, matrix.Columns);
-
-        for (int i = 0; i < result.Rows; i++)
-        {
-            for (int j = 0; j < result.Columns; j++)
-            {
-                for (int k = 0; k < matrix.Rows; k++)
-                {
-                    result[i, j] += Array[i, k] * matrix[k, j];
-                }
-            }
-        }
-
-        return result;
+        return this * matrix;
     }
 
     // Hadamard product (element-wise multiplication)
     public Matrix Hadamard(Matrix matrix)
     {
         CheckNullMatrix(matrix);
-
         CheckSquareMatrix(matrix);
 
         Matrix result = new(Rows, matrix.Columns);
@@ -301,14 +284,6 @@ public class Matrix : ICloneable
         {
             throw new ArgumentNullException(nameof(matrix),
                 NullMatrixExceptionMessage);
-        }
-    }
-
-    private void CheckMultiplyAvaibility(Matrix matrix)
-    {
-        if (Columns != matrix.Rows)
-        {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
         }
     }
 

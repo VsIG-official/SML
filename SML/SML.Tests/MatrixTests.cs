@@ -317,7 +317,7 @@ public class MatrixTests
 
     public static IEnumerable<object[]> SameDimensionsSubtractMatrixData =>
     new List<object[]>
-{
+    {
         new object[]
         {
             new double[1, 1]
@@ -465,6 +465,64 @@ public class MatrixTests
         new object[]
         {
             null
+        }
+    };
+
+    public static IEnumerable<object[]> SameDimensionsTransposeMatrixData =>
+    new List<object[]>
+    {
+        new object[]
+        {
+            new double[1, 1]
+            {
+                { 1 }
+            },
+            new double[1, 1]
+            {
+                { 1 }
+            }
+        },
+        new object[]
+        {
+            new double[1, 3]
+            {
+                { 0, 1, -2 }
+            },
+            new double[3, 1]
+            {
+                { 0 },
+                { 1 },
+                { -2 }
+            }
+        },
+        new object[]
+        {
+            new double[3, 3]
+            {
+                { 0, 1, 2 },
+                { 3, 4, -5 },
+                { -6, 7, 8 },
+            },
+            new double[3, 3]
+            {
+                { 0, 3, -6 },
+                { 1, 4, 7 },
+                { 2, -5, 8 },
+            }
+        },
+        new object[]
+        {
+            new double[3, 2]
+            {
+                { 0, -1 },
+                { 2, 3 },
+                { 4, 5 },
+            },
+            new double[2, 3]
+            {
+                { 0, 2, 4 },
+                { -1, 3, 5 }
+            }
         }
     };
 
@@ -911,79 +969,20 @@ public class MatrixTests
 
     #region Transpose
     
-    [Fact]
-    public void Transpose3x1_ReturnsTrue()
+    [Theory]
+    [MemberData(nameof(SameDimensionsTransposeMatrixData))]
+    public void Transpose_ReturnsTrue(double[,] array, double[,] expectedArray)
     {
-        double[,] nums1 =
-            {
-                { 0, 1, 2 }
-            };
+        // Arrange
+        Matrix matrix = new(array);
+        Matrix expected = new(expectedArray);
 
-        Matrix numMatrix = new(nums1);
+        // Act
+        Matrix actual = matrix.Transpose();
 
-        double[,] expectedNums =
-        {
-            { 0 },
-            { 1 },
-            { 2 }
-        };
-
-        Matrix actual = numMatrix.Transpose();
-
-        Matrix expected = new(expectedNums);
-
+        // Assert
         Assert.Equal(actual.Array, expected.Array);
-    }
-
-    [Fact]
-    public void Transpose3x3_ReturnsTrue()
-    {
-        double[,] nums1 =
-            {
-                { 0, 1, 2 },
-                { 3, 4, 5 },
-                { 6, 7, 8 },
-            };
-
-        Matrix numMatrix = new(nums1);
-
-        double[,] expectedNums =
-            {
-                { 0, 3, 6 },
-                { 1, 4, 7 },
-                { 2, 5, 8 },
-            };
-
-        Matrix actual = numMatrix.Transpose();
-
-        Matrix expected = new(expectedNums);
-
-        Assert.Equal(actual.Array, expected.Array);
-    }
-
-    [Fact]
-    public void Transpose2x3_ReturnsTrue()
-    {
-        double[,] nums1 =
-            {
-                { 0, 1 },
-                { 2, 3 },
-                { 4, 5 },
-            };
-
-        Matrix numMatrix = new(nums1);
-
-        double[,] expectedNums =
-            {
-                { 0, 2, 4 },
-                { 1, 3, 5 }
-            };
-
-        Matrix actual = numMatrix.Transpose();
-
-        Matrix expected = new(expectedNums);
-
-        Assert.Equal(actual.Array, expected.Array);
+        Assert.Equal(actual, expected);
     }
 
     #endregion Transpose
