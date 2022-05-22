@@ -80,26 +80,13 @@ public class Matrix : ICloneable
 
     public Matrix Subtract(Matrix matrix)
     {
-        CheckNullMatrix(matrix);
-
-        CheckSquareMatrix(matrix);
-
-        for (int i = 0; i < Rows; i++)
-        {
-            for (int j = 0; j < Columns; j++)
-            {
-                Array[i, j] = Array[i, j] - matrix[i, j];
-            }
-        }
-
-        return this;
+        return this - matrix;
     }
 
     // Dot product
     public Matrix Multiply(Matrix matrix)
     {
         CheckNullMatrix(matrix);
-
         CheckMultiplyAvaibility(matrix);
 
         Matrix result = new(Rows, matrix.Columns);

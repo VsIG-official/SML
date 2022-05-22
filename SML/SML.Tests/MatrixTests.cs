@@ -118,6 +118,155 @@ public class MatrixTests
         },
 };
 
+    public static IEnumerable<object[]> DifferentDimensionsMultiplyMatrixData =>
+    new List<object[]>
+    {
+        new object[]
+        {
+            new double[1, 2]
+            {
+                { 1, 2 }
+            },
+            new double[2, 1]
+            {
+                { 1 },
+                { 2 }
+            },
+            new double[1, 1]
+            {
+                { 5 }
+            }
+        },
+        new object[]
+        {
+            new double[2, 1]
+            {
+                { 1 },
+                { 2 }
+            },
+            new double[1, 2]
+            {
+                { 1, 2 }
+            },
+            new double[2, 2]
+            {
+                { 1, 2 },
+                { 2, 4 }
+            }
+        },
+        new object[]
+        {
+            new double[2, 3]
+            {
+                { 2, 3, 4 },
+                { 2, 3, 4 }
+            },
+            new double[3, 2]
+            {
+                { 2, 3 },
+                { 2, 3 },
+                { 2, 3 }
+            },
+            new double[2, 2]
+            {
+                { 18, 27 },
+                { 18, 27 }
+            }
+        },
+        new object[]
+        {
+            new double[3, 2]
+            {
+                { 2, 3 },
+                { 2, 3 },
+                { 2, 3 }
+            },
+            new double[2, 3]
+            {
+                { 2, 3, 4 },
+                { 2, 3, 4 }
+            },
+            new double[3, 3]
+            {
+                { 10, 15, 20 },
+                { 10, 15, 20 },
+                { 10, 15, 20 }
+            }
+        },
+        new object[]
+        {
+            new double[5, 1]
+            {
+                { -5 },
+                { 4 },
+                { 3 },
+                { 4 },
+                { 5 }
+            },
+            new double[1, 5]
+            {
+                { 1, 2, 3, -2, 1 }
+            },
+            new double[5, 5]
+            {
+                { -5, -10, -15, 10, -5 },
+                { 4, 8, 12, -8, 4 },
+                { 3, 6, 9, -6, 3 },
+                { 4, 8, 12, -8, 4 },
+                { 5, 10, 15, -10, 5 }
+            }
+        },
+    };
+
+    public static IEnumerable<object[]> DifferentDimensionsNotAvailableToMultiplyMatrixData =>
+    new List<object[]>
+    {
+        new object[]
+        {
+            new double[1, 2]
+            {
+                { 1, -2 }
+            },
+            new double[3, 3]
+            {
+                { 1, 2, 3 },
+                { 2, -1, 4 },
+                { 2, 1, 4 }
+            }
+        },
+        new object[]
+        {
+            new double[3, 1]
+            {
+                { 2 },
+                { 2 },
+                { -2 }
+            },
+            new double[3, 2]
+            {
+                { 2, 3 },
+                { 2, -3 },
+                { 2, 3 }
+            }
+        },
+        new object[]
+        {
+            new double[5, 1]
+            {
+                { -5 },
+                { 4 },
+                { 3 },
+                { 4 },
+                { 5 }
+            },
+            new double[2, 4]
+            {
+                { 1, 2, 3, -2 },
+                { 1, 2, 3, -2 }
+            }
+        },
+    };
+
     public static IEnumerable<object[]> SameDimensionsAddMatrixData =>
         new List<object[]>
     {
@@ -213,6 +362,54 @@ public class MatrixTests
             }
         },
 };
+
+    public static IEnumerable<object[]> SameDimensionsMultiplyMatrixData =>
+    new List<object[]>
+    {
+        new object[]
+        {
+            new double[1, 1]
+            {
+                { 1 }
+            },
+            new double[1, 1]
+            {
+                { 1 }
+            },
+        },
+        new object[]
+        {
+            new double[2, 2]
+            {
+                { 2, 2 },
+                { 2, 2 }
+            },
+            new double[2, 2]
+            {
+                { 8, 8 },
+                { 8, 8 }
+            }
+        },
+        new object[]
+        {
+            new double[5, 5]
+            {
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 },
+                { 1, 2, 3, 4, 5 }
+            },
+            new double[5, 5]
+            {
+                { 15, 30, 45, 60, 75 },
+                { 15, 30, 45, 60, 75 },
+                { 15, 30, 45, 60, 75 },
+                { 15, 30, 45, 60, 75 },
+                { 15, 30, 45, 60, 75 }
+            }
+        },
+    };
 
     public static IEnumerable<object[]> SameDimensionsSubMatrixData =>
     new List<object[]>
@@ -518,6 +715,105 @@ public class MatrixTests
     #endregion MinusOperation
 
     #endregion Subtract
+
+    #region Multiply
+
+    #region Mul
+
+    [Theory]
+    [MemberData(nameof(SameDimensionsMultiplyMatrixData))]
+    public void Multiply_SameDimensions_ReturnsTrue(double[,] array,
+        double[,] expectedArray)
+    {
+        // Arrange
+        Matrix matrix = new(array);
+        Matrix expectedMatrix = new(expectedArray);
+
+        // Act
+        Matrix result = matrix.Multiply(matrix);
+
+        // Assert
+        Assert.Equal(expectedMatrix, result);
+    }
+
+    [Theory]
+    [MemberData(nameof(SameDimensionsMultiplyMatrixData))]
+    public void Multiply_NullMatrix_ThrowsArgumentNullException(double[,] array1,
+        double[,] array2)
+    {
+        // Arrange
+        Matrix matrix1 = new(array1);
+        Matrix matrix2 = new(array2);
+
+        // Act
+        matrix2 = null;
+
+        // Assert
+        Assert.Throws<ArgumentNullException>(() => matrix1.Multiply(matrix2));
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentDimensionsNotAvailableToMultiplyMatrixData))]
+    public void Multiply_DifferentDimensions_ThrowsMatrixException(
+        double[,] array1, double[,] array2)
+    {
+        // Arrange
+        Matrix matrix1 = new(array1);
+        Matrix matrix2 = new(array2);
+
+        // Assert
+        Assert.Throws<MatrixException>(() => matrix1.Multiply(matrix2));
+    }
+
+    #endregion Mul
+
+    #region MultiplyOperation
+
+    [Theory]
+    [MemberData(nameof(SameDimensionsMultiplyMatrixData))]
+    public void MultiplyOperation_SameDimensions_ReturnsTrue(double[,] array,
+        double[,] expectedArray)
+    {
+        // Arrange
+        Matrix matrix = new(array);
+        Matrix expectedMatrix = new(expectedArray);
+
+        // Act
+        Matrix result = matrix * matrix;
+
+        // Assert
+        Assert.Equal(expectedMatrix, result);
+    }
+
+    [Fact]
+    public void MultiplyOperation_NullMatrix_ThrowsArgumentNullException()
+    {
+        // Arrange
+        Matrix matrix = new(2, 2);
+
+        // Act
+        matrix = null;
+
+        // Assert
+        Assert.Throws<ArgumentNullException>(() => matrix * matrix);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentDimensionsNotAvailableToMultiplyMatrixData))]
+    public void MultiplyOperation_DifferentDimensions_ThrowsMatrixException(
+    double[,] array1, double[,] array2)
+    {
+        // Arrange
+        Matrix matrix1 = new(array1);
+        Matrix matrix2 = new(array2);
+
+        // Assert
+        Assert.Throws<MatrixException>(() => matrix1 * matrix2);
+    }
+
+    #endregion MultiplyOperation
+
+    #endregion Multiply
 
     #region Hadamard
 
