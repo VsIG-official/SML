@@ -92,8 +92,7 @@ public class Matrix : ICloneable
     // Hadamard product (element-wise multiplication)
     public Matrix Hadamard(Matrix matrix)
     {
-        CheckNullMatrix(matrix);
-        CheckSquareMatrix(matrix);
+        CheckForHadamardOperation(matrix);
 
         Matrix result = new(Rows, matrix.Columns);
 
@@ -106,6 +105,12 @@ public class Matrix : ICloneable
         }
 
         return result;
+    }
+
+    private void CheckForHadamardOperation(Matrix matrix)
+    {
+        CheckNullMatrix(matrix);
+        CheckSquareMatrix(matrix);
     }
 
     public Matrix Transpose()
@@ -174,9 +179,7 @@ public class Matrix : ICloneable
 
     public static Matrix operator +(Matrix matrix1, Matrix matrix2)
     {
-        CheckNullMatrix(matrix1);
-        CheckNullMatrix(matrix2);
-        CheckSameDimensionsMatrix(matrix1, matrix2);
+        CheckForAddOrSubOperations(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix1.Columns);
 
@@ -193,9 +196,7 @@ public class Matrix : ICloneable
 
     public static Matrix operator -(Matrix matrix1, Matrix matrix2)
     {
-        CheckNullMatrix(matrix1);
-        CheckNullMatrix(matrix2);
-        CheckSameDimensionsMatrix(matrix1, matrix2);
+        CheckForAddOrSubOperations(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix1.Columns);
 
@@ -210,11 +211,16 @@ public class Matrix : ICloneable
         return result;
     }
 
-    public static Matrix operator *(Matrix matrix1, Matrix matrix2)
+    private static void CheckForAddOrSubOperations(Matrix matrix1, Matrix matrix2)
     {
         CheckNullMatrix(matrix1);
         CheckNullMatrix(matrix2);
-        CheckMultiplyAvailability(matrix1, matrix2);
+        CheckSameDimensionsMatrix(matrix1, matrix2);
+    }
+
+    public static Matrix operator *(Matrix matrix1, Matrix matrix2)
+    {
+        CheckForMultiplyOperation(matrix1, matrix2);
 
         Matrix result = new(matrix1.Rows, matrix2.Columns);
 
@@ -230,6 +236,13 @@ public class Matrix : ICloneable
         }
 
         return result;
+    }
+
+    private static void CheckForMultiplyOperation(Matrix matrix1, Matrix matrix2)
+    {
+        CheckNullMatrix(matrix1);
+        CheckNullMatrix(matrix2);
+        CheckMultiplyAvailability(matrix1, matrix2);
     }
 
     #endregion Operators
