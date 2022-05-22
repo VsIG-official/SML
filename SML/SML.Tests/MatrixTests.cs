@@ -10,6 +10,23 @@ public class MatrixTests
 {
     #region PremadeData
 
+    public static IEnumerable<object[]> ZeroAndMoreConstructorValuesData =>
+    new List<object[]>
+    {
+        new object[] { 0, 0 },
+        new object[] { 1, 0 },
+        new object[] { 0, 1 },
+        new object[] { 1, 1 },
+    };
+
+    public static IEnumerable<object[]> LessThenZeroConstructorValuesData =>
+    new List<object[]>
+    {
+        new object[] { -1, 1 },
+        new object[] { 1, -1 },
+        new object[] { -1, -1 }
+    };
+
     public static IEnumerable<object[]> SquareMatrixData =>
         new List<object[]>
     {
@@ -625,10 +642,33 @@ public class MatrixTests
 
     [Theory]
     [MemberData(nameof(NullMatrixData))]
-    public void ConstructorMatrix_NullArray_ReturnsException(double[,] nullArray)
+    public void ConstructorMatrix_NullArray_ReturnsArgumentNullException
+        (double[,] nullArray)
     {
         // Assert
         Assert.Throws<ArgumentNullException>(() => new Matrix(nullArray));
+    }
+    
+    [Theory]
+    [MemberData(nameof(LessThenZeroConstructorValuesData))]
+    public void ConstructorMatrix_LessThanZeroRowsAndOrColumns_ReturnsException
+        (int rows, int columns)
+    {
+        // Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Matrix(rows, columns));
+    }
+
+    [Theory]
+    [MemberData(nameof(ZeroAndMoreConstructorValuesData))]
+    public void ConstructorMatrix_ZeroOrMoreRowsAndOrColumns_ReturnsException
+        (int rows, int columns)
+    {
+        // Arrange
+        Matrix matrix = new(rows, columns);
+
+        // Assert
+        Assert.Equal(rows, matrix.Rows);
+        Assert.Equal(columns, matrix.Columns);
     }
 
     #endregion Constructor
@@ -746,7 +786,7 @@ public class MatrixTests
         Matrix expectedMatrix = new(smallValuesArray);
 
         // Act
-        Matrix result = bigValuesMatrix - expectedMatrix;
+        Matrix result = bigValuesMatrix.Subtract(expectedMatrix);
 
         // Assert
         Assert.Equal(expectedMatrix, result);
