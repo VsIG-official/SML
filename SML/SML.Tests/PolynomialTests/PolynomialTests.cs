@@ -179,18 +179,18 @@ public class PolynomialTests
     {
         // Arrange
         int expectedMembersCount = 0;
-        bool expectedIsMemberExisted = true;
+        bool expectedDoesMemberExisted = true;
         
         Polynomial polynomial = new();
         PolynomialMember member = new(degree, coefficient);
         polynomial.AddMember(member);
 
         // Act
-        var isMemberExisted = polynomial.RemoveMember(degree);
+        var doesMemberExisted = polynomial.RemoveMember(degree);
 
         // Assert
         Assert.Equal(expectedMembersCount, polynomial.Count);
-        Assert.Equal(expectedIsMemberExisted, isMemberExisted);
+        Assert.Equal(expectedDoesMemberExisted, doesMemberExisted);
     }
 
     [Theory]
@@ -200,17 +200,61 @@ public class PolynomialTests
     {
         // Arrange
         int expectedMembersCount = 0;
-        bool expectedIsMemberExisted = false;
+        bool expectedDoesMemberExisted = false;
 
         Polynomial polynomial = new();
 
         // Act
-        var isMemberExisted = polynomial.RemoveMember(degree);
+        var doesMemberExisted = polynomial.RemoveMember(degree);
 
         // Assert
         Assert.Equal(expectedMembersCount, polynomial.Count);
-        Assert.Equal(expectedIsMemberExisted, isMemberExisted);
+        Assert.Equal(expectedDoesMemberExisted, doesMemberExisted);
     }
 
     #endregion RemoveMember
+
+    #region ContainsMember
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void ContainsMember_WithMember_True
+        (double degree, double coefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        bool expectedDoesMemberExisted = true;
+
+        Polynomial polynomial = new();
+        PolynomialMember member = new(degree, coefficient);
+        polynomial.AddMember(member);
+
+        // Act
+        var doesMemberExists = polynomial.ContainsMember(degree);
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.Equal(expectedDoesMemberExisted, doesMemberExists);
+    }
+
+    [Theory]
+    [MemberData(nameof(SameValuesData))]
+    public void ContainsMember_WithoutMember_False
+        (double degree)
+    {
+        // Arrange
+        int expectedMembersCount = 0;
+        bool expectedDoesMemberExisted = false;
+
+        Polynomial polynomial = new();
+
+        // Act
+        var doesMemberExists = polynomial.ContainsMember(degree);
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.Equal(expectedDoesMemberExisted, doesMemberExists);
+    }
+
+    #endregion ContainsMember
 }
