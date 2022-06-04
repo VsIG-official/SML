@@ -30,6 +30,17 @@ public class PolynomialTests
         new object[] { int.MaxValue, int.MinValue },
     };
 
+    public static IEnumerable<object[]> DifferentNonZeroValuesData => new List<object[]>
+    {
+        new object[] { 2, 1 },
+        new object[] { -1, 2 },
+        new object[] { 1, -1 },
+        new object[] { -3.222, 9 },
+        new object[] { -1000.123, 9999.1 },
+        new object[] { int.MaxValue, int.MinValue },
+        new object[] { int.MinValue, int.MaxValue },
+    };
+
     #endregion PremadeData
 
     #region Constructor
@@ -120,4 +131,42 @@ public class PolynomialTests
     }
 
     #endregion Constructor
+
+    #region AddMember
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void AddMember_PolynomialMember_CorrectValues
+        (double degree, double coefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        Polynomial polynomial = new();
+        PolynomialMember member = new(degree, coefficient);
+
+        // Act
+        polynomial.AddMember(member);
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void AddMember_Tuple_CorrectValues
+        (double degree, double coefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        (double, double) member = (degree, coefficient);
+
+        // Act
+        Polynomial polynomial = new();
+        polynomial.AddMember(member);
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+    }
+
+    #endregion AddMember
 }
