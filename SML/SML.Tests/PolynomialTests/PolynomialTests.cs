@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SML.Polynomials;
+using SML.Polynomials.Exceptions;
 using Xunit;
 
 namespace SML.Tests.PolynomialTests;
@@ -154,7 +155,7 @@ public class PolynomialTests
     [Theory]
     [MemberData(nameof(DifferentNonZeroValuesData))]
     public void AddMember_Tuple_CorrectValues
-        (double degree, double coefficient)
+    (double degree, double coefficient)
     {
         // Arrange
         int expectedMembersCount = 1;
@@ -166,6 +167,58 @@ public class PolynomialTests
 
         // Assert
         Assert.Equal(expectedMembersCount, polynomial.Count);
+    }
+    
+    [Fact]
+    public void AddMember_NullPolynomialMember_ThrowsPolynomialArgumentNullException()
+    {
+        // Arrange
+        Polynomial polynomial = new();
+
+        // Assert
+        Assert.Throws<PolynomialArgumentNullException>(() => polynomial.AddMember(null));
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void AddMember_ExistingPolynomialMember_ThrowsPolynomialArgumentException
+        (double deegree, double coefficient)
+    {
+        // Arrange
+        Polynomial polynomial = new();
+        PolynomialMember member = new(deegree, coefficient);
+        polynomial.AddMember(member);
+
+        // Assert
+        Assert.Throws<PolynomialArgumentException>(() => polynomial.AddMember(member));
+    }
+
+    [Fact]
+    public void AddMember_MeaninglessPolynomialMember_ThrowsPolynomialArgumentException()
+    {
+        // Arrange
+        int degree = 1;
+        int coefficient = 0;
+        
+        Polynomial polynomial = new();
+        PolynomialMember member = new(degree, coefficient);
+
+        // Assert
+        Assert.Throws<PolynomialArgumentException>(() => polynomial.AddMember(member));
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void AddMember_MeaninglessTuple_ThrowsPolynomialArgumentException
+        (double deegree, double coefficient)
+    {
+        // Arrange
+        Polynomial polynomial = new();
+        (double, double) member = (deegree, coefficient);
+        polynomial.AddMember(member);
+
+        // Assert
+        Assert.Throws<PolynomialArgumentException>(() => polynomial.AddMember(member));
     }
 
     #endregion AddMember
