@@ -13,6 +13,8 @@ public class PolynomialMemberTests
         new object[] { 0 },
         new object[] { 1 },
         new object[] { -1 },
+        new object[] { -1.23 },
+        new object[] { 99.9 },
         new object[] { int.MinValue },
         new object[] { int.MaxValue },
     };
@@ -22,6 +24,8 @@ public class PolynomialMemberTests
         new object[] { 0, 1 },
         new object[] { -1, 0 },
         new object[] { 1, -1 },
+        new object[] { -1.23, 2 },
+        new object[] { 99.9, -100 },
         new object[] { int.MinValue, int.MaxValue },
         new object[] { int.MaxValue, int.MinValue },
     };
