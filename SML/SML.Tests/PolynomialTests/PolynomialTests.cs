@@ -169,4 +169,48 @@ public class PolynomialTests
     }
 
     #endregion AddMember
+
+    #region RemoveMember
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void RemoveMember_WithMember_True
+        (double degree, double coefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 0;
+        bool expectedIsMemberExisted = true;
+        
+        Polynomial polynomial = new();
+        PolynomialMember member = new(degree, coefficient);
+        polynomial.AddMember(member);
+
+        // Act
+        var isMemberExisted = polynomial.RemoveMember(degree);
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.Equal(expectedIsMemberExisted, isMemberExisted);
+    }
+
+    [Theory]
+    [MemberData(nameof(SameValuesData))]
+    public void RemoveMember_WithoutMember_False
+        (double degree)
+    {
+        // Arrange
+        int expectedMembersCount = 0;
+        bool expectedIsMemberExisted = false;
+
+        Polynomial polynomial = new();
+
+        // Act
+        var isMemberExisted = polynomial.RemoveMember(degree);
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.Equal(expectedIsMemberExisted, isMemberExisted);
+    }
+
+    #endregion RemoveMember
 }
