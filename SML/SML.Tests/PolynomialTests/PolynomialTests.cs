@@ -300,4 +300,117 @@ public class PolynomialTests
     }
 
     #endregion FindMember
+
+    #region Indexer
+
+    #region Get
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void IndexerGet_WithMember_CorrectCoefficient
+        (double degree, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+
+        Polynomial polynomial = new();
+        PolynomialMember expectedMember = new(degree, expectedCoefficient);
+        polynomial.AddMember(expectedMember);
+
+        // Act
+        var foundCoefficient = polynomial[degree];
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.Equal(expectedCoefficient, foundCoefficient);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void IndexerGet_WithoutMember_CorrectCoefficient
+        (double degree, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 0;
+
+        Polynomial polynomial = new();
+
+        // Act
+        var foundCoefficient = polynomial[degree];
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.Equal(0, foundCoefficient);
+    }
+
+    #endregion Get
+
+    #region Set
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void IndexerSet_WithMemberAndValueNotEqualZero_Coefficient
+        (double degree, double coefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        double expectedCoefficient = 5;
+
+        Polynomial polynomial = new();
+        PolynomialMember expectedMember = new(degree, coefficient);
+        polynomial.AddMember(expectedMember);
+
+        // Act
+        polynomial[degree] = expectedCoefficient;
+        var foundCoefficient = polynomial[degree];
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.Equal(expectedCoefficient, foundCoefficient);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void IndexerSet_WithMemberAndValueEqualZero_Coefficient
+        (double degree, double coefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 0;
+        double expectedCoefficient = 0;
+
+        Polynomial polynomial = new();
+        PolynomialMember expectedMember = new(degree, coefficient);
+        polynomial.AddMember(expectedMember);
+
+        // Act
+        polynomial[degree] = expectedCoefficient;
+        var foundCoefficient = polynomial[degree];
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.Equal(expectedCoefficient, foundCoefficient);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void IndexerSet_WithoutMemberAndValueNotEqualZero_Coefficient
+        (double degree, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+
+        Polynomial polynomial = new();
+
+        // Act
+        polynomial[degree] = expectedCoefficient;
+        var foundCoefficient = polynomial[degree];
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.Equal(expectedCoefficient, foundCoefficient);
+    }
+
+    #endregion Get
+
+    #endregion Indexer
 }
