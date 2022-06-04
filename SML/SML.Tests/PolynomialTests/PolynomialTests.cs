@@ -257,4 +257,47 @@ public class PolynomialTests
     }
 
     #endregion ContainsMember
+
+    #region FindMember
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void FindMember_WithMember_True
+        (double degree, double coefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+
+        Polynomial polynomial = new();
+        PolynomialMember expectedMember = new(degree, coefficient);
+        polynomial.AddMember(expectedMember);
+
+        // Act
+        var foundMember = polynomial.Find(degree);
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.Equal(expectedMember, foundMember);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void FindMember_WithoutMember_False
+        (double degree, double coefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 0;
+
+        Polynomial polynomial = new();
+        PolynomialMember expectedMember = new(degree, coefficient);
+
+        // Act
+        var foundMember = polynomial.Find(degree);
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.NotEqual(expectedMember, foundMember);
+    }
+
+    #endregion FindMember
 }
