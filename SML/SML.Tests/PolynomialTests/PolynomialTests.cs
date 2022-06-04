@@ -413,4 +413,30 @@ public class PolynomialTests
     #endregion Get
 
     #endregion Indexer
+
+    #region ToArray
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void ToArray_CorrectArray
+        (double degree, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+
+        Polynomial polynomial = new();
+        PolynomialMember member = new(degree, expectedCoefficient);
+        polynomial.AddMember(member);
+
+        PolynomialMember[] expectedArray = new[] { member };
+
+        // Act
+        var foundArray = polynomial.ToArray();
+
+        // Assert
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.Equal(expectedArray, foundArray);
+    }
+
+    #endregion ToArray
 }
