@@ -7,6 +7,11 @@ public sealed class Polynomial
     #region Fields
 
     private readonly List<PolynomialMember> _monomials;
+    private const string NullMemberMessage = "Member is null";
+    private const string ExistingMemberMessage =
+        "Member with such degree already exist in polynomial";
+    private const string MeaninglessMemberMessage =
+        "Don't need to add this member";
 
     public int Count
     {
@@ -83,18 +88,18 @@ public sealed class Polynomial
     {
         if (member == null)
         {
-            throw new PolynomialArgumentNullException("Member is null");
+            throw new PolynomialArgumentNullException(NullMemberMessage);
         }
 
         if (ContainsMember(member.Degree))
         {
             throw new PolynomialArgumentException
-                ("Member with such degree already exist in polynomial");
+                (ExistingMemberMessage);
         }
 
         if (member.Coefficient == 0 && member.Degree != 0)
         {
-            throw new PolynomialArgumentException("Don't need to add this member");
+            throw new PolynomialArgumentException(MeaninglessMemberMessage);
         }
 
         _monomials.Add(member);
@@ -105,7 +110,7 @@ public sealed class Polynomial
         if (ContainsMember(member.degree) || member.coefficient == 0)
         {
             throw new PolynomialArgumentException
-                ("Member with such degree already exist in polynomial");
+                (ExistingMemberMessage);
         }
 
         AddMember(new PolynomialMember(member.degree, member.coefficient));
@@ -228,7 +233,7 @@ public sealed class Polynomial
     {
         if (a == null || b == null)
         {
-            throw new PolynomialArgumentNullException();
+            throw new PolynomialArgumentNullException(NullMemberMessage);
         }
 
         var result = new Polynomial(a._monomials);
@@ -245,7 +250,7 @@ public sealed class Polynomial
     {
         if (a == null || b == null)
         {
-            throw new PolynomialArgumentNullException();
+            throw new PolynomialArgumentNullException(NullMemberMessage);
         }
 
         var result = new Polynomial(a._monomials);
@@ -270,7 +275,7 @@ public sealed class Polynomial
     {
         if (a == null || b == null)
         {
-            throw new PolynomialArgumentNullException();
+            throw new PolynomialArgumentNullException(NullMemberMessage);
         }
 
         var result = new Polynomial();
