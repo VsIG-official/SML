@@ -73,12 +73,16 @@ public class PolynomialTests
     [Fact]
     public void Constructor_NoneValues_CorrectValues()
     {
+        // Arrange
+        int expectedMembersCount = 0;
+        int expectedMembersDegree = 0;
+
         // Act
         Polynomial polynomial = new();
 
         // Assert
-        Assert.Equal(0, polynomial.Count);
-        Assert.Equal(0, polynomial.Degree);
+        Assert.Equal(expectedMembersCount, polynomial.Count);
+        Assert.Equal(expectedMembersDegree, polynomial.Degree);
     }
 
     [Theory]
