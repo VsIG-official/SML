@@ -149,7 +149,7 @@ public sealed class Polynomial
             }
         }
 
-        return new PolynomialMember(0, 0);
+        return null;
     }
 
     public double this[double degree]
@@ -192,11 +192,6 @@ public sealed class Polynomial
 
     public Polynomial Add(Polynomial polynomial)
     {
-        if (polynomial is null)
-        {
-            throw new PolynomialArgumentNullException();
-        }
-
         return this + polynomial;
     }
 

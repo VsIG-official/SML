@@ -50,7 +50,7 @@ public class PolynomialTests
         new object[] { 2, -1.23, -2.46 },
     };
 
-    public static IEnumerable<object[]> SubstractionData => new List<object[]>
+    public static IEnumerable<object[]> SubtractionData => new List<object[]>
     {
         new object[] { 3, 4, 2, 2 },
         new object[] { 1, 2, 1, 1 },
@@ -517,7 +517,7 @@ public class PolynomialTests
 
     #endregion ToArray
 
-    #region Add
+    #region Addition
 
     #region PlusOperator
 
@@ -594,14 +594,59 @@ public class PolynomialTests
 
     #endregion PlusOperator
 
+    #region Add
+
+    [Theory]
+    [MemberData(nameof(AdditionData))]
+    public void Add_PolynomialMember_CorrectValues
+    (double degree, double coefficient, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        PolynomialMember member = new(degree, coefficient);
+
+        Polynomial polynomial1 = new(member);
+        Polynomial polynomial2 = new(member);
+
+        // Act
+        Polynomial result = polynomial1.Add(polynomial2);
+        var actualAddCoefficient = result.ToArray()[0].Coefficient;
+
+        // Assert
+        Assert.Equal(expectedMembersCount, result.Count);
+        Assert.Equal(actualAddCoefficient, expectedCoefficient);
+    }
+
+    [Theory]
+    [MemberData(nameof(AdditionData))]
+    public void Add_Tuple_CorrectValues
+        (double degree, double coefficient, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        (double, double) member = new(degree, coefficient);
+
+        Polynomial polynomial = new(member);
+
+        // Act
+        Polynomial result = polynomial.Add(member);
+        var actualAddCoefficient = result.ToArray()[0].Coefficient;
+
+        // Assert
+        Assert.Equal(expectedMembersCount, result.Count);
+        Assert.Equal(actualAddCoefficient, expectedCoefficient);
+    }
+
     #endregion Add
 
-    #region Sub
+    #endregion Addition
+
+    #region Subtraction
 
     #region MinusOperator
 
     [Theory]
-    [MemberData(nameof(SubstractionData))]
+    [MemberData(nameof(SubtractionData))]
     public void MinusOperator_PolynomialMember_CorrectValues
         (double degree, double coefficient,
         double subCoefficient, double expectedCoefficient)
@@ -654,7 +699,7 @@ public class PolynomialTests
     }
 
     [Theory]
-    [MemberData(nameof(SubstractionData))]
+    [MemberData(nameof(SubtractionData))]
     public void MinusOperator_Tuple_CorrectValues
         (double degree, double coefficient,
         double subCoefficient, double expectedCoefficient)
@@ -677,9 +722,58 @@ public class PolynomialTests
 
     #endregion MinusOperator
 
+    #region Sub
+
+    [Theory]
+    [MemberData(nameof(SubtractionData))]
+    public void Subtraction_PolynomialMember_CorrectValues
+        (double degree, double coefficient,
+        double subCoefficient, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        PolynomialMember member1 = new(degree, coefficient);
+        PolynomialMember member2 = new(degree, subCoefficient);
+
+        Polynomial polynomial1 = new(member1);
+        Polynomial polynomial2 = new(member2);
+
+        // Act
+        Polynomial result = polynomial1.Subtraction(polynomial2);
+        var actualAddCoefficient = result.ToArray()[0].Coefficient;
+
+        // Assert
+        Assert.Equal(expectedMembersCount, result.Count);
+        Assert.Equal(actualAddCoefficient, expectedCoefficient);
+    }
+
+    [Theory]
+    [MemberData(nameof(SubtractionData))]
+    public void Subtraction_Tuple_CorrectValues
+        (double degree, double coefficient,
+        double subCoefficient, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        (double, double) member1 = new(degree, coefficient);
+        (double, double) member2 = new(degree, subCoefficient);
+
+        Polynomial polynomial = new(member1);
+
+        // Act
+        Polynomial result = polynomial.Subtraction(member2);
+        var actualAddCoefficient = result.ToArray()[0].Coefficient;
+
+        // Assert
+        Assert.Equal(expectedMembersCount, result.Count);
+        Assert.Equal(actualAddCoefficient, expectedCoefficient);
+    }
+
     #endregion Sub
 
-    #region Mul
+    #endregion Subtraction
+
+    #region Multiply
 
     #region MultiplyOperator
 
@@ -760,5 +854,54 @@ public class PolynomialTests
 
     #endregion MultiplyOperator
 
+    #region Mul
+
+    [Theory]
+    [MemberData(nameof(MultiplyData))]
+    public void Multiply_PolynomialMember_CorrectValues
+        (double degree, double coefficient,
+        double mulCoefficient, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        PolynomialMember member1 = new(degree, coefficient);
+        PolynomialMember member2 = new(degree, mulCoefficient);
+
+        Polynomial polynomial1 = new(member1);
+        Polynomial polynomial2 = new(member2);
+
+        // Act
+        Polynomial result = polynomial1.Multiply(polynomial2);
+        var actualAddCoefficient = result.ToArray()[0].Coefficient;
+
+        // Assert
+        Assert.Equal(expectedMembersCount, result.Count);
+        Assert.Equal(actualAddCoefficient, expectedCoefficient);
+    }
+
+    [Theory]
+    [MemberData(nameof(MultiplyData))]
+    public void Multiply_Tuple_CorrectValues
+        (double degree, double coefficient,
+        double mulCoefficient, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        (double, double) member1 = new(degree, coefficient);
+        (double, double) member2 = new(degree, mulCoefficient);
+
+        Polynomial polynomial = new(member1);
+
+        // Act
+        Polynomial result = polynomial.Multiply(member2);
+        var actualAddCoefficient = result.ToArray()[0].Coefficient;
+
+        // Assert
+        Assert.Equal(expectedMembersCount, result.Count);
+        Assert.Equal(actualAddCoefficient, expectedCoefficient);
+    }
+
     #endregion Mul
+
+    #endregion Multiply
 }
