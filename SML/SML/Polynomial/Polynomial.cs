@@ -7,6 +7,11 @@ public sealed class Polynomial
     #region Fields
 
     private readonly List<PolynomialMember> _monomials;
+    private const string NullMemberMessage = "Member is null";
+    private const string ExistingMemberMessage =
+        "Member with such degree already exist in polynomial";
+    private const string MeaninglessMemberMessage =
+        "Don't need to add this member";
 
     public int Count
     {
@@ -81,34 +86,57 @@ public sealed class Polynomial
 
     public void AddMember(PolynomialMember member)
     {
-        if (member == null)
-        {
-            throw new PolynomialArgumentNullException("Member is null");
-        }
-
-        if (ContainsMember(member.Degree))
-        {
-            throw new PolynomialArgumentException
-                ("Member with such degree already exist in polynomial");
-        }
-
-        if (member.Coefficient == 0 && member.Degree != 0)
-        {
-            throw new PolynomialArgumentException("Don't need to add this member");
-        }
+        CheckPolynomialMember(member);
 
         _monomials.Add(member);
     }
 
+    private void CheckPolynomialMember(PolynomialMember member)
+    {
+        CheckNullMember(member);
+        CheckExistingMember(member);
+        CheckMeaninglessMember(member);
+    }
+
+    private static void CheckNullMember(PolynomialMember member)
+    {
+        if (member == null)
+        {
+            throw new PolynomialArgumentNullException(NullMemberMessage);
+        }
+    }
+
+    private void CheckExistingMember(PolynomialMember member)
+    {
+        if (ContainsMember(member.Degree))
+        {
+            throw new PolynomialArgumentException
+                (ExistingMemberMessage);
+        }
+    }
+
+    private static void CheckMeaninglessMember(PolynomialMember member)
+    {
+        if (member.Coefficient == 0 && member.Degree != 0)
+        {
+            throw new PolynomialArgumentException(MeaninglessMemberMessage);
+        }
+    }
+
     public void AddMember((double degree, double coefficient) member)
+    {
+        CheckTupleMember(member);
+
+        AddMember(new PolynomialMember(member.degree, member.coefficient));
+    }
+
+    private void CheckTupleMember((double degree, double coefficient) member)
     {
         if (ContainsMember(member.degree) || member.coefficient == 0)
         {
             throw new PolynomialArgumentException
-                ("Member with such degree already exist in polynomial");
+                (ExistingMemberMessage);
         }
-
-        AddMember(new PolynomialMember(member.degree, member.coefficient));
     }
 
     public bool RemoveMember(double degree)
@@ -149,7 +177,7 @@ public sealed class Polynomial
             }
         }
 
-        return new PolynomialMember(0, 0);
+        return null;
     }
 
     public double this[double degree]
@@ -192,11 +220,6 @@ public sealed class Polynomial
 
     public Polynomial Add(Polynomial polynomial)
     {
-        if (polynomial is null)
-        {
-            throw new PolynomialArgumentNullException();
-        }
-
         return this + polynomial;
     }
 
@@ -231,10 +254,7 @@ public sealed class Polynomial
 
     public static Polynomial operator +(Polynomial a, Polynomial b)
     {
-        if (a == null || b == null)
-        {
-            throw new PolynomialArgumentNullException();
-        }
+        CheckPolynomials(a, b);
 
         var result = new Polynomial(a._monomials);
 
@@ -246,12 +266,17 @@ public sealed class Polynomial
         return result;
     }
 
-    public static Polynomial operator -(Polynomial a, Polynomial b)
+    private static void CheckPolynomials(Polynomial a, Polynomial b)
     {
         if (a == null || b == null)
         {
-            throw new PolynomialArgumentNullException();
+            throw new PolynomialArgumentNullException(NullMemberMessage);
         }
+    }
+
+    public static Polynomial operator -(Polynomial a, Polynomial b)
+    {
+        CheckPolynomials(a, b);
 
         var result = new Polynomial(a._monomials);
 
@@ -273,10 +298,7 @@ public sealed class Polynomial
 
     public static Polynomial operator *(Polynomial a, Polynomial b)
     {
-        if (a == null || b == null)
-        {
-            throw new PolynomialArgumentNullException();
-        }
+        CheckPolynomials(a, b);
 
         var result = new Polynomial();
 

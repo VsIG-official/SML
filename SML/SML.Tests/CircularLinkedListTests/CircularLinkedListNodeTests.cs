@@ -11,7 +11,7 @@ public class CircularLinkedListNodeTests
     [InlineData(1)]
     [InlineData(int.MinValue)]
     [InlineData(int.MaxValue)]
-    public void Constructor_Int_ReturnsCorrectValues(int expected)
+    public void Constructor_Int_CorrectValues(int expected)
     {
         // Arrange
         var node = new CircularLinkedListNode<int>(expected);
@@ -32,7 +32,7 @@ public class CircularLinkedListNodeTests
     [InlineData("汉字 and 漢字")]
     [InlineData("الْعَرَبِيَّة")]
     [InlineData("👾🤓😎🥸🤩🥳")]
-    public void Constructor_String_ReturnsCorrectValues(string expected)
+    public void Constructor_String_CorrectValues(string expected)
     {
         // Arrange
         var node = new CircularLinkedListNode<string>(expected);
