@@ -86,34 +86,57 @@ public sealed class Polynomial
 
     public void AddMember(PolynomialMember member)
     {
+        CheckPolynomialMember(member);
+
+        _monomials.Add(member);
+    }
+
+    private void CheckPolynomialMember(PolynomialMember member)
+    {
+        CheckNullMember(member);
+        CheckExistingMember(member);
+        CheckMeaninglessMember(member);
+    }
+
+    private static void CheckNullMember(PolynomialMember member)
+    {
         if (member == null)
         {
             throw new PolynomialArgumentNullException(NullMemberMessage);
         }
+    }
 
+    private void CheckExistingMember(PolynomialMember member)
+    {
         if (ContainsMember(member.Degree))
         {
             throw new PolynomialArgumentException
                 (ExistingMemberMessage);
         }
+    }
 
+    private static void CheckMeaninglessMember(PolynomialMember member)
+    {
         if (member.Coefficient == 0 && member.Degree != 0)
         {
             throw new PolynomialArgumentException(MeaninglessMemberMessage);
         }
-
-        _monomials.Add(member);
     }
 
     public void AddMember((double degree, double coefficient) member)
+    {
+        CheckTupleMember(member);
+
+        AddMember(new PolynomialMember(member.degree, member.coefficient));
+    }
+
+    private void CheckTupleMember((double degree, double coefficient) member)
     {
         if (ContainsMember(member.degree) || member.coefficient == 0)
         {
             throw new PolynomialArgumentException
                 (ExistingMemberMessage);
         }
-
-        AddMember(new PolynomialMember(member.degree, member.coefficient));
     }
 
     public bool RemoveMember(double degree)
