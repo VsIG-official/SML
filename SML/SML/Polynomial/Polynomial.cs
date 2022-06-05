@@ -254,10 +254,7 @@ public sealed class Polynomial
 
     public static Polynomial operator +(Polynomial a, Polynomial b)
     {
-        if (a == null || b == null)
-        {
-            throw new PolynomialArgumentNullException(NullMemberMessage);
-        }
+        CheckPolynomials(a, b);
 
         var result = new Polynomial(a._monomials);
 
@@ -269,12 +266,17 @@ public sealed class Polynomial
         return result;
     }
 
-    public static Polynomial operator -(Polynomial a, Polynomial b)
+    private static void CheckPolynomials(Polynomial a, Polynomial b)
     {
         if (a == null || b == null)
         {
             throw new PolynomialArgumentNullException(NullMemberMessage);
         }
+    }
+
+    public static Polynomial operator -(Polynomial a, Polynomial b)
+    {
+        CheckPolynomials(a, b);
 
         var result = new Polynomial(a._monomials);
 
@@ -296,10 +298,7 @@ public sealed class Polynomial
 
     public static Polynomial operator *(Polynomial a, Polynomial b)
     {
-        if (a == null || b == null)
-        {
-            throw new PolynomialArgumentNullException(NullMemberMessage);
-        }
+        CheckPolynomials(a, b);
 
         var result = new Polynomial();
 
