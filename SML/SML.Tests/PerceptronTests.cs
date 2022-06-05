@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using SML.ExtensionMethods;
 using SML.Perceptrons;
 using Xunit;
 
@@ -6,26 +9,50 @@ namespace SML.Tests.PerceptronTests;
 
 public class PerceptronTests
 {
-    [Fact]
-    public void XorGate_ShouldReturnTrue()
+    #region PremadeData
+
+    public static IEnumerable<object[]> XorData =>
+        new List<object[]>
     {
-        double[,] input = new double[,]
+        new object[]
         {
-            { 0, 0 },
-            { 0, 1 },
-            { 1, 0 },
-            { 1, 1 }
-        };
+            new double[,]
+            {
+                { 0, 0 },
+                { 0, 1 },
+                { 1, 0 },
+                { 1, 1 }
+            },
+            new double[,]
+            {
+                { 0 },
+                { 1 },
+                { 1 },
+                { 0 }
+            }
+        },
+    };
 
-        double[,] output =
-        {
-            { 0 },
-            { 1 },
-            { 1 },
-            { 0 }
-        };
+    #endregion PremadeData
 
-        double[,] xTest1 = { { 0, 0 } };
+    #region XOR
+
+    [Theory]
+    [MemberData(nameof(XorData))]
+    public void XorGate_ShouldReturnTrue
+        (double[,] input, double [,] output)
+    {
+        var smth = input.GetRow(0).ToArray();
+        double[,] xTest1 = new double[1, 2];
+
+        Buffer.BlockCopy(
+    smth, // src
+    0, // srcOffset
+    xTest1, // dst
+    1 * xTest1.GetLength(1) * sizeof(int), // dstOffset
+    smth.Length * sizeof(int));
+
+        var xTest5 = input.GetColumn(0);
         double[,] xTest2 = { { 0, 1 } };
         double[,] xTest3 = { { 1, 0 } };
         double[,] xTest4 = { { 1, 1 } };
@@ -55,4 +82,6 @@ public class PerceptronTests
 
         Assert.Equal(expected, actual);
     }
+
+    #endregion XOR
 }
