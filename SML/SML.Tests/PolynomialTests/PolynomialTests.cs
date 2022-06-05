@@ -42,6 +42,30 @@ public class PolynomialTests
         new object[] { int.MinValue, int.MaxValue },
     };
 
+    public static IEnumerable<object[]> AdditionData => new List<object[]>
+    {
+        new object[] { 3, 2, 4 },
+        new object[] { 1, 1, 2 },
+        new object[] { -1 , -1, -2 },
+        new object[] { 2, -1.23, -2.46 },
+    };
+
+    public static IEnumerable<object[]> SubstractionData => new List<object[]>
+    {
+        new object[] { 3, 4, 2, 2 },
+        new object[] { 1, 2, 1, 1 },
+        new object[] { -1 , -2, 3, -5 },
+        new object[] { 2, 2.46, -1.2, 3.66 },
+    };
+
+    public static IEnumerable<object[]> MultiplyData => new List<object[]>
+    {
+        new object[] { 3, 2, 3, 6 },
+        new object[] { 1, 2, 1, 2 },
+        new object[] { -1 , -2, 3, -6 },
+        new object[] { 2, 2.46, -1.2, -2.952 },
+    };
+
     #endregion PremadeData
 
     #region Constructor
@@ -492,4 +516,249 @@ public class PolynomialTests
     }
 
     #endregion ToArray
+
+    #region Add
+
+    #region PlusOperator
+
+    [Theory]
+    [MemberData(nameof(AdditionData))]
+    public void PlusOperator_PolynomialMember_CorrectValues
+        (double degree, double coefficient, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        PolynomialMember member = new(degree, coefficient);
+        
+        Polynomial polynomial1 = new(member);
+        Polynomial polynomial2 = new(member);
+
+        // Act
+        Polynomial result = polynomial1 + polynomial2;
+        var actualAddCoefficient = result.ToArray()[0].Coefficient;
+
+        // Assert
+        Assert.Equal(expectedMembersCount, result.Count);
+        Assert.Equal(actualAddCoefficient, expectedCoefficient);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void PlusOperator_NullFirstPolynomial_PolynomialMember_ThrowsPolynomialArgumentNullException
+        (double degree, double coefficient)
+    {
+        // Arrange
+        PolynomialMember member = new(degree, coefficient);
+
+        Polynomial polynomial1 =  null;
+        Polynomial polynomial2 = new(member);
+
+        // Assert
+        Assert.Throws<PolynomialArgumentNullException>(() => polynomial1 + polynomial2);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void PlusOperator_NullSecondPolynomial_PolynomialMember_ThrowsPolynomialArgumentNullException
+        (double degree, double coefficient)
+    {
+        // Arrange
+        PolynomialMember member = new(degree, coefficient);
+
+        Polynomial polynomial1 = new(member);
+        Polynomial polynomial2 = null;
+
+        // Assert
+        Assert.Throws<PolynomialArgumentNullException>(() => polynomial1 + polynomial2);
+    }
+
+    [Theory]
+    [MemberData(nameof(AdditionData))]
+    public void PlusOperator_Tuple_CorrectValues
+    (double degree, double coefficient, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        (double degree, double coefficient) member = (degree, coefficient);
+
+        Polynomial polynomial = new(member);
+
+        // Act
+        Polynomial result = polynomial + member;
+        var actualAddCoefficient = result.ToArray()[0].Coefficient;
+
+        // Assert
+        Assert.Equal(expectedMembersCount, result.Count);
+        Assert.Equal(actualAddCoefficient, expectedCoefficient);
+    }
+
+    #endregion PlusOperator
+
+    #endregion Add
+
+    #region Sub
+
+    #region MinusOperator
+
+    [Theory]
+    [MemberData(nameof(SubstractionData))]
+    public void MinusOperator_PolynomialMember_CorrectValues
+        (double degree, double coefficient,
+        double subCoefficient, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        PolynomialMember member1 = new(degree, coefficient);
+        PolynomialMember member2 = new(degree, subCoefficient);
+
+        Polynomial polynomial1 = new(member1);
+        Polynomial polynomial2 = new(member2);
+
+        // Act
+        Polynomial result = polynomial1 - polynomial2;
+        var actualSubCoefficient = result.ToArray()[0].Coefficient;
+
+        // Assert
+        Assert.Equal(expectedMembersCount, result.Count);
+        Assert.Equal(actualSubCoefficient, expectedCoefficient);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void MinusOperator_NullFirstPolynomial_PolynomialMember_ThrowsPolynomialArgumentNullException
+        (double degree, double coefficient)
+    {
+        // Arrange
+        PolynomialMember member = new(degree, coefficient);
+
+        Polynomial polynomial1 = null;
+        Polynomial polynomial2 = new(member);
+
+        // Assert
+        Assert.Throws<PolynomialArgumentNullException>(() => polynomial1 - polynomial2);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void MinusOperator_NullSecondPolynomial_PolynomialMember_ThrowsPolynomialArgumentNullException
+        (double degree, double coefficient)
+    {
+        // Arrange
+        PolynomialMember member = new(degree, coefficient);
+
+        Polynomial polynomial1 = new(member);
+        Polynomial polynomial2 = null;
+
+        // Assert
+        Assert.Throws<PolynomialArgumentNullException>(() => polynomial1 - polynomial2);
+    }
+
+    [Theory]
+    [MemberData(nameof(SubstractionData))]
+    public void MinusOperator_Tuple_CorrectValues
+        (double degree, double coefficient,
+        double subCoefficient, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        (double, double) member1 = new(degree, coefficient);
+        (double, double) member2 = new(degree, subCoefficient);
+
+        Polynomial polynomial = new(member1);
+
+        // Act
+        Polynomial result = polynomial - member2;
+        var actualSubCoefficient = result.ToArray()[0].Coefficient;
+
+        // Assert
+        Assert.Equal(expectedMembersCount, result.Count);
+        Assert.Equal(actualSubCoefficient, expectedCoefficient);
+    }
+
+    #endregion MinusOperator
+
+    #endregion Sub
+
+    #region Mul
+
+    #region MultiplyOperator
+
+    [Theory]
+    [MemberData(nameof(MultiplyData))]
+    public void MultiplyOperator_PolynomialMember_CorrectValues
+        (double degree, double coefficient,
+        double subCoefficient, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        PolynomialMember member1 = new(degree, coefficient);
+        PolynomialMember member2 = new(degree, subCoefficient);
+
+        Polynomial polynomial1 = new(member1);
+        Polynomial polynomial2 = new(member2);
+
+        // Act
+        Polynomial result = polynomial1 * polynomial2;
+        var actualSubCoefficient = result.ToArray()[0].Coefficient;
+
+        // Assert
+        Assert.Equal(expectedMembersCount, result.Count);
+        Assert.Equal(actualSubCoefficient, expectedCoefficient);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void MultiplyOperator_NullFirstPolynomial_PolynomialMember_ThrowsPolynomialArgumentNullException
+        (double degree, double coefficient)
+    {
+        // Arrange
+        PolynomialMember member = new(degree, coefficient);
+
+        Polynomial polynomial1 = null;
+        Polynomial polynomial2 = new(member);
+
+        // Assert
+        Assert.Throws<PolynomialArgumentNullException>(() => polynomial1 * polynomial2);
+    }
+
+    [Theory]
+    [MemberData(nameof(DifferentNonZeroValuesData))]
+    public void MultiplyOperator_NullSecondPolynomial_PolynomialMember_ThrowsPolynomialArgumentNullException
+        (double degree, double coefficient)
+    {
+        // Arrange
+        PolynomialMember member = new(degree, coefficient);
+
+        Polynomial polynomial1 = new(member);
+        Polynomial polynomial2 = null;
+
+        // Assert
+        Assert.Throws<PolynomialArgumentNullException>(() => polynomial1 * polynomial2);
+    }
+
+    [Theory]
+    [MemberData(nameof(MultiplyData))]
+    public void MultiplyOperator_Tuple_CorrectValues
+        (double degree, double coefficient,
+        double subCoefficient, double expectedCoefficient)
+    {
+        // Arrange
+        int expectedMembersCount = 1;
+        (double, double) member1 = new(degree, coefficient);
+        (double, double) member2 = new(degree, subCoefficient);
+
+        Polynomial polynomial = new(member1);
+
+        // Act
+        Polynomial result = polynomial * member2;
+        var actualSubCoefficient = result.ToArray()[0].Coefficient;
+
+        // Assert
+        Assert.Equal(expectedMembersCount, result.Count);
+        Assert.Equal(actualSubCoefficient, expectedCoefficient);
+    }
+
+    #endregion MultiplyOperator
+
+    #endregion Mul
 }
