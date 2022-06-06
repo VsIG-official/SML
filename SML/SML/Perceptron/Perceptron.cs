@@ -82,7 +82,8 @@ public class Perceptron
 
         Matrix firstLayerWeightsMatrix = new(_firstLayerWeights);
 
-        Matrix xTestDotfirstLayerWeights = xTestMatrix.Multiply(firstLayerWeightsMatrix);
+        Matrix xTestDotfirstLayerWeights = xTestMatrix
+            .Multiply(firstLayerWeightsMatrix);
 
         double[,] firstLayer = xTestDotfirstLayerWeights.Array;
 
@@ -168,9 +169,12 @@ public class Perceptron
 
             Matrix secondLayerErrorMatrix = new(secondLayerError);
 
-            for (int x = 0; x < secondLayer.GetUpperBound(0) + 1; x++)
+            int firstLastElement = GetLastElementOfDimension(secondLayer, 0);
+            int secondLastElement = GetLastElementOfDimension(secondLayer, 1);
+
+            for (int x = 0; x < firstLastElement; x++)
             {
-                for (int y = 0; y < secondLayer.GetUpperBound(1) + 1; y++)
+                for (int y = 0; y < secondLastElement; y++)
                 {
                     secondLayer[x, y] = SigmoidDerivative(secondLayer[x, y]);
                 }
@@ -188,10 +192,13 @@ public class Perceptron
                 Multiply(secondLayerWeightsMatrixTransposed);
 
             double[,] firstLayerDerivative = firstLayer;
+            
+            firstLastElement = GetLastElementOfDimension(firstLayerDerivative, 0);
+            secondLastElement = GetLastElementOfDimension(firstLayerDerivative, 1);
 
-            for (int x = 0; x < firstLayerDerivative.GetUpperBound(0) + 1; x++)
+            for (int x = 0; x < firstLastElement; x++)
             {
-                for (int y = 0; y < firstLayerDerivative.GetUpperBound(1) + 1; y++)
+                for (int y = 0; y < secondLastElement; y++)
                 {
                     firstLayerDerivative[x, y] = SigmoidDerivative(firstLayer[x, y]);
                 }
@@ -208,11 +215,12 @@ public class Perceptron
             Matrix dotFirstLayerAndSecondLayerDelta = firstLayerMatrix.Transpose()
                 .Multiply(secondLayerDeltaMatrix);
 
-            for (int x = 0; x <
-                GetLastElementOfDimension(_secondLayerWeights, 0); x++)
+            firstLastElement = GetLastElementOfDimension(_secondLayerWeights, 0);
+            secondLastElement = GetLastElementOfDimension(_secondLayerWeights, 1);
+
+            for (int x = 0; x < firstLastElement; x++)
             {
-                for (int y = 0; y <
-                    GetLastElementOfDimension(_secondLayerWeights, 1); y++)
+                for (int y = 0; y < secondLastElement; y++)
                 {
                     _secondLayerWeights[x, y] += dotFirstLayerAndSecondLayerDelta[x, y];
                 }
@@ -225,9 +233,12 @@ public class Perceptron
             Matrix dotXTrainTransposedAndFirstLayerDeltaMatrix =
                 xTrainTransposedMatrix.Multiply(firstLayerDeltaMatrix);
 
-            for (int x = 0; x < _firstLayerWeights.GetUpperBound(0) + 1; x++)
+            firstLastElement = GetLastElementOfDimension(_firstLayerWeights, 0);
+            secondLastElement = GetLastElementOfDimension(_firstLayerWeights, 1);
+
+            for (int x = 0; x < firstLastElement; x++)
             {
-                for (int y = 0; y < _firstLayerWeights.GetUpperBound(1) + 1; y++)
+                for (int y = 0; y < secondLastElement; y++)
                 {
                     _firstLayerWeights[x, y] += dotXTrainTransposedAndFirstLayerDeltaMatrix[x, y];
                 }
