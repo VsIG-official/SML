@@ -85,8 +85,8 @@ public class Perceptron
         return secondLayer;
     }
 
-    private static double[,] ActivateSigmoid(double[,] testValues,
-        double[,] layerWeights)
+    private double[,] ActivateSigmoid(double[,] testValues,
+        double[,] layerWeights, bool adjustBias = false)
     {
         Matrix testValuesMatrix = new(testValues);
         Matrix layerWeightsMatrix = new(layerWeights);
@@ -101,6 +101,11 @@ public class Perceptron
             for (int j = 0; j < testValuesDotLayerWeights.Columns; j++)
             {
                 layer[i, j] = Sigmoid(layer[i, j]);
+                
+                if (adjustBias)
+                {
+                    layer[i, j] += _bias;
+                }
             }
         }
 
@@ -125,25 +130,8 @@ public class Perceptron
     {
         for (var i = 0; i < iterations; i++)
         {
-            Matrix xTrainMatrix = new(xTrain);
-
-            Matrix firstLayerWeightsMatrix = new(_firstLayerWeights);
-
-            Matrix dotXTrainAndFirstLayerWeigth = xTrainMatrix
-                .Multiply(firstLayerWeightsMatrix);
-
-            double[,] firstLayer = dotXTrainAndFirstLayerWeigth.Array;
-
-            // Adjusting with bias and activating training
-
-            for (int x = 0; x < dotXTrainAndFirstLayerWeigth.Rows; x++)
-            {
-                for (int y = 0; y < dotXTrainAndFirstLayerWeigth.Columns; y++)
-                {
-                    firstLayer[x, y] = Sigmoid(firstLayer[x, y]);
-                    firstLayer[x, y] += _bias;
-                }
-            }
+            double[,] firstLayer = ActivateSigmoid(xTrain,
+                _firstLayerWeights, true);
 
             Matrix firstLayerMatrix = new(firstLayer);
 
@@ -224,6 +212,8 @@ public class Perceptron
             }
 
             // First Weights
+            
+            Matrix xTrainMatrix = new(xTrain);
 
             Matrix xTrainTransposedMatrix = xTrainMatrix.Transpose();
 
