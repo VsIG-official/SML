@@ -78,41 +78,34 @@ public class Perceptron
 
     public double[,] Predict(double[,] xTest)
     {
-        Matrix xTestMatrix = new(xTest);
+        double[,] firstLayer = ActivateSigmoid(xTest, _firstLayerWeights);
 
-        Matrix firstLayerWeightsMatrix = new(_firstLayerWeights);
-
-        Matrix xTestDotfirstLayerWeights = xTestMatrix
-            .Multiply(firstLayerWeightsMatrix);
-
-        double[,] firstLayer = xTestDotfirstLayerWeights.Array;
-
-        for (int i = 0; i < xTestDotfirstLayerWeights.Rows; i++)
-        {
-            for (int j = 0; j < xTestDotfirstLayerWeights.Columns; j++)
-            {
-                firstLayer[i, j] = Sigmoid(firstLayer[i, j]);
-            }
-        }
-
-        Matrix firstLayerMatrix = new(firstLayer);
-
-        Matrix secondLayerWeightsMatrix = new(_secondLayerWeights);
-
-        Matrix firstLayerDotsecondLayerWeights = firstLayerMatrix
-            .Multiply(secondLayerWeightsMatrix);
-
-        double[,] secondLayer = firstLayerDotsecondLayerWeights.Array;
-
-        for (int i = 0; i < firstLayerDotsecondLayerWeights.Rows; i++)
-        {
-            for (int j = 0; j < firstLayerDotsecondLayerWeights.Columns; j++)
-            {
-                secondLayer[i, j] = Sigmoid(secondLayer[i, j]);
-            }
-        }
+        double[,] secondLayer = ActivateSigmoid(firstLayer, _secondLayerWeights);
 
         return secondLayer;
+    }
+
+    private double[,] ActivateSigmoid(double[,] testValues,
+        double[,] layerWeights)
+    {
+        Matrix xTestMatrix = new(testValues);
+
+        Matrix layerWeightsMatrix = new(layerWeights);
+
+        Matrix xTestDotLayerWeights = xTestMatrix
+            .Multiply(layerWeightsMatrix);
+
+        double[,] layer = xTestDotLayerWeights.Array;
+
+        for (int i = 0; i < xTestDotLayerWeights.Rows; i++)
+        {
+            for (int j = 0; j < xTestDotLayerWeights.Columns; j++)
+            {
+                layer[i, j] = Sigmoid(layer[i, j]);
+            }
+        }
+
+        return layer;
     }
 
     public void Train(double[,] xTrain, double[,] yTrain, int iterations)
