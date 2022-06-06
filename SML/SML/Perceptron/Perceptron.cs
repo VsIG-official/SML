@@ -7,7 +7,7 @@ public class Perceptron
     #region Fields
 
     public double[,] Input { get; set; }
-    public int RunTimes { get; set; } = 10000;
+    public int Iterations { get; set; } = 10000;
 
     private readonly double _bias = 0.03;
 
@@ -113,7 +113,7 @@ public class Perceptron
 
     public void Train(double[,] xTrain, double[,] yTrain, int iterations)
     {
-        for (var k = 0; k < iterations; k++)
+        for (var i = 0; i < iterations; i++)
         {
             Matrix xTrainMatrix = new(xTrain);
 
@@ -125,12 +125,12 @@ public class Perceptron
 
             // Adjusting with bias and activating training
 
-            for (int i = 0; i < dotXTrainAndFirstLayerWeigth.Rows; i++)
+            for (int x = 0; x < dotXTrainAndFirstLayerWeigth.Rows; x++)
             {
-                for (int j = 0; j < dotXTrainAndFirstLayerWeigth.Columns; j++)
+                for (int y = 0; y < dotXTrainAndFirstLayerWeigth.Columns; y++)
                 {
-                    firstLayer[i, j] += _bias;
-                    firstLayer[i, j] = Sigmoid(firstLayer[i, j]);
+                    firstLayer[x, y] += _bias;
+                    firstLayer[x, y] = Sigmoid(firstLayer[x, y]);
                 }
             }
 
@@ -143,11 +143,11 @@ public class Perceptron
 
             double[,] secondLayer = dotFirstLayerAndSecondLayerWeights.Array;
 
-            for (int i = 0; i < dotFirstLayerAndSecondLayerWeights.Rows; i++)
+            for (int x = 0; x < dotFirstLayerAndSecondLayerWeights.Rows; x++)
             {
-                for (int j = 0; j < dotFirstLayerAndSecondLayerWeights.Columns; j++)
+                for (int y = 0; y < dotFirstLayerAndSecondLayerWeights.Columns; y++)
                 {
-                    secondLayer[i, j] = Sigmoid(secondLayer[i, j]);
+                    secondLayer[x, y] = Sigmoid(secondLayer[x, y]);
                 }
             }
 
@@ -155,21 +155,21 @@ public class Perceptron
 
             double[,] secondLayerError = dotFirstLayerAndSecondLayerWeights.Array;
 
-            for (int i = 0; i < dotFirstLayerAndSecondLayerWeights.Rows; i++)
+            for (int x = 0; x < dotFirstLayerAndSecondLayerWeights.Rows; x++)
             {
-                for (int j = 0; j < dotFirstLayerAndSecondLayerWeights.Columns; j++)
+                for (int y = 0; y < dotFirstLayerAndSecondLayerWeights.Columns; y++)
                 {
-                    secondLayerError[i, j] = yTrain[i, j] - secondLayer[i, j];
+                    secondLayerError[x, y] = yTrain[x, y] - secondLayer[x, y];
                 }
             }
 
             Matrix secondLayerErrorMatrix = new(secondLayerError);
 
-            for (int i = 0; i < secondLayer.GetUpperBound(0) + 1; i++)
+            for (int x = 0; x < secondLayer.GetUpperBound(0) + 1; x++)
             {
-                for (int j = 0; j < secondLayer.GetUpperBound(1) + 1; j++)
+                for (int y = 0; y < secondLayer.GetUpperBound(1) + 1; y++)
                 {
-                    secondLayer[i, j] = SigmoidDerivative(secondLayer[i, j]);
+                    secondLayer[x, y] = SigmoidDerivative(secondLayer[x, y]);
                 }
             }
 
@@ -186,11 +186,11 @@ public class Perceptron
 
             double[,] firstLayerDerivative = firstLayer;
 
-            for (int i = 0; i < firstLayerDerivative.GetUpperBound(0) + 1; i++)
+            for (int x = 0; x < firstLayerDerivative.GetUpperBound(0) + 1; x++)
             {
-                for (int j = 0; j < firstLayerDerivative.GetUpperBound(1) + 1; j++)
+                for (int y = 0; y < firstLayerDerivative.GetUpperBound(1) + 1; y++)
                 {
-                    firstLayerDerivative[i, j] = SigmoidDerivative(firstLayer[i, j]);
+                    firstLayerDerivative[x, y] = SigmoidDerivative(firstLayer[x, y]);
                 }
             }
 
@@ -205,11 +205,11 @@ public class Perceptron
             Matrix dotFirstLayerAndSecondLayerDelta = firstLayerMatrix.Transpose()
                 .Multiply(secondLayerDeltaMatrix);
 
-            for (int i = 0; i < _secondLayerWeights.GetUpperBound(0) + 1; i++)
+            for (int x = 0; x < _secondLayerWeights.GetUpperBound(0) + 1; x++)
             {
-                for (int j = 0; j < _secondLayerWeights.GetUpperBound(1) + 1; j++)
+                for (int y = 0; y < _secondLayerWeights.GetUpperBound(1) + 1; y++)
                 {
-                    _secondLayerWeights[i, j] += dotFirstLayerAndSecondLayerDelta[i, j];
+                    _secondLayerWeights[x, y] += dotFirstLayerAndSecondLayerDelta[x, y];
                 }
             }
 
@@ -220,11 +220,11 @@ public class Perceptron
             Matrix dotXTrainTransposedAndFirstLayerDeltaMatrix =
                 xTrainTransposedMatrix.Multiply(firstLayerDeltaMatrix);
 
-            for (int i = 0; i < _firstLayerWeights.GetUpperBound(0) + 1; i++)
+            for (int x = 0; x < _firstLayerWeights.GetUpperBound(0) + 1; x++)
             {
-                for (int j = 0; j < _firstLayerWeights.GetUpperBound(1) + 1; j++)
+                for (int y = 0; y < _firstLayerWeights.GetUpperBound(1) + 1; y++)
                 {
-                    _firstLayerWeights[i, j] += dotXTrainTransposedAndFirstLayerDeltaMatrix[i, j];
+                    _firstLayerWeights[x, y] += dotXTrainTransposedAndFirstLayerDeltaMatrix[x, y];
                 }
             }
         }
