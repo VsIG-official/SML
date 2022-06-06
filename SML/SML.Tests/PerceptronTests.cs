@@ -40,26 +40,30 @@ public class PerceptronTests
     [Theory]
     [MemberData(nameof(XorData))]
     public void XorGate_ShouldReturnTrue
-        (double[][] separateInputValues, double [,] output)
+        (double[][] separatedInputValues, double [,] output)
     {
-        double[,] input = separateInputValues.To2D();
+        // Arrange
+        int iterations = 10000;
+        double[,] input = separatedInputValues.To2D();
         Perceptron perceptron = new(input);
 
         perceptron.Start();
-        perceptron.Train(input, output, 10000);
+        perceptron.Train(input, output, iterations);
 
         double[,] xTest = new double[1, 2];
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < input.GetLowerBound(0); i++)
         {
-            for (int x = 0; x < 2; x++)
+            for (int j = 0; j < input.GetLowerBound(1); j++)
             {
-                xTest[0, x] = separateInputValues[i][x];
+                xTest[0, j] = separatedInputValues[i][j];
             }
 
+            // Act
             double expected = output[i, 0];
             double actual = Math.Round(perceptron.Predict(xTest)[0, 0]);
 
+            // Assert
             Assert.Equal(expected, actual);
         }
     }
