@@ -39,28 +39,37 @@ public class Perceptron
         // During the training phase, the network is trained by adjusting
         // these weights to be able to predict the correct class for the input.
 
-        int firstLayerLength = Input.GetUpperBound(0) + 1;
-        int secondLayerLength = Input.GetUpperBound(1) + 1;
+        int firstLayerLen = Input.GetUpperBound(0) + 1;
+        int secondLayerLen = Input.GetUpperBound(1) + 1;
 
-        _firstLayerWeights = new double[secondLayerLength, firstLayerLength];
+        _firstLayerWeights = new double[secondLayerLen, firstLayerLen];
 
-        for (int i = 0; i < secondLayerLength; i++)
-        {
-            for (int j = 0; j < firstLayerLength; j++)
-            {
-                _firstLayerWeights[i, j] = _random.NextDouble();
-            }
-        }
+        _firstLayerWeights = AssignWeights
+            (_firstLayerWeights, secondLayerLen, firstLayerLen);
 
-        _secondLayerWeights = new double[firstLayerLength, 1];
+        _secondLayerWeights = new double[firstLayerLen, 1];
 
+        _secondLayerWeights = AssignWeights
+            (_secondLayerWeights, firstLayerLen, 1);
+    }
+
+    private double[,] AssignWeights(double[,] weights,
+        int firstLayerLength, int secondLayerLength)
+    {
         for (int i = 0; i < firstLayerLength; i++)
         {
-            for (int j = 0; j < 1; j++)
+            for (int j = 0; j < secondLayerLength; j++)
             {
-                _secondLayerWeights[i, j] = _random.NextDouble();
+                weights[i, j] = GetRandomDouble();
             }
         }
+
+        return weights;
+    }
+
+    private double GetRandomDouble()
+    {
+        return _random.NextDouble();
     }
 
     private static double Sigmoid(double x)
@@ -113,7 +122,7 @@ public class Perceptron
 
     public void Train(double[,] xTrain, double[,] yTrain, int iterations)
     {
-        for (var i = 0; i < iterations; i++)
+        for (var k = 0; k < iterations; k++)
         {
             Matrix xTrainMatrix = new(xTrain);
 
