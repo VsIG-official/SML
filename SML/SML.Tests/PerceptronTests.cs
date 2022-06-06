@@ -29,7 +29,7 @@ public class PerceptronTests
                 { 1 },
                 { 1 },
                 { 0 }
-            }
+            },
         },
     };
 
@@ -42,45 +42,30 @@ public class PerceptronTests
     public void XorGate_ShouldReturnTrue
         (double[,] input, double [,] output)
     {
-        var smth = input.GetRow(0).ToArray();
-        double[,] xTest1 = new double[1, 2];
-
-        Buffer.BlockCopy(
-    smth, // src
-    0, // srcOffset
-    xTest1, // dst
-    1 * xTest1.GetLength(1) * sizeof(int), // dstOffset
-    smth.Length * sizeof(int));
-
-        var xTest5 = input.GetColumn(0);
-        double[,] xTest2 = { { 0, 1 } };
-        double[,] xTest3 = { { 1, 0 } };
-        double[,] xTest4 = { { 1, 1 } };
-
         Perceptron perceptron = new(input);
 
         perceptron.Start();
         perceptron.Train(input, output, 10000);
 
-        double expected = output[0, 0];
-        double actual = Math.Round(perceptron.Predict(xTest1)[0, 0]);
+        for (int i = 0; i < 4; i++)
+        {
+            double[] row = input.GetRow(i).ToArray();
+            double[,] xTest = new double[1, 2];
+            xTest[0, 0] = row[0];
+            xTest[0, 1] = row[1];
 
-        Assert.Equal(expected, actual);
+            //Buffer.BlockCopy(
+            //    row, // src
+            //    0, // srcOffset
+            //    xTest, // dst
+            //    1 * xTest.GetLength(1) * sizeof(double), // dstOffset
+            //    row.Length * sizeof(double));
 
-        expected = output[1, 0];
-        actual = Math.Round(perceptron.Predict(xTest2)[0, 0]);
+            double expected = output[i, 0];
+            double actual = Math.Round(perceptron.Predict(xTest)[0, 0]);
 
-        Assert.Equal(expected, actual);
-
-        expected = output[2, 0];
-        actual = Math.Round(perceptron.Predict(xTest3)[0, 0]);
-
-        Assert.Equal(expected, actual);
-
-        expected = output[3, 0];
-        actual = Math.Round(perceptron.Predict(xTest4)[0, 0]);
-
-        Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual);
+        }
     }
 
     #endregion XOR
