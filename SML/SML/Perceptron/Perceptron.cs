@@ -43,17 +43,13 @@ public class Perceptron
         int secondLayerLen = Input.GetUpperBound(1) + 1;
 
         _firstLayerWeights = new double[secondLayerLen, firstLayerLen];
-
-        _firstLayerWeights = AssignWeights
-            (_firstLayerWeights, secondLayerLen, firstLayerLen);
+        AssignWeights(_firstLayerWeights, secondLayerLen, firstLayerLen);
 
         _secondLayerWeights = new double[firstLayerLen, 1];
-
-        _secondLayerWeights = AssignWeights
-            (_secondLayerWeights, firstLayerLen, 1);
+        AssignWeights(_secondLayerWeights, firstLayerLen, 1);
     }
 
-    private double[,] AssignWeights(double[,] weights,
+    private void AssignWeights(double[,] weights,
         int firstLayerLength, int secondLayerLength)
     {
         for (int i = 0; i < firstLayerLength; i++)
@@ -63,8 +59,6 @@ public class Perceptron
                 weights[i, j] = GetRandomDouble();
             }
         }
-
-        return weights;
     }
 
     private double GetRandomDouble()
@@ -214,9 +208,11 @@ public class Perceptron
             Matrix dotFirstLayerAndSecondLayerDelta = firstLayerMatrix.Transpose()
                 .Multiply(secondLayerDeltaMatrix);
 
-            for (int x = 0; x < _secondLayerWeights.GetUpperBound(0) + 1; x++)
+            for (int x = 0; x <
+                GetLastElementOfDimension(_secondLayerWeights, 0); x++)
             {
-                for (int y = 0; y < _secondLayerWeights.GetUpperBound(1) + 1; y++)
+                for (int y = 0; y <
+                    GetLastElementOfDimension(_secondLayerWeights, 1); y++)
                 {
                     _secondLayerWeights[x, y] += dotFirstLayerAndSecondLayerDelta[x, y];
                 }
@@ -237,6 +233,11 @@ public class Perceptron
                 }
             }
         }
+    }
+
+    private static int GetLastElementOfDimension(double[,] array, int dimension)
+    {
+        return array.GetUpperBound(dimension) + 1;
     }
 
     #endregion Methods
