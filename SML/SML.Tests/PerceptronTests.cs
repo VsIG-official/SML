@@ -16,12 +16,12 @@ public class PerceptronTests
     {
         new object[]
         {
-            new double[,]
+            new double[][]
             {
-                { 0, 0 },
-                { 0, 1 },
-                { 1, 0 },
-                { 1, 1 }
+                new double[] { 0, 0 },
+                new double[] { 0, 1 },
+                new double[] { 1, 0 },
+                new double[] { 1, 1 }
             },
             new double[,]
             {
@@ -40,26 +40,22 @@ public class PerceptronTests
     [Theory]
     [MemberData(nameof(XorData))]
     public void XorGate_ShouldReturnTrue
-        (double[,] input, double [,] output)
+        (double[][] separateInputValues, double [,] output)
     {
+        double[,] input = separateInputValues.To2D();
         Perceptron perceptron = new(input);
 
         perceptron.Start();
         perceptron.Train(input, output, 10000);
 
+        double[,] xTest = new double[1, 2];
+
         for (int i = 0; i < 4; i++)
         {
-            double[] row = input.GetRow(i).ToArray();
-            double[,] xTest = new double[1, 2];
-            xTest[0, 0] = row[0];
-            xTest[0, 1] = row[1];
-
-            //Buffer.BlockCopy(
-            //    row, // src
-            //    0, // srcOffset
-            //    xTest, // dst
-            //    1 * xTest.GetLength(1) * sizeof(double), // dstOffset
-            //    row.Length * sizeof(double));
+            for (int x = 0; x < 2; x++)
+            {
+                xTest[0, x] = separateInputValues[i][x];
+            }
 
             double expected = output[i, 0];
             double actual = Math.Round(perceptron.Predict(xTest)[0, 0]);
