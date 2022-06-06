@@ -85,21 +85,20 @@ public class Perceptron
         return secondLayer;
     }
 
-    private double[,] ActivateSigmoid(double[,] testValues,
+    private static double[,] ActivateSigmoid(double[,] testValues,
         double[,] layerWeights)
     {
-        Matrix xTestMatrix = new(testValues);
-
+        Matrix testValuesMatrix = new(testValues);
         Matrix layerWeightsMatrix = new(layerWeights);
 
-        Matrix xTestDotLayerWeights = xTestMatrix
+        Matrix testValuesDotLayerWeights = testValuesMatrix
             .Multiply(layerWeightsMatrix);
 
-        double[,] layer = xTestDotLayerWeights.Array;
+        double[,] layer = testValuesDotLayerWeights.Array;
 
-        for (int i = 0; i < xTestDotLayerWeights.Rows; i++)
+        for (int i = 0; i < testValuesDotLayerWeights.Rows; i++)
         {
-            for (int j = 0; j < xTestDotLayerWeights.Columns; j++)
+            for (int j = 0; j < testValuesDotLayerWeights.Columns; j++)
             {
                 layer[i, j] = Sigmoid(layer[i, j]);
             }
@@ -108,15 +107,30 @@ public class Perceptron
         return layer;
     }
 
+    private static void ActivateSigmoidDerivative(int firstElement,
+        int secondElement, double[,] layer, double[,] layerInSigmoid = null)
+    {
+        layerInSigmoid ??= layer;
+
+        for (int x = 0; x < firstElement; x++)
+        {
+            for (int y = 0; y < secondElement; y++)
+            {
+                layer[x, y] = SigmoidDerivative(layerInSigmoid[x, y]);
+            }
+        }
+    }
+
     public void Train(double[,] xTrain, double[,] yTrain, int iterations)
     {
-        for (var k = 0; k < iterations; k++)
+        for (var i = 0; i < iterations; i++)
         {
             Matrix xTrainMatrix = new(xTrain);
 
             Matrix firstLayerWeightsMatrix = new(_firstLayerWeights);
 
-            Matrix dotXTrainAndFirstLayerWeigth = xTrainMatrix.Multiply(firstLayerWeightsMatrix);
+            Matrix dotXTrainAndFirstLayerWeigth = xTrainMatrix
+                .Multiply(firstLayerWeightsMatrix);
 
             double[,] firstLayer = dotXTrainAndFirstLayerWeigth.Array;
 
@@ -126,8 +140,8 @@ public class Perceptron
             {
                 for (int y = 0; y < dotXTrainAndFirstLayerWeigth.Columns; y++)
                 {
-                    firstLayer[x, y] += _bias;
                     firstLayer[x, y] = Sigmoid(firstLayer[x, y]);
+                    firstLayer[x, y] += _bias;
                 }
             }
 
@@ -165,13 +179,8 @@ public class Perceptron
             int firstLastElement = GetLastElementOfDimension(secondLayer, 0);
             int secondLastElement = GetLastElementOfDimension(secondLayer, 1);
 
-            for (int x = 0; x < firstLastElement; x++)
-            {
-                for (int y = 0; y < secondLastElement; y++)
-                {
-                    secondLayer[x, y] = SigmoidDerivative(secondLayer[x, y]);
-                }
-            }
+            ActivateSigmoidDerivative(firstLastElement,
+                secondLastElement, secondLayer);
 
             Matrix secondLayerMatrix = new(secondLayer);
 
@@ -189,13 +198,8 @@ public class Perceptron
             firstLastElement = GetLastElementOfDimension(firstLayerDerivative, 0);
             secondLastElement = GetLastElementOfDimension(firstLayerDerivative, 1);
 
-            for (int x = 0; x < firstLastElement; x++)
-            {
-                for (int y = 0; y < secondLastElement; y++)
-                {
-                    firstLayerDerivative[x, y] = SigmoidDerivative(firstLayer[x, y]);
-                }
-            }
+            ActivateSigmoidDerivative(firstLastElement,
+                secondLastElement, firstLayerDerivative, firstLayer);
 
             Matrix firstLayerDerivativeMatrix = new(firstLayerDerivative);
 
@@ -233,7 +237,8 @@ public class Perceptron
             {
                 for (int y = 0; y < secondLastElement; y++)
                 {
-                    _firstLayerWeights[x, y] += dotXTrainTransposedAndFirstLayerDeltaMatrix[x, y];
+                    _firstLayerWeights[x, y] +=
+                        dotXTrainTransposedAndFirstLayerDeltaMatrix[x, y];
                 }
             }
         }
