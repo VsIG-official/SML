@@ -20,6 +20,9 @@ public class ArrayExtensionTests
                 { 1 },
                 { 2 },
                 { 3 },
+                { -1 },
+                { int.MinValue },
+                { int.MaxValue },
             },
         },
     };
