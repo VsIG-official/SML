@@ -9,7 +9,7 @@ public class ArrayExtensionTests
 {
     #region PremadeData
 
-    public static IEnumerable<object[]> OneElementData =>
+    public static IEnumerable<object[]> OneElement2DData =>
     new List<object[]>
     {
         new object[]
@@ -24,7 +24,7 @@ public class ArrayExtensionTests
         },
     };
 
-    public static IEnumerable<object[]> TwoElementsData =>
+    public static IEnumerable<object[]> TwoElements2DData =>
     new List<object[]>
     {
         new object[]
@@ -42,15 +42,29 @@ public class ArrayExtensionTests
             },
         },
     };
-                    
-    
+
+    public static IEnumerable<object[]> TwoElementsJaggedData =>
+    new List<object[]>
+    {
+        new object[]
+        {
+            new double[][]
+            {
+                new double[] { 0, 0 },
+                new double[] { 0, 1 },
+                new double[] { 1, 0 },
+                new double[] { 1, 1 },
+            },
+        },
+    };
+
     #endregion PremadeData
 
     #region GetRow
 
     [Theory]
-    [MemberData(nameof(OneElementData))]
-    [MemberData(nameof(TwoElementsData))]
+    [MemberData(nameof(OneElement2DData))]
+    [MemberData(nameof(TwoElementsJaggedData))]
     public void GetRow_CorrectValues(double[,] array)
     {
         // Arrange
@@ -80,8 +94,8 @@ public class ArrayExtensionTests
     #region GetColumn
 
     [Theory]
-    [MemberData(nameof(OneElementData))]
-    [MemberData(nameof(TwoElementsData))]
+    [MemberData(nameof(OneElement2DData))]
+    [MemberData(nameof(TwoElements2DData))]
     public void GetColumn_CorrectValues(double[,] array)
     {
         // Arrange
@@ -107,4 +121,15 @@ public class ArrayExtensionTests
     }
 
     #endregion GetColumn
+
+    #region To2D
+
+    [Theory]
+    [MemberData(nameof(TwoElementsJaggedData))]
+    public void To2D_CorrectValues(double[][] array)
+    {
+
+    }
+
+    #endregion To2D
 }

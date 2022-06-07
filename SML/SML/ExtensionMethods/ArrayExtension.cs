@@ -1,53 +1,57 @@
-﻿namespace SML.ExtensionMethods
+﻿namespace SML.ExtensionMethods;
+
+public static class ArrayExtension
 {
-    public static class ArrayExtension
+    #region Fields
+
+    private static string To2DExceptionMessage =
+        "The given jagged array is not rectangular";
+
+    #endregion Fields
+
+    #region Methods
+
+    public static IEnumerable<T> GetColumn<T>(this T[,] array, int column)
     {
-        public static IEnumerable<T> GetColumn<T>(this T[,] array, int column)
+        for (var i = 0; i < array.GetLength(0); i++)
         {
-            for (var i = 0; i < array.GetLength(0); i++)
-            {
-                yield return array[i, column];
-            }
-        }
-
-        public static IEnumerable<T> GetRow<T>(this T[,] array, int row)
-        {
-            for (var i = 0; i < array.GetLength(1); i++)
-            {
-                yield return array[row, i];
-            }
-        }
-
-        private static IEnumerable<T> IterateThroughArray<T>(T[,] array, int arrayLength, int index)
-        {
-            for (var i = 0; i < arrayLength; i++)
-            {
-                yield return array[i, index];
-            }
-        }
-
-        public static T[,] To2D<T>(this T[][] source)
-        {
-            try
-            {
-                int firstDim = source.Length;
-                int secondDim = source.GroupBy(row => row.Length).Single().Key; // throws InvalidOperationException if source is not rectangular
-
-                var result = new T[firstDim, secondDim];
-                for (var i = 0; i < firstDim; ++i)
-                {
-                    for (var j = 0; j < secondDim; ++j)
-                    {
-                        result[i, j] = source[i][j];
-                    }
-                }
-
-                return result;
-            }
-            catch (InvalidOperationException)
-            {
-                throw new InvalidOperationException("The given jagged array is not rectangular.");
-            }
+            yield return array[i, column];
         }
     }
+
+    public static IEnumerable<T> GetRow<T>(this T[,] array, int row)
+    {
+        for (var i = 0; i < array.GetLength(1); i++)
+        {
+            yield return array[row, i];
+        }
+    }
+
+    public static T[,] To2D<T>(this T[][] array)
+    {
+        try
+        {
+            int rows = array.Length;
+            int columns = array.GroupBy(row => row.Length).Single().Key;
+
+            var result = new T[rows, columns];
+            
+            for (var i = 0; i < rows; ++i)
+            {
+                for (var j = 0; j < columns; ++j)
+                {
+                    result[i, j] = array[i][j];
+                }
+            }
+
+            return result;
+        }
+        catch (InvalidOperationException)
+        {
+            throw new
+                InvalidOperationException(To2DExceptionMessage);
+        }
+    }
+
+    #endregion Methods
 }
