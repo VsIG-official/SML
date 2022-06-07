@@ -43,6 +43,30 @@ public class ArrayExtensionTests
         },
     };
 
+    public static IEnumerable<object[]> OneElementJaggedData =>
+    new List<object[]>
+    {
+        new object[]
+        {
+            new double[][]
+            {
+                new double[] { 0 },
+                new double[] { 1 },
+                new double[] { -1 },
+                new double[] { int.MinValue },
+                new double[] { int.MaxValue },
+            },
+            new double[,]
+            {
+                { 0 },
+                { 1 },
+                { -1 },
+                { int.MinValue },
+                { int.MaxValue },
+            },
+        },
+};
+
     public static IEnumerable<object[]> TwoElementsJaggedData =>
     new List<object[]>
     {
@@ -54,6 +78,23 @@ public class ArrayExtensionTests
                 new double[] { 0, 1 },
                 new double[] { 1, 0 },
                 new double[] { 1, 1 },
+                new double[] { -1, 1 },
+                new double[] { 1, -1 },
+                new double[] { -1, -1 },
+                new double[] { int.MinValue, int.MaxValue },
+                new double[] { int.MaxValue, int.MinValue },
+            },
+            new double[,]
+            {
+                { 0, 0 },
+                { 0, 1 },
+                { 1, 0 },
+                { 1, 1 },
+                { -1, 1 },
+                { 1, -1 },
+                { -1, -1 },
+                { int.MinValue, int.MaxValue },
+                { int.MaxValue, int.MinValue },
             },
         },
     };
@@ -64,7 +105,7 @@ public class ArrayExtensionTests
 
     [Theory]
     [MemberData(nameof(OneElement2DData))]
-    [MemberData(nameof(TwoElementsJaggedData))]
+    [MemberData(nameof(TwoElements2DData))]
     public void GetRow_CorrectValues(double[,] array)
     {
         // Arrange
@@ -126,9 +167,14 @@ public class ArrayExtensionTests
 
     [Theory]
     [MemberData(nameof(TwoElementsJaggedData))]
-    public void To2D_CorrectValues(double[][] array)
+    public void To2D_CorrectValues(double[][] array, double[,] expectedArray)
     {
+        // Act
+        double[,] actual = array.To2D();
 
+        // Assert
+        Assert.Equal(expectedArray.Length, actual.Length);
+        Assert.Equal(expectedArray, actual);
     }
 
     #endregion To2D
