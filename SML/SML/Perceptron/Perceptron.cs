@@ -39,8 +39,7 @@ public class Perceptron
         // During the training phase, the network is trained by adjusting
         // these weights to be able to predict the correct class for the input.
 
-        int firstLayerLen = Input.GetUpperBound(0) + 1;
-        int secondLayerLen = Input.GetUpperBound(1) + 1;
+        (int firstLayerLen, int secondLayerLen) = GetLastElements(Input);
 
         _firstLayerWeights = new double[secondLayerLen, firstLayerLen];
         AssignWeights(_firstLayerWeights, secondLayerLen, firstLayerLen);
@@ -79,7 +78,6 @@ public class Perceptron
     public double[,] Predict(double[,] xTest)
     {
         double[,] firstLayer = ActivateSigmoid(xTest, _firstLayerWeights);
-
         double[,] secondLayer = ActivateSigmoid(firstLayer, _secondLayerWeights);
 
         return secondLayer;
