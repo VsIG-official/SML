@@ -113,15 +113,15 @@ public class Perceptron
     }
 
     private static void ActivateSigmoidDerivative(int firstElement,
-        int secondElement, double[,] layer, double[,] layerInSigmoid = null)
+        int secondElement, double[,] layer, double[,] layerForSigmoid = null)
     {
-        layerInSigmoid ??= layer;
+        layerForSigmoid ??= layer;
 
         for (int x = 0; x < firstElement; x++)
         {
             for (int y = 0; y < secondElement; y++)
             {
-                layer[x, y] = SigmoidDerivative(layerInSigmoid[x, y]);
+                layer[x, y] = SigmoidDerivative(layerForSigmoid[x, y]);
             }
         }
     }
@@ -164,8 +164,8 @@ public class Perceptron
 
             Matrix secondLayerErrorMatrix = new(secondLayerError);
 
-            int firstLastElement = GetLastElementOfDimension(secondLayer, 0);
-            int secondLastElement = GetLastElementOfDimension(secondLayer, 1);
+            (int firstLastElement, int secondLastElement) =
+                GetLastElements(secondLayer);
 
             ActivateSigmoidDerivative(firstLastElement,
                 secondLastElement, secondLayer);
@@ -182,9 +182,9 @@ public class Perceptron
                 Multiply(secondLayerWeightsMatrixTransposed);
 
             double[,] firstLayerDerivative = firstLayer;
-            
-            firstLastElement = GetLastElementOfDimension(firstLayerDerivative, 0);
-            secondLastElement = GetLastElementOfDimension(firstLayerDerivative, 1);
+
+            (firstLastElement, secondLastElement) =
+                GetLastElements(firstLayerDerivative);
 
             ActivateSigmoidDerivative(firstLastElement,
                 secondLastElement, firstLayerDerivative, firstLayer);
@@ -200,8 +200,8 @@ public class Perceptron
             Matrix dotFirstLayerAndSecondLayerDelta = firstLayerMatrix.Transpose()
                 .Multiply(secondLayerDeltaMatrix);
 
-            firstLastElement = GetLastElementOfDimension(_secondLayerWeights, 0);
-            secondLastElement = GetLastElementOfDimension(_secondLayerWeights, 1);
+            (firstLastElement, secondLastElement) =
+                GetLastElements(_secondLayerWeights);
 
             for (int x = 0; x < firstLastElement; x++)
             {
@@ -232,6 +232,14 @@ public class Perceptron
                 }
             }
         }
+    }
+
+    private static (int, int) GetLastElements(double[,] layer)
+    {
+        int firstElement = GetLastElementOfDimension(layer, 0);
+        int secondElement = GetLastElementOfDimension(layer, 1);
+
+        return (firstElement, secondElement);
     }
 
     private static int GetLastElementOfDimension(double[,] array, int dimension)
