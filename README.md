@@ -1,7 +1,7 @@
 # SML
 
 <p align="center">
-    <img src="https://github.com/VsIG-official/Images/blob/master/LogoFinalWhite.png" data-canonical-src="https://github.com/VsIG-official/Images/blob/master/LogoFinalWhite.png" width="200" height="100" />
+    <img src="docs/Logo.png" data-canonical-src="docs/Logo.png" width="600" height="300" />
 </p>
 
 ## Table of Contents
@@ -19,6 +19,7 @@ SML - Small Math Library for .NET. I decided to create this library, because som
 
 [![Theme](https://img.shields.io/badge/Theme-Math-blueviolet)](https://img.shields.io/badge/Theme-Math-blueviolet)
 [![Language](https://img.shields.io/badge/Language-CSharp-blueviolet)](https://img.shields.io/badge/Language-CSharp-blueviolet)
+![Code Coverage](https://img.shields.io/badge/Code_coverage-95,23%25-brightgreen)
 
 ---
 
