@@ -113,7 +113,7 @@ public class ArrayExtensionTests
     {
         // Arrange
         int columns = array.GetLength(0);
-        
+
         for (var i = 0; i < columns; i++)
         {
             var expectedRowLength = array.GetLength(1);

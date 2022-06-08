@@ -104,7 +104,7 @@ public class PerceptronTests
     [MemberData(nameof(OrGateData))]
     [MemberData(nameof(NotGateData))]
     public void LogicGate_True
-        (double[][] separatedInputValues, double [,] output)
+        (double[][] separatedInputValues, double[,] output)
     {
         // Arrange
         int iterations = 10000;

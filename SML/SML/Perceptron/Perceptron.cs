@@ -94,7 +94,7 @@ public class Perceptron
             .Multiply(weights);
 
         double[,] layer = trainDotWeights.Array;
-        
+
         for (var i = 0; i < trainDotWeights.Rows; i++)
         {
             for (var j = 0; j < trainDotWeights.Columns; j++)
@@ -116,7 +116,7 @@ public class Perceptron
     {
         (int firstDimensionLength,
             int secondDimensionLength) = GetAllDimensionsLength(layer);
-            
+
         sigmoidLayer ??= layer;
 
         for (int x = 0; x < firstDimensionLength; x++)
@@ -158,14 +158,14 @@ public class Perceptron
                 firstLayerDeltas, _firstLayerWeights);
         }
     }
-    
+
     private Matrix GetFirstLayerDeltas(double[,] layer, Matrix layerDelta)
     {
         Matrix layerWeights = new(_secondLayerWeights);
 
         Matrix layerWeightsTransposed =
             layerWeights.Transpose();
-        
+
         double[,] layerDerivative = layer;
         ActivateSigmoidDerivative(layerDerivative, layer);
 
@@ -196,7 +196,7 @@ public class Perceptron
         Matrix dotProduct, double[,] layer)
     {
         double[,] error = dotProduct.Array;
-        
+
         for (var i = 0; i < dotProduct.Rows; i++)
         {
             for (var j = 0; j < dotProduct.Columns; j++)

@@ -1,5 +1,5 @@
-using SML.Matrices.Exceptions;
 using System.Text;
+using SML.Matrices.Exceptions;
 
 namespace SML.Matrices;
 

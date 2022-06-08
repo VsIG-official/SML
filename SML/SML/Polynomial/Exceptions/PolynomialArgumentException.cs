@@ -6,5 +6,6 @@ public class PolynomialArgumentException : Exception
     public PolynomialArgumentException() { }
 
     public PolynomialArgumentException(string message) :
-        base (message) { }
+        base(message)
+    { }
 }

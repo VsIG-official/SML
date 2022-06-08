@@ -1482,8 +1482,8 @@ public class CircularLinkedListTests
         circularLinkedList.AddFirst(secondElement);
         circularLinkedList.AddFirst(firstElement);
 
-        var firstPart = $"{ firstElement + Environment.NewLine + Environment.NewLine }";
-        var secondPart = $"{ secondElement + Environment.NewLine + Environment.NewLine }";
+        var firstPart = $"{firstElement + Environment.NewLine + Environment.NewLine}";
+        var secondPart = $"{secondElement + Environment.NewLine + Environment.NewLine}";
 
         var expected = firstPart + secondPart;
 
@@ -1505,8 +1505,8 @@ public class CircularLinkedListTests
         circularLinkedList.AddFirst(secondElement);
         circularLinkedList.AddFirst(firstElement);
 
-        var firstPart = $"{ firstElement + Environment.NewLine + Environment.NewLine }";
-        var secondPart = $"{ secondElement + Environment.NewLine + Environment.NewLine }";
+        var firstPart = $"{firstElement + Environment.NewLine + Environment.NewLine}";
+        var secondPart = $"{secondElement + Environment.NewLine + Environment.NewLine}";
 
         var expected = firstPart + secondPart;
 

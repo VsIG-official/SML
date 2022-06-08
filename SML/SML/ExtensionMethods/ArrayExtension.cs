@@ -35,7 +35,7 @@ public static class ArrayExtension
             int columns = array.GroupBy(row => row.Length).Single().Key;
 
             var result = new T[rows, columns];
-            
+
             for (var i = 0; i < rows; ++i)
             {
                 for (var j = 0; j < columns; ++j)

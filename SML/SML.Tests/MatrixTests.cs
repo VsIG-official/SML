@@ -648,7 +648,7 @@ public class MatrixTests
         // Assert
         Assert.Throws<ArgumentNullException>(() => new Matrix(nullArray));
     }
-    
+
     [Theory]
     [MemberData(nameof(LessThenZeroConstructorValuesData))]
     public void ConstructorMatrix_LessThanZeroRowsAndOrColumns_ReturnsException
@@ -975,10 +975,10 @@ public class MatrixTests
     [Theory]
     [MemberData(nameof(SameDimensionsHadamardMatrixData))]
     public void Hadamard2x2_ReturnsTrue(double[,] array, double[,] expectedArray)
-	{
+    {
         // Arrange
         Matrix matrix = new(array);
-        Matrix expected = new (expectedArray);
+        Matrix expected = new(expectedArray);
 
         // Act
         Matrix actual = matrix.Hadamard(matrix);
@@ -991,7 +991,7 @@ public class MatrixTests
     #endregion Hadamard
 
     #region Transpose
-    
+
     [Theory]
     [MemberData(nameof(SameDimensionsTransposeMatrixData))]
     public void Transpose_ReturnsTrue(double[,] array, double[,] expectedArray)

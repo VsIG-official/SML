@@ -106,7 +106,7 @@ public class PolynomialTests
     {
         // Arrange
         int expectedMembersCount = 5;
-        
+
         List<PolynomialMember> members = new();
         PolynomialMember member = new(expected, expected);
 
@@ -196,7 +196,7 @@ public class PolynomialTests
         // Assert
         Assert.Equal(expectedMembersCount, polynomial.Count);
     }
-    
+
     [Fact]
     public void AddMember_NullPolynomialMember_ThrowsPolynomialArgumentNullException()
     {
@@ -227,7 +227,7 @@ public class PolynomialTests
         // Arrange
         int degree = 1;
         int coefficient = 0;
-        
+
         Polynomial polynomial = new();
         PolynomialMember member = new(degree, coefficient);
 
@@ -261,7 +261,7 @@ public class PolynomialTests
         // Arrange
         int expectedMembersCount = 0;
         bool expectedDoesMemberExisted = true;
-        
+
         Polynomial polynomial = new();
         PolynomialMember member = new(degree, coefficient);
         polynomial.AddMember(member);
@@ -533,7 +533,7 @@ public class PolynomialTests
         // Arrange
         int expectedMembersCount = 1;
         PolynomialMember member = new(degree, coefficient);
-        
+
         Polynomial polynomial1 = new(member);
         Polynomial polynomial2 = new(member);
 
@@ -554,7 +554,7 @@ public class PolynomialTests
         // Arrange
         PolynomialMember member = new(degree, coefficient);
 
-        Polynomial polynomial1 =  null;
+        Polynomial polynomial1 = null;
         Polynomial polynomial2 = new(member);
 
         // Assert
