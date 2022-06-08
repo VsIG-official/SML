@@ -22,7 +22,7 @@ public class Matrix : ICloneable
     private const string RowsLessThanZeroExceptionMessage =
         "Rows should be more than 0";
     private const string ColumnsLessThanZeroExceptionMessage =
-       "Columns should be more than 0";
+        "Columns should be more than 0";
 
     #endregion Consts
 

@@ -1,7 +1,7 @@
 # SML
 
 <p align="center">
-  <img src="https://github.com/VsIG-official/Images/blob/master/LogoFinalWhite.png" data-canonical-src="https://github.com/VsIG-official/Images/blob/master/LogoFinalWhite.png" width="200" height="100" />
+    <img src="https://github.com/VsIG-official/Images/blob/master/LogoFinalWhite.png" data-canonical-src="https://github.com/VsIG-official/Images/blob/master/LogoFinalWhite.png" width="200" height="100" />
 </p>
 
 ## Table of Contents
@@ -24,15 +24,15 @@ SML - Small Math Library for .NET. I decided to create this library, because som
 
 ### Features
 - [Circular Linked List](SML/SML/CircularLinkedList)
-  - [Tests](SML/SML.Tests/CircularLinkedListTests)
+    - [Tests](SML/SML.Tests/CircularLinkedListTests)
 - [Extension Methods](SML/SML/ExtensionMethods/ArrayExtension.cs)
-  - [Tests](SML/SML.Tests/ExtensionMethodsTests/ArrayExtensionTests.cs)
+    - [Tests](SML/SML.Tests/ExtensionMethodsTests/ArrayExtensionTests.cs)
 - [Matrix](SML/SML/Matrix)
-  - [Tests](SML/SML.Tests/MatrixTests.cs)
+    - [Tests](SML/SML.Tests/MatrixTests.cs)
 - [Perceptron](SML/SML/Perceptron/Perceptron.cs)
-  - [Tests](SML/SML.Tests/PerceptronTests.cs)
+    - [Tests](SML/SML.Tests/PerceptronTests.cs)
 - [Polynomials](SML/SML/Polynomial)
-  - [Tests](SML/SML.Tests/PolynomialTests)
+    - [Tests](SML/SML.Tests/PolynomialTests)
 
 Code Coverage:
 ![Code Coverage](docs/CodeCoverage.jpg "Code Coverage")
