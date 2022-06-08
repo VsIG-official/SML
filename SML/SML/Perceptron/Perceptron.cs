@@ -75,28 +75,28 @@ public class Perceptron
         return Sigmoid(x) * (1 - Sigmoid(x));
     }
 
-    public double[,] Predict(double[,] xTest)
+    public double[,] Predict(double[,] test)
     {
-        (double[,] firstLayer, _) = ActivateSigmoid(xTest, _firstLayerWeights);
+        (double[,] firstLayer, _) = ActivateSigmoid(test, _firstLayerWeights);
         (double[,] secondLayer, _) = ActivateSigmoid(firstLayer, _secondLayerWeights);
 
         return secondLayer;
     }
 
-    private (double[,], Matrix) ActivateSigmoid(double[,] testValues,
+    private (double[,], Matrix) ActivateSigmoid(double[,] train,
         double[,] layerWeights, bool adjustBias = false)
     {
-        Matrix testValuesMatrix = new(testValues);
-        Matrix layerWeightsMatrix = new(layerWeights);
+        Matrix trainMatrix = new(train);
+        Matrix weights = new(layerWeights);
 
-        Matrix testValuesDotLayerWeights = testValuesMatrix
-            .Multiply(layerWeightsMatrix);
+        Matrix trainDotWeights = trainMatrix
+            .Multiply(weights);
 
-        double[,] layer = testValuesDotLayerWeights.Array;
+        double[,] layer = trainDotWeights.Array;
 
-        for (int i = 0; i < testValuesDotLayerWeights.Rows; i++)
+        for (int i = 0; i < trainDotWeights.Rows; i++)
         {
-            for (int j = 0; j < testValuesDotLayerWeights.Columns; j++)
+            for (int j = 0; j < trainDotWeights.Columns; j++)
             {
                 layer[i, j] = Sigmoid(layer[i, j]);
 
@@ -107,7 +107,7 @@ public class Perceptron
             }
         }
 
-        return (layer, testValuesDotLayerWeights);
+        return (layer, trainDotWeights);
     }
 
     private static void ActivateSigmoidDerivative(int firstElement,
@@ -184,39 +184,35 @@ public class Perceptron
             // Adjusting the weights
             // Second Weights
 
-            Matrix dotFirstLayerAndSecondLayerDelta = firstLayerMatrix.Transpose()
-                .Multiply(secondLayerDeltaMatrix);
-
-            (firstLastElement, secondLastElement) =
-                GetLastElements(_secondLayerWeights);
-
-            for (int x = 0; x < firstLastElement; x++)
-            {
-                for (int y = 0; y < secondLastElement; y++)
-                {
-                    _secondLayerWeights[x, y] += dotFirstLayerAndSecondLayerDelta[x, y];
-                }
-            }
+            ApplyDeltaValues(firstLayerMatrix,
+                secondLayerDeltaMatrix, _secondLayerWeights);
 
             // First Weights
 
             Matrix xTrainMatrix = new(xTrain);
 
-            Matrix xTrainTransposedMatrix = xTrainMatrix.Transpose();
+            ApplyDeltaValues(xTrainMatrix,
+                firstLayerDeltaMatrix, _firstLayerWeights);
+        }
+    }
 
-            Matrix dotXTrainTransposedAndFirstLayerDeltaMatrix =
-                xTrainTransposedMatrix.Multiply(firstLayerDeltaMatrix);
+    private static void ApplyDeltaValues(Matrix train,
+        Matrix delta, double[,] layer)
+    {
+        Matrix trainTransposed = train.Transpose();
 
-            firstLastElement = GetLastElementOfDimension(_firstLayerWeights, 0);
-            secondLastElement = GetLastElementOfDimension(_firstLayerWeights, 1);
+        Matrix dotTrainTransposedAndDelta =
+            trainTransposed.Multiply(delta);
 
-            for (int x = 0; x < firstLastElement; x++)
+        (int firstLastElement, int secondLastElement) =
+            GetLastElements(layer);
+
+        for (var i = 0; i < firstLastElement; i++)
+        {
+            for (var j = 0; j < secondLastElement; j++)
             {
-                for (int y = 0; y < secondLastElement; y++)
-                {
-                    _firstLayerWeights[x, y] +=
-                        dotXTrainTransposedAndFirstLayerDeltaMatrix[x, y];
-                }
+                layer[i, j] +=
+                    dotTrainTransposedAndDelta[i, j];
             }
         }
     }
