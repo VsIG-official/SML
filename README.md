@@ -34,7 +34,7 @@ SML - Small Math Library for .NET. I decided to create this library, because som
 - [Polynomials](SML/SML/Polynomial)
     - [Tests](SML/SML.Tests/PolynomialTests)
 
-CodeCoverage:
+Code Coverage:
 ![Code Coverage](docs/CodeCoverage.jpg "Code Coverage")
 
 ## Contributing
