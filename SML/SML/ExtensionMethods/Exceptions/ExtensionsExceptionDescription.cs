@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-namespace SML.ExtensionMethods.Exceptions;
+﻿namespace SML.ExtensionMethods.Exceptions;
 
 public static class ExtensionsExceptionDescription
 {
