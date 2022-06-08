@@ -161,10 +161,10 @@ public class Perceptron
     
     private Matrix GetFirstLayerDeltas(double[,] layer, Matrix layerDelta)
     {
-        Matrix layerWeightsMatrix = new(_secondLayerWeights);
+        Matrix layerWeights = new(_secondLayerWeights);
 
-        Matrix layerWeightsMatrixTransposed =
-            layerWeightsMatrix.Transpose();
+        Matrix layerWeightsTransposed =
+            layerWeights.Transpose();
         
         double[,] layerDerivative = layer;
         ActivateSigmoidDerivative(layerDerivative, layer);
@@ -172,7 +172,7 @@ public class Perceptron
         Matrix layerDerivativeMatrix = new(layerDerivative);
 
         Matrix layerError = layerDelta.
-            Multiply(layerWeightsMatrixTransposed);
+            Multiply(layerWeightsTransposed);
 
         Matrix firstLayerDelta = layerDerivativeMatrix.
             Hadamard(layerError);
@@ -180,34 +180,34 @@ public class Perceptron
         return firstLayerDelta;
     }
 
-    private static Matrix GetSecondLayerDeltas(double[,] secondLayer,
-        Matrix secondLayerError)
+    private static Matrix GetSecondLayerDeltas(double[,] layer,
+        Matrix error)
     {
-        ActivateSigmoidDerivative(secondLayer);
+        ActivateSigmoidDerivative(layer);
 
-        Matrix secondLayerMatrix = new(secondLayer);
-        Matrix secondLayerDelta = secondLayerMatrix.
-            Hadamard(secondLayerError);
+        Matrix layerMatrix = new(layer);
+        Matrix deltas = layerMatrix.
+            Hadamard(error);
 
-        return secondLayerDelta;
+        return deltas;
     }
 
     private static Matrix CalculateError(double[,] yTrain,
         Matrix dotProduct, double[,] layer)
     {
-        double[,] layerError = dotProduct.Array;
+        double[,] error = dotProduct.Array;
         
         for (var i = 0; i < dotProduct.Rows; i++)
         {
             for (var j = 0; j < dotProduct.Columns; j++)
             {
-                layerError[i, j] = yTrain[i, j] - layer[i, j];
+                error[i, j] = yTrain[i, j] - layer[i, j];
             }
         }
 
-        Matrix layerErrorMatrix = new(layerError);
+        Matrix errorMatrix = new(error);
 
-        return layerErrorMatrix;
+        return errorMatrix;
     }
 
     private static void SetDeltas(double[,] train,
@@ -218,12 +218,12 @@ public class Perceptron
         Matrix dotTrainTransposedAndDelta =
             trainTransposed.Multiply(delta);
 
-        (int firstLastElement, int secondLastElement) =
+        (int firstDimensionLength, int secondDimensionLength) =
             GetAllDimensionsLength(layer);
 
-        for (var i = 0; i < firstLastElement; i++)
+        for (var i = 0; i < firstDimensionLength; i++)
         {
-            for (var j = 0; j < secondLastElement; j++)
+            for (var j = 0; j < secondDimensionLength; j++)
             {
                 layer[i, j] +=
                     dotTrainTransposedAndDelta[i, j];
