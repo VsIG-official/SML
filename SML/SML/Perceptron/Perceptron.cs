@@ -7,7 +7,7 @@ public class Perceptron
     #region Fields
 
     public double[,] Input { get; set; }
-    public int RunTimes { get; set; } = 10000;
+    public int Iterations { get; set; } = 10000;
 
     private readonly double _bias = 0.03;
 
@@ -38,29 +38,30 @@ public class Perceptron
     {
         // During the training phase, the network is trained by adjusting
         // these weights to be able to predict the correct class for the input.
-
-        int firstLayerLength = Input.GetUpperBound(0) + 1;
-        int secondLayerLength = Input.GetUpperBound(1) + 1;
+        (int firstLayerLength, int secondLayerLength) = GetAllDimensionsLength(Input);
 
         _firstLayerWeights = new double[secondLayerLength, firstLayerLength];
-
-        for (int i = 0; i < secondLayerLength; i++)
-        {
-            for (int j = 0; j < firstLayerLength; j++)
-            {
-                _firstLayerWeights[i, j] = _random.NextDouble();
-            }
-        }
+        SetWeights(_firstLayerWeights, secondLayerLength, firstLayerLength);
 
         _secondLayerWeights = new double[firstLayerLength, 1];
+        SetWeights(_secondLayerWeights, firstLayerLength, 1);
+    }
 
+    private void SetWeights(double[,] weights,
+        int firstLayerLength, int secondLayerLength)
+    {
         for (int i = 0; i < firstLayerLength; i++)
         {
-            for (int j = 0; j < 1; j++)
+            for (int j = 0; j < secondLayerLength; j++)
             {
-                _secondLayerWeights[i, j] = _random.NextDouble();
+                weights[i, j] = GetRandomDouble();
             }
         }
+    }
+
+    private double GetRandomDouble()
+    {
+        return _random.NextDouble();
     }
 
     private static double Sigmoid(double x)
@@ -73,161 +74,174 @@ public class Perceptron
         return Sigmoid(x) * (1 - Sigmoid(x));
     }
 
-    public double[,] Predict(double[,] xTest)
+    public double[,] Predict(double[,] test)
     {
-        Matrix xTestMatrix = new(xTest);
-
-        Matrix firstLayerWeightsMatrix = new(_firstLayerWeights);
-
-        Matrix xTestDotfirstLayerWeights = xTestMatrix.Multiply(firstLayerWeightsMatrix);
-
-        double[,] firstLayer = xTestDotfirstLayerWeights.Array;
-
-        for (int i = 0; i < xTestDotfirstLayerWeights.Rows; i++)
-        {
-            for (int j = 0; j < xTestDotfirstLayerWeights.Columns; j++)
-            {
-                firstLayer[i, j] = Sigmoid(firstLayer[i, j]);
-            }
-        }
-
-        Matrix firstLayerMatrix = new(firstLayer);
-
-        Matrix secondLayerWeightsMatrix = new(_secondLayerWeights);
-
-        Matrix firstLayerDotsecondLayerWeights = firstLayerMatrix
-            .Multiply(secondLayerWeightsMatrix);
-
-        double[,] secondLayer = firstLayerDotsecondLayerWeights.Array;
-
-        for (int i = 0; i < firstLayerDotsecondLayerWeights.Rows; i++)
-        {
-            for (int j = 0; j < firstLayerDotsecondLayerWeights.Columns; j++)
-            {
-                secondLayer[i, j] = Sigmoid(secondLayer[i, j]);
-            }
-        }
+        (double[,] firstLayer, _) =
+            ActivateSigmoid(test, _firstLayerWeights);
+        (double[,] secondLayer, _) =
+            ActivateSigmoid(firstLayer, _secondLayerWeights);
 
         return secondLayer;
     }
 
-    public void Train(double[,] xTrain, double[,] yTrain, int iterations)
+    private (double[,], Matrix) ActivateSigmoid(double[,] train,
+        double[,] layerWeights, bool adjustBias = false)
     {
-        for (var k = 0; k < iterations; k++)
+        Matrix trainMatrix = new(train);
+        Matrix weights = new(layerWeights);
+
+        Matrix trainDotWeights = trainMatrix
+            .Multiply(weights);
+
+        double[,] layer = trainDotWeights.Array;
+        
+        for (var i = 0; i < trainDotWeights.Rows; i++)
         {
-            Matrix xTrainMatrix = new(xTrain);
-
-            Matrix firstLayerWeightsMatrix = new(_firstLayerWeights);
-
-            Matrix dotXTrainAndFirstLayerWeigth = xTrainMatrix.Multiply(firstLayerWeightsMatrix);
-
-            double[,] firstLayer = dotXTrainAndFirstLayerWeigth.Array;
-
-            // Adjusting with bias and activating training
-
-            for (int i = 0; i < dotXTrainAndFirstLayerWeigth.Rows; i++)
+            for (var j = 0; j < trainDotWeights.Columns; j++)
             {
-                for (int j = 0; j < dotXTrainAndFirstLayerWeigth.Columns; j++)
+                layer[i, j] = Sigmoid(layer[i, j]);
+
+                if (adjustBias)
                 {
-                    firstLayer[i, j] += _bias;
-                    firstLayer[i, j] = Sigmoid(firstLayer[i, j]);
-                }
-            }
-
-            Matrix firstLayerMatrix = new(firstLayer);
-
-            Matrix secondLayerWeightsMatrix = new(_secondLayerWeights);
-
-            Matrix dotFirstLayerAndSecondLayerWeights =
-                firstLayerMatrix.Multiply(secondLayerWeightsMatrix);
-
-            double[,] secondLayer = dotFirstLayerAndSecondLayerWeights.Array;
-
-            for (int i = 0; i < dotFirstLayerAndSecondLayerWeights.Rows; i++)
-            {
-                for (int j = 0; j < dotFirstLayerAndSecondLayerWeights.Columns; j++)
-                {
-                    secondLayer[i, j] = Sigmoid(secondLayer[i, j]);
-                }
-            }
-
-            // Calculate the prediction error
-
-            double[,] secondLayerError = dotFirstLayerAndSecondLayerWeights.Array;
-
-            for (int i = 0; i < dotFirstLayerAndSecondLayerWeights.Rows; i++)
-            {
-                for (int j = 0; j < dotFirstLayerAndSecondLayerWeights.Columns; j++)
-                {
-                    secondLayerError[i, j] = yTrain[i, j] - secondLayer[i, j];
-                }
-            }
-
-            Matrix secondLayerErrorMatrix = new(secondLayerError);
-
-            for (int i = 0; i < secondLayer.GetUpperBound(0) + 1; i++)
-            {
-                for (int j = 0; j < secondLayer.GetUpperBound(1) + 1; j++)
-                {
-                    secondLayer[i, j] = SigmoidDerivative(secondLayer[i, j]);
-                }
-            }
-
-            Matrix secondLayerMatrix = new(secondLayer);
-
-            Matrix secondLayerDeltaMatrix = secondLayerMatrix.
-                Hadamard(secondLayerErrorMatrix);
-
-            Matrix secondLayerWeightsMatrixTransposed =
-                secondLayerWeightsMatrix.Transpose();
-
-            Matrix firstLayerErrorMatrix = secondLayerDeltaMatrix.
-                Multiply(secondLayerWeightsMatrixTransposed);
-
-            double[,] firstLayerDerivative = firstLayer;
-
-            for (int i = 0; i < firstLayerDerivative.GetUpperBound(0) + 1; i++)
-            {
-                for (int j = 0; j < firstLayerDerivative.GetUpperBound(1) + 1; j++)
-                {
-                    firstLayerDerivative[i, j] = SigmoidDerivative(firstLayer[i, j]);
-                }
-            }
-
-            Matrix firstLayerDerivativeMatrix = new(firstLayerDerivative);
-
-            Matrix firstLayerDeltaMatrix = firstLayerDerivativeMatrix.
-                Hadamard(firstLayerErrorMatrix);
-
-            // Adjusting the weights
-            // Second Weights
-
-            Matrix dotFirstLayerAndSecondLayerDelta = firstLayerMatrix.Transpose()
-                .Multiply(secondLayerDeltaMatrix);
-
-            for (int i = 0; i < _secondLayerWeights.GetUpperBound(0) + 1; i++)
-            {
-                for (int j = 0; j < _secondLayerWeights.GetUpperBound(1) + 1; j++)
-                {
-                    _secondLayerWeights[i, j] += dotFirstLayerAndSecondLayerDelta[i, j];
-                }
-            }
-
-            // First Weights
-
-            Matrix xTrainTransposedMatrix = xTrainMatrix.Transpose();
-
-            Matrix dotXTrainTransposedAndFirstLayerDeltaMatrix =
-                xTrainTransposedMatrix.Multiply(firstLayerDeltaMatrix);
-
-            for (int i = 0; i < _firstLayerWeights.GetUpperBound(0) + 1; i++)
-            {
-                for (int j = 0; j < _firstLayerWeights.GetUpperBound(1) + 1; j++)
-                {
-                    _firstLayerWeights[i, j] += dotXTrainTransposedAndFirstLayerDeltaMatrix[i, j];
+                    layer[i, j] += _bias;
                 }
             }
         }
+
+        return (layer, trainDotWeights);
+    }
+
+    private static void ActivateSigmoidDerivative(double[,] layer,
+        double[,] sigmoidLayer = null)
+    {
+        (int firstDimensionLength,
+            int secondDimensionLength) = GetAllDimensionsLength(layer);
+            
+        sigmoidLayer ??= layer;
+
+        for (int x = 0; x < firstDimensionLength; x++)
+        {
+            for (int y = 0; y < secondDimensionLength; y++)
+            {
+                layer[x, y] = SigmoidDerivative(sigmoidLayer[x, y]);
+            }
+        }
+    }
+
+    public void Train(double[,] xTrain, double[,] yTrain, int iterations)
+    {
+        for (var i = 0; i < iterations; i++)
+        {
+            (double[,] firstLayer, _) = ActivateSigmoid(xTrain,
+                _firstLayerWeights, true);
+
+            (double[,] secondLayer, Matrix firstLayerAndSecondLayerWeights) =
+                ActivateSigmoid(firstLayer, _secondLayerWeights);
+
+            // Calculate the prediction error
+            Matrix secondLayerError = CalculateError(yTrain,
+                firstLayerAndSecondLayerWeights, secondLayer);
+
+            Matrix secondLayerDeltas = GetSecondLayerDeltas
+                (secondLayer, secondLayerError);
+
+            Matrix firstLayerDeltas = GetFirstLayerDeltas(firstLayer,
+                secondLayerDeltas);
+
+            // Adjusting the weights
+            // Second Weights
+            SetDeltas(firstLayer,
+                secondLayerDeltas, _secondLayerWeights);
+
+            // First Weights
+            SetDeltas(xTrain,
+                firstLayerDeltas, _firstLayerWeights);
+        }
+    }
+    
+    private Matrix GetFirstLayerDeltas(double[,] layer, Matrix layerDelta)
+    {
+        Matrix layerWeights = new(_secondLayerWeights);
+
+        Matrix layerWeightsTransposed =
+            layerWeights.Transpose();
+        
+        double[,] layerDerivative = layer;
+        ActivateSigmoidDerivative(layerDerivative, layer);
+
+        Matrix layerDerivativeMatrix = new(layerDerivative);
+
+        Matrix layerError = layerDelta.
+            Multiply(layerWeightsTransposed);
+
+        Matrix firstLayerDelta = layerDerivativeMatrix.
+            Hadamard(layerError);
+
+        return firstLayerDelta;
+    }
+
+    private static Matrix GetSecondLayerDeltas(double[,] layer,
+        Matrix error)
+    {
+        ActivateSigmoidDerivative(layer);
+
+        Matrix layerMatrix = new(layer);
+        Matrix deltas = layerMatrix.
+            Hadamard(error);
+
+        return deltas;
+    }
+
+    private static Matrix CalculateError(double[,] yTrain,
+        Matrix dotProduct, double[,] layer)
+    {
+        double[,] error = dotProduct.Array;
+        
+        for (var i = 0; i < dotProduct.Rows; i++)
+        {
+            for (var j = 0; j < dotProduct.Columns; j++)
+            {
+                error[i, j] = yTrain[i, j] - layer[i, j];
+            }
+        }
+
+        Matrix errorMatrix = new(error);
+
+        return errorMatrix;
+    }
+
+    private static void SetDeltas(double[,] train,
+        Matrix delta, double[,] layer)
+    {
+        var trainTransposed = new Matrix(train).Transpose();
+
+        Matrix dotTrainTransposedAndDelta =
+            trainTransposed.Multiply(delta);
+
+        (int firstDimensionLength, int secondDimensionLength) =
+            GetAllDimensionsLength(layer);
+
+        for (var i = 0; i < firstDimensionLength; i++)
+        {
+            for (var j = 0; j < secondDimensionLength; j++)
+            {
+                layer[i, j] +=
+                    dotTrainTransposedAndDelta[i, j];
+            }
+        }
+    }
+
+    private static (int, int) GetAllDimensionsLength(double[,] layer)
+    {
+        int firstDimensionLength = GetDimensionLength(layer, 0);
+        int secondDimensionLength = GetDimensionLength(layer, 1);
+
+        return (firstDimensionLength, secondDimensionLength);
+    }
+
+    private static int GetDimensionLength(double[,] array, int dimension)
+    {
+        return array.GetUpperBound(dimension) + 1;
     }
 
     #endregion Methods
