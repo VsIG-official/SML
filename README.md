@@ -25,12 +25,12 @@ SML - Small Math Library for .NET. I decided to create this library, because som
 ### Features
 - [Circular Linked List](SML/SML/CircularLinkedList)
     - [Tests](SML/SML.Tests/CircularLinkedListTests)
-- [Matrices](https://github.com/VsIG-official/SML/tree/master/SML/SML/Matrix)
-    - [Tests](https://github.com/VsIG-official/SML/blob/master/SML/SML.Tests/MatrixTests.cs)
-- [Polynomials](https://github.com/VsIG-official/SML/tree/master/SML/SML/Polynomial)
-    - [Tests](https://github.com/VsIG-official/SML/blob/master/SML/SML.Tests/PolynomialTests.cs)
-- [Perceptron](https://github.com/VsIG-official/SML/tree/master/SML/SML/Perceptron)
-    - [Tests](https://github.com/VsIG-official/SML/blob/master/SML/SML.Tests/PerceptronTests.cs)
+- [Matrix](SML/SML/Matrix)
+    - [Tests](SML/SML.Tests/MatrixTests.cs)
+- [Polynomials](SML/SML/Polynomial)
+    - [Tests](SML/SML.Tests/PolynomialTests.cs)
+- [Perceptron](SML/SML/Perceptron)
+    - [Tests](SML/SML.Tests/PerceptronTests.cs)
 
 ## Contributing
 
