@@ -139,17 +139,8 @@ public class Perceptron
 
             // Calculate the prediction error
 
-            double[,] secondLayerError = dotFirstLayerAndSecondLayerWeights.Array;
-
-            for (int x = 0; x < dotFirstLayerAndSecondLayerWeights.Rows; x++)
-            {
-                for (int y = 0; y < dotFirstLayerAndSecondLayerWeights.Columns; y++)
-                {
-                    secondLayerError[x, y] = yTrain[x, y] - secondLayer[x, y];
-                }
-            }
-
-            Matrix secondLayerErrorMatrix = new(secondLayerError);
+            Matrix secondLayerErrorMatrix = CalculateError(yTrain,
+                dotFirstLayerAndSecondLayerWeights, secondLayer);
 
             (int firstLastElement, int secondLastElement) =
                 GetLastElements(secondLayer);
@@ -165,7 +156,7 @@ public class Perceptron
             Matrix secondLayerWeightsMatrixTransposed =
                 secondLayerWeightsMatrix.Transpose();
 
-            Matrix firstLayerErrorMatrix = secondLayerDeltaMatrix.
+            Matrix firstLayerError = secondLayerDeltaMatrix.
                 Multiply(secondLayerWeightsMatrixTransposed);
 
             double[,] firstLayerDerivative = firstLayer;
@@ -178,8 +169,8 @@ public class Perceptron
 
             Matrix firstLayerDerivativeMatrix = new(firstLayerDerivative);
 
-            Matrix firstLayerDeltaMatrix = firstLayerDerivativeMatrix.
-                Hadamard(firstLayerErrorMatrix);
+            Matrix firstLayerDelta = firstLayerDerivativeMatrix.
+                Hadamard(firstLayerError);
 
             // Adjusting the weights
             // Second Weights
@@ -192,8 +183,26 @@ public class Perceptron
             Matrix xTrainMatrix = new(xTrain);
 
             ApplyDeltaValues(xTrainMatrix,
-                firstLayerDeltaMatrix, _firstLayerWeights);
+                firstLayerDelta, _firstLayerWeights);
         }
+    }
+
+    private static Matrix CalculateError(double[,] yTrain,
+        Matrix dotProduct, double[,] layer)
+    {
+        double[,] secondLayerError = dotProduct.Array;
+
+        for (int x = 0; x < dotProduct.Rows; x++)
+        {
+            for (int y = 0; y < dotProduct.Columns; y++)
+            {
+                secondLayerError[x, y] = yTrain[x, y] - layer[x, y];
+            }
+        }
+
+        Matrix secondLayerErrorMatrix = new(secondLayerError);
+
+        return secondLayerErrorMatrix;
     }
 
     private static void ApplyDeltaValues(Matrix train,
