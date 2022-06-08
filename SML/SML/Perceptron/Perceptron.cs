@@ -134,9 +134,6 @@ public class Perceptron
             (double[,] secondLayer, Matrix dotFirstLayerAndSecondLayerWeights) =
                 ActivateSigmoid(firstLayer, _secondLayerWeights);
             
-            Matrix firstLayerMatrix = new(firstLayer);
-            Matrix secondLayerWeightsMatrix = new(_secondLayerWeights);
-
             // Calculate the prediction error
 
             Matrix secondLayerErrorMatrix = CalculateError(yTrain,
@@ -153,6 +150,8 @@ public class Perceptron
             Matrix secondLayerDeltaMatrix = secondLayerMatrix.
                 Hadamard(secondLayerErrorMatrix);
 
+            Matrix secondLayerWeightsMatrix = new(_secondLayerWeights);
+            
             Matrix secondLayerWeightsMatrixTransposed =
                 secondLayerWeightsMatrix.Transpose();
 
@@ -174,15 +173,11 @@ public class Perceptron
 
             // Adjusting the weights
             // Second Weights
-
-            ApplyDeltaValues(firstLayerMatrix,
+            ApplyDeltaValues(firstLayer,
                 secondLayerDeltaMatrix, _secondLayerWeights);
 
             // First Weights
-
-            Matrix xTrainMatrix = new(xTrain);
-
-            ApplyDeltaValues(xTrainMatrix,
+            ApplyDeltaValues(xTrain,
                 firstLayerDelta, _firstLayerWeights);
         }
     }
@@ -205,10 +200,10 @@ public class Perceptron
         return secondLayerErrorMatrix;
     }
 
-    private static void ApplyDeltaValues(Matrix train,
+    private static void ApplyDeltaValues(double[,] train,
         Matrix delta, double[,] layer)
     {
-        Matrix trainTransposed = train.Transpose();
+        var trainTransposed = new Matrix(train).Transpose();
 
         Matrix dotTrainTransposedAndDelta =
             trainTransposed.Multiply(delta);
