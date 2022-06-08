@@ -1,14 +1,9 @@
-﻿namespace SML.ExtensionMethods;
+﻿using SML.ExtensionMethods.Exceptions;
+
+namespace SML.ExtensionMethods;
 
 public static class ArrayExtension
 {
-    #region Fields
-
-    private static string To2DExceptionMessage =
-        "The given jagged array is not rectangular";
-
-    #endregion Fields
-
     #region Methods
 
     public static IEnumerable<T> GetColumn<T>(this T[,] array, int column)
@@ -49,7 +44,8 @@ public static class ArrayExtension
         catch (InvalidOperationException)
         {
             throw new
-                InvalidOperationException(To2DExceptionMessage);
+                InvalidOperationException(ExtensionsExceptionDescription.
+                To2DExceptionMessage);
         }
     }
 
