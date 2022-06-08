@@ -133,13 +133,13 @@ public class Perceptron
             (double[,] firstLayer, _) = ActivateSigmoid(xTrain,
                 _firstLayerWeights, true);
 
-            (double[,] secondLayer, Matrix dotFirstLayerAndSecondLayerWeights) =
+            (double[,] secondLayer, Matrix firstLayerAndSecondLayerWeights) =
                 ActivateSigmoid(firstLayer, _secondLayerWeights);
             
             // Calculate the prediction error
             Matrix secondLayerErrorMatrix = CalculateError(yTrain,
-                dotFirstLayerAndSecondLayerWeights, secondLayer);
-            
+                firstLayerAndSecondLayerWeights, secondLayer);
+
             ActivateSigmoidDerivative(secondLayer);
 
             Matrix secondLayerMatrix = new(secondLayer);
@@ -147,22 +147,8 @@ public class Perceptron
             Matrix secondLayerDeltaMatrix = secondLayerMatrix.
                 Hadamard(secondLayerErrorMatrix);
 
-            Matrix secondLayerWeightsMatrix = new(_secondLayerWeights);
-            
-            Matrix secondLayerWeightsMatrixTransposed =
-                secondLayerWeightsMatrix.Transpose();
-
-            Matrix firstLayerError = secondLayerDeltaMatrix.
-                Multiply(secondLayerWeightsMatrixTransposed);
-
-            double[,] firstLayerDerivative = firstLayer;
-
-            ActivateSigmoidDerivative(firstLayerDerivative, firstLayer);
-
-            Matrix firstLayerDerivativeMatrix = new(firstLayerDerivative);
-
-            Matrix firstLayerDelta = firstLayerDerivativeMatrix.
-                Hadamard(firstLayerError);
+            Matrix firstLayerDelta = GetFirstLayerDelta(firstLayer,
+                secondLayerDeltaMatrix, _secondLayerWeights);
 
             // Adjusting the weights
             // Second Weights
@@ -173,6 +159,28 @@ public class Perceptron
             ApplyDeltaValues(xTrain,
                 firstLayerDelta, _firstLayerWeights);
         }
+    }
+    
+    private static Matrix GetFirstLayerDelta(double[,] firstLayer,
+        Matrix secondLayerDelta, double[,] layerWeights)
+    {
+        Matrix secondLayerWeightsMatrix = new(layerWeights);
+
+        Matrix secondLayerWeightsMatrixTransposed =
+            secondLayerWeightsMatrix.Transpose();
+        
+        double[,] firstLayerDerivative = firstLayer;
+        ActivateSigmoidDerivative(firstLayerDerivative, firstLayer);
+
+        Matrix firstLayerDerivativeMatrix = new(firstLayerDerivative);
+
+        Matrix firstLayerError = secondLayerDelta.
+            Multiply(secondLayerWeightsMatrixTransposed);
+
+        Matrix firstLayerDelta = firstLayerDerivativeMatrix.
+            Hadamard(firstLayerError);
+
+        return firstLayerDelta;
     }
 
     private static Matrix CalculateError(double[,] yTrain,
