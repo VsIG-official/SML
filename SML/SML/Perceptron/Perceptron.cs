@@ -142,27 +142,26 @@ public class Perceptron
             Matrix secondLayerError = CalculateError(yTrain,
                 firstLayerAndSecondLayerWeights, secondLayer);
 
-            Matrix secondLayerDelta = GetSecondLayerDeltas
+            Matrix secondLayerDeltas = GetSecondLayerDeltas
                 (secondLayer, secondLayerError);
 
-            Matrix firstLayerDelta = GetFirstLayerDeltas(firstLayer,
-                secondLayerDelta, _secondLayerWeights);
+            Matrix firstLayerDeltas = GetFirstLayerDeltas(firstLayer,
+                secondLayerDeltas);
 
             // Adjusting the weights
             // Second Weights
             SetDeltas(firstLayer,
-                secondLayerDelta, _secondLayerWeights);
+                secondLayerDeltas, _secondLayerWeights);
 
             // First Weights
             SetDeltas(xTrain,
-                firstLayerDelta, _firstLayerWeights);
+                firstLayerDeltas, _firstLayerWeights);
         }
     }
     
-    private static Matrix GetFirstLayerDeltas(double[,] layer,
-        Matrix layerDelta, double[,] layerWeights)
+    private Matrix GetFirstLayerDeltas(double[,] layer, Matrix layerDelta)
     {
-        Matrix layerWeightsMatrix = new(layerWeights);
+        Matrix layerWeightsMatrix = new(_secondLayerWeights);
 
         Matrix layerWeightsMatrixTransposed =
             layerWeightsMatrix.Transpose();

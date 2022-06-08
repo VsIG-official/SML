@@ -10,7 +10,7 @@ public class PerceptronTests
 {
     #region PremadeData
 
-    public static IEnumerable<object[]> XorData =>
+    public static IEnumerable<object[]> XorGateData =>
         new List<object[]>
     {
         new object[]
@@ -32,13 +32,78 @@ public class PerceptronTests
         },
     };
 
+    public static IEnumerable<object[]> AndGateData =>
+    new List<object[]>
+    {
+        new object[]
+        {
+            new double[][]
+            {
+                new double[] { 0, 0 },
+                new double[] { 0, 1 },
+                new double[] { 1, 0 },
+                new double[] { 1, 1 }
+            },
+            new double[,]
+            {
+                { 0 },
+                { 0 },
+                { 0 },
+                { 1 }
+            },
+        },
+    };
+
+    public static IEnumerable<object[]> OrGateData =>
+    new List<object[]>
+    {
+        new object[]
+        {
+            new double[][]
+            {
+                new double[] { 0, 0 },
+                new double[] { 0, 1 },
+                new double[] { 1, 0 },
+                new double[] { 1, 1 }
+            },
+            new double[,]
+            {
+                { 0 },
+                { 1 },
+                { 1 },
+                { 1 }
+            },
+        },
+    };
+
+    public static IEnumerable<object[]> NotGateData =>
+    new List<object[]>
+    {
+        new object[]
+        {
+            new double[][]
+            {
+                new double[] { 0 },
+                new double[] { 1 },
+            },
+            new double[,]
+            {
+                { 1 },
+                { 0 },
+            },
+        },
+    };
+
     #endregion PremadeData
 
-    #region XOR
+    #region LogicGates
 
     [Theory]
-    [MemberData(nameof(XorData))]
-    public void XorGate_ShouldReturnTrue
+    [MemberData(nameof(XorGateData))]
+    [MemberData(nameof(AndGateData))]
+    [MemberData(nameof(OrGateData))]
+    [MemberData(nameof(NotGateData))]
+    public void LogicGate_True
         (double[][] separatedInputValues, double [,] output)
     {
         // Arrange
@@ -67,5 +132,5 @@ public class PerceptronTests
         }
     }
 
-    #endregion XOR
+    #endregion LogicGates
 }
