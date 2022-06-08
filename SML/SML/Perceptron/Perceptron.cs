@@ -131,22 +131,11 @@ public class Perceptron
             (double[,] firstLayer, _) = ActivateSigmoid(xTrain,
                 _firstLayerWeights, true);
 
+            (double[,] secondLayer, Matrix dotFirstLayerAndSecondLayerWeights) =
+                ActivateSigmoid(firstLayer, _secondLayerWeights);
+            
             Matrix firstLayerMatrix = new(firstLayer);
-
             Matrix secondLayerWeightsMatrix = new(_secondLayerWeights);
-
-            Matrix dotFirstLayerAndSecondLayerWeights =
-                firstLayerMatrix.Multiply(secondLayerWeightsMatrix);
-
-            double[,] secondLayer = dotFirstLayerAndSecondLayerWeights.Array;
-
-            for (int x = 0; x < dotFirstLayerAndSecondLayerWeights.Rows; x++)
-            {
-                for (int y = 0; y < dotFirstLayerAndSecondLayerWeights.Columns; y++)
-                {
-                    secondLayer[x, y] = Sigmoid(secondLayer[x, y]);
-                }
-            }
 
             // Calculate the prediction error
 
