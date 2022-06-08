@@ -38,17 +38,16 @@ public class Perceptron
     {
         // During the training phase, the network is trained by adjusting
         // these weights to be able to predict the correct class for the input.
+        (int firstLayerLength, int secondLayerLength) = GetAllDimensionsLength(Input);
 
-        (int firstLayerLen, int secondLayerLen) = GetLastElements(Input);
+        _firstLayerWeights = new double[secondLayerLength, firstLayerLength];
+        SetWeights(_firstLayerWeights, secondLayerLength, firstLayerLength);
 
-        _firstLayerWeights = new double[secondLayerLen, firstLayerLen];
-        AssignWeights(_firstLayerWeights, secondLayerLen, firstLayerLen);
-
-        _secondLayerWeights = new double[firstLayerLen, 1];
-        AssignWeights(_secondLayerWeights, firstLayerLen, 1);
+        _secondLayerWeights = new double[firstLayerLength, 1];
+        SetWeights(_secondLayerWeights, firstLayerLength, 1);
     }
 
-    private void AssignWeights(double[,] weights,
+    private void SetWeights(double[,] weights,
         int firstLayerLength, int secondLayerLength)
     {
         for (int i = 0; i < firstLayerLength; i++)
@@ -77,8 +76,10 @@ public class Perceptron
 
     public double[,] Predict(double[,] test)
     {
-        (double[,] firstLayer, _) = ActivateSigmoid(test, _firstLayerWeights);
-        (double[,] secondLayer, _) = ActivateSigmoid(firstLayer, _secondLayerWeights);
+        (double[,] firstLayer, _) =
+            ActivateSigmoid(test, _firstLayerWeights);
+        (double[,] secondLayer, _) =
+            ActivateSigmoid(firstLayer, _secondLayerWeights);
 
         return secondLayer;
     }
@@ -93,10 +94,10 @@ public class Perceptron
             .Multiply(weights);
 
         double[,] layer = trainDotWeights.Array;
-
-        for (int i = 0; i < trainDotWeights.Rows; i++)
+        
+        for (var i = 0; i < trainDotWeights.Rows; i++)
         {
-            for (int j = 0; j < trainDotWeights.Columns; j++)
+            for (var j = 0; j < trainDotWeights.Columns; j++)
             {
                 layer[i, j] = Sigmoid(layer[i, j]);
 
@@ -113,13 +114,14 @@ public class Perceptron
     private static void ActivateSigmoidDerivative(double[,] layer,
         double[,] sigmoidLayer = null)
     {
-        (int firstElement, int secondElement) = GetLastElements(layer);
+        (int firstDimensionLength,
+            int secondDimensionLength) = GetAllDimensionsLength(layer);
             
         sigmoidLayer ??= layer;
 
-        for (int x = 0; x < firstElement; x++)
+        for (int x = 0; x < firstDimensionLength; x++)
         {
-            for (int y = 0; y < secondElement; y++)
+            for (int y = 0; y < secondDimensionLength; y++)
             {
                 layer[x, y] = SigmoidDerivative(sigmoidLayer[x, y]);
             }
@@ -135,73 +137,81 @@ public class Perceptron
 
             (double[,] secondLayer, Matrix firstLayerAndSecondLayerWeights) =
                 ActivateSigmoid(firstLayer, _secondLayerWeights);
-            
+
             // Calculate the prediction error
-            Matrix secondLayerErrorMatrix = CalculateError(yTrain,
+            Matrix secondLayerError = CalculateError(yTrain,
                 firstLayerAndSecondLayerWeights, secondLayer);
 
-            ActivateSigmoidDerivative(secondLayer);
+            Matrix secondLayerDelta = GetSecondLayerDeltas
+                (secondLayer, secondLayerError);
 
-            Matrix secondLayerMatrix = new(secondLayer);
-
-            Matrix secondLayerDeltaMatrix = secondLayerMatrix.
-                Hadamard(secondLayerErrorMatrix);
-
-            Matrix firstLayerDelta = GetFirstLayerDelta(firstLayer,
-                secondLayerDeltaMatrix, _secondLayerWeights);
+            Matrix firstLayerDelta = GetFirstLayerDeltas(firstLayer,
+                secondLayerDelta, _secondLayerWeights);
 
             // Adjusting the weights
             // Second Weights
-            ApplyDeltaValues(firstLayer,
-                secondLayerDeltaMatrix, _secondLayerWeights);
+            SetDeltas(firstLayer,
+                secondLayerDelta, _secondLayerWeights);
 
             // First Weights
-            ApplyDeltaValues(xTrain,
+            SetDeltas(xTrain,
                 firstLayerDelta, _firstLayerWeights);
         }
     }
     
-    private static Matrix GetFirstLayerDelta(double[,] firstLayer,
-        Matrix secondLayerDelta, double[,] layerWeights)
+    private static Matrix GetFirstLayerDeltas(double[,] layer,
+        Matrix layerDelta, double[,] layerWeights)
     {
-        Matrix secondLayerWeightsMatrix = new(layerWeights);
+        Matrix layerWeightsMatrix = new(layerWeights);
 
-        Matrix secondLayerWeightsMatrixTransposed =
-            secondLayerWeightsMatrix.Transpose();
+        Matrix layerWeightsMatrixTransposed =
+            layerWeightsMatrix.Transpose();
         
-        double[,] firstLayerDerivative = firstLayer;
-        ActivateSigmoidDerivative(firstLayerDerivative, firstLayer);
+        double[,] layerDerivative = layer;
+        ActivateSigmoidDerivative(layerDerivative, layer);
 
-        Matrix firstLayerDerivativeMatrix = new(firstLayerDerivative);
+        Matrix layerDerivativeMatrix = new(layerDerivative);
 
-        Matrix firstLayerError = secondLayerDelta.
-            Multiply(secondLayerWeightsMatrixTransposed);
+        Matrix layerError = layerDelta.
+            Multiply(layerWeightsMatrixTransposed);
 
-        Matrix firstLayerDelta = firstLayerDerivativeMatrix.
-            Hadamard(firstLayerError);
+        Matrix firstLayerDelta = layerDerivativeMatrix.
+            Hadamard(layerError);
 
         return firstLayerDelta;
+    }
+
+    private static Matrix GetSecondLayerDeltas(double[,] secondLayer,
+        Matrix secondLayerError)
+    {
+        ActivateSigmoidDerivative(secondLayer);
+
+        Matrix secondLayerMatrix = new(secondLayer);
+        Matrix secondLayerDelta = secondLayerMatrix.
+            Hadamard(secondLayerError);
+
+        return secondLayerDelta;
     }
 
     private static Matrix CalculateError(double[,] yTrain,
         Matrix dotProduct, double[,] layer)
     {
-        double[,] secondLayerError = dotProduct.Array;
-
-        for (int x = 0; x < dotProduct.Rows; x++)
+        double[,] layerError = dotProduct.Array;
+        
+        for (var i = 0; i < dotProduct.Rows; i++)
         {
-            for (int y = 0; y < dotProduct.Columns; y++)
+            for (var j = 0; j < dotProduct.Columns; j++)
             {
-                secondLayerError[x, y] = yTrain[x, y] - layer[x, y];
+                layerError[i, j] = yTrain[i, j] - layer[i, j];
             }
         }
 
-        Matrix secondLayerErrorMatrix = new(secondLayerError);
+        Matrix layerErrorMatrix = new(layerError);
 
-        return secondLayerErrorMatrix;
+        return layerErrorMatrix;
     }
 
-    private static void ApplyDeltaValues(double[,] train,
+    private static void SetDeltas(double[,] train,
         Matrix delta, double[,] layer)
     {
         var trainTransposed = new Matrix(train).Transpose();
@@ -210,7 +220,7 @@ public class Perceptron
             trainTransposed.Multiply(delta);
 
         (int firstLastElement, int secondLastElement) =
-            GetLastElements(layer);
+            GetAllDimensionsLength(layer);
 
         for (var i = 0; i < firstLastElement; i++)
         {
@@ -222,15 +232,15 @@ public class Perceptron
         }
     }
 
-    private static (int, int) GetLastElements(double[,] layer)
+    private static (int, int) GetAllDimensionsLength(double[,] layer)
     {
-        int firstElement = GetLastElementOfDimension(layer, 0);
-        int secondElement = GetLastElementOfDimension(layer, 1);
+        int firstDimensionLength = GetDimensionLength(layer, 0);
+        int secondDimensionLength = GetDimensionLength(layer, 1);
 
-        return (firstElement, secondElement);
+        return (firstDimensionLength, secondDimensionLength);
     }
 
-    private static int GetLastElementOfDimension(double[,] array, int dimension)
+    private static int GetDimensionLength(double[,] array, int dimension)
     {
         return array.GetUpperBound(dimension) + 1;
     }
