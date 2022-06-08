@@ -110,16 +110,18 @@ public class Perceptron
         return (layer, trainDotWeights);
     }
 
-    private static void ActivateSigmoidDerivative(int firstElement,
-        int secondElement, double[,] layer, double[,] layerForSigmoid = null)
+    private static void ActivateSigmoidDerivative(double[,] layer,
+        double[,] sigmoidLayer = null)
     {
-        layerForSigmoid ??= layer;
+        (int firstElement, int secondElement) = GetLastElements(layer);
+            
+        sigmoidLayer ??= layer;
 
         for (int x = 0; x < firstElement; x++)
         {
             for (int y = 0; y < secondElement; y++)
             {
-                layer[x, y] = SigmoidDerivative(layerForSigmoid[x, y]);
+                layer[x, y] = SigmoidDerivative(sigmoidLayer[x, y]);
             }
         }
     }
@@ -135,15 +137,10 @@ public class Perceptron
                 ActivateSigmoid(firstLayer, _secondLayerWeights);
             
             // Calculate the prediction error
-
             Matrix secondLayerErrorMatrix = CalculateError(yTrain,
                 dotFirstLayerAndSecondLayerWeights, secondLayer);
-
-            (int firstLastElement, int secondLastElement) =
-                GetLastElements(secondLayer);
-
-            ActivateSigmoidDerivative(firstLastElement,
-                secondLastElement, secondLayer);
+            
+            ActivateSigmoidDerivative(secondLayer);
 
             Matrix secondLayerMatrix = new(secondLayer);
 
@@ -160,11 +157,7 @@ public class Perceptron
 
             double[,] firstLayerDerivative = firstLayer;
 
-            (firstLastElement, secondLastElement) =
-                GetLastElements(firstLayerDerivative);
-
-            ActivateSigmoidDerivative(firstLastElement,
-                secondLastElement, firstLayerDerivative, firstLayer);
+            ActivateSigmoidDerivative(firstLayerDerivative, firstLayer);
 
             Matrix firstLayerDerivativeMatrix = new(firstLayerDerivative);
 
