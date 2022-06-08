@@ -19,6 +19,7 @@ SML - Small Math Library for .NET. I decided to create this library, because som
 
 [![Theme](https://img.shields.io/badge/Theme-Math-blueviolet)](https://img.shields.io/badge/Theme-Math-blueviolet)
 [![Language](https://img.shields.io/badge/Language-CSharp-blueviolet)](https://img.shields.io/badge/Language-CSharp-blueviolet)
+![Code Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
 
 ---
 
