@@ -260,9 +260,9 @@ public sealed class Polynomial
 
         var result = new Polynomial(firstPolynomial._monomials);
 
-        foreach (PolynomialMember item in secondPolynomial._monomials)
+        foreach (PolynomialMember member in secondPolynomial._monomials)
         {
-            result[item.Degree] += item.Coefficient;
+            result[member.Degree] += member.Coefficient;
         }
 
         return result;
@@ -309,12 +309,14 @@ public sealed class Polynomial
 
         var result = new Polynomial();
 
-        foreach (PolynomialMember memberA in firstPolynomial._monomials)
+        foreach (PolynomialMember firstMember in firstPolynomial._monomials)
         {
-            foreach (PolynomialMember memberB in secondPolynomial._monomials)
+            foreach (PolynomialMember secondMember in secondPolynomial._monomials)
             {
-                double degreeSum = memberA.Degree + memberB.Degree;
-                double coefficientMul = memberA.Coefficient * memberB.Coefficient;
+                double degreeSum = firstMember.Degree +
+                    secondMember.Degree;
+                double coefficientMul = firstMember.Coefficient *
+                    secondMember.Coefficient;
 
                 if (coefficientMul != 0)
                 {
