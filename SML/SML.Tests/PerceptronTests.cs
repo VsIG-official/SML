@@ -116,9 +116,9 @@ public class PerceptronTests
 
         double[,] xTest = new double[1, 2];
 
-        for (int i = 0; i < input.GetLowerBound(0); i++)
+        for (var i = 0; i < input.GetLowerBound(0); i++)
         {
-            for (int j = 0; j < input.GetLowerBound(1); j++)
+            for (var j = 0; j < input.GetLowerBound(1); j++)
             {
                 xTest[0, j] = separatedInputValues[i][j];
             }

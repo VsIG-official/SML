@@ -1227,7 +1227,7 @@ public class CircularLinkedListTests
 
         var circularLinkedList = new CircularLinkedList<int>(firstElement);
 
-        for (int i = 0; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         {
             circularLinkedList.Add(firstElement);
         }
@@ -1251,7 +1251,7 @@ public class CircularLinkedListTests
 
         var circularLinkedList = new CircularLinkedList<string>(firstElement);
 
-        for (int i = 0; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         {
             circularLinkedList.Add(firstElement);
         }

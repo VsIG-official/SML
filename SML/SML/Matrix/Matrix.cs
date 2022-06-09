@@ -89,9 +89,9 @@ public class Matrix : ICloneable
 
         Matrix result = new(Rows, matrix.Columns);
 
-        for (int i = 0; i < result.Rows; i++)
+        for (var i = 0; i < result.Rows; i++)
         {
-            for (int j = 0; j < result.Columns; j++)
+            for (var j = 0; j < result.Columns; j++)
             {
                 result[i, j] = Array[i, j] * matrix[i, j];
             }
@@ -110,9 +110,9 @@ public class Matrix : ICloneable
     {
         Matrix matrix = new(Columns, Rows);
 
-        for (int i = 0; i < Columns; i++)
+        for (var i = 0; i < Columns; i++)
         {
-            for (int j = 0; j < Rows; j++)
+            for (var j = 0; j < Rows; j++)
             {
                 matrix[i, j] = Array[j, i];
             }
@@ -129,9 +129,9 @@ public class Matrix : ICloneable
             Rows == matrix.Rows &&
             Columns == matrix.Columns)
         {
-            for (int i = 0; i < matrix.Rows; i++)
+            for (var i = 0; i < matrix.Rows; i++)
             {
-                for (int j = 0; j < matrix.Columns; j++)
+                for (var j = 0; j < matrix.Columns; j++)
                 {
                     if (Array[i, j] == matrix[i, j])
                     {
@@ -153,9 +153,9 @@ public class Matrix : ICloneable
     {
         StringBuilder matrix = new();
 
-        for (int i = 0; i < Rows; i++)
+        for (var i = 0; i < Rows; i++)
         {
-            for (int j = 0; j < Columns; j++)
+            for (var j = 0; j < Columns; j++)
             {
                 matrix.Append(Array[i, j]);
                 matrix.Append(StringDelimiter);
@@ -176,9 +176,9 @@ public class Matrix : ICloneable
 
         Matrix result = new(firstMatrix.Rows, firstMatrix.Columns);
 
-        for (int i = 0; i < result.Rows; i++)
+        for (var i = 0; i < result.Rows; i++)
         {
-            for (int j = 0; j < result.Columns; j++)
+            for (var j = 0; j < result.Columns; j++)
             {
                 result[i, j] = firstMatrix[i, j] + secondMatrix[i, j];
             }
@@ -193,9 +193,9 @@ public class Matrix : ICloneable
 
         Matrix result = new(firstMatrix.Rows, firstMatrix.Columns);
 
-        for (int i = 0; i < result.Rows; i++)
+        for (var i = 0; i < result.Rows; i++)
         {
-            for (int j = 0; j < result.Columns; j++)
+            for (var j = 0; j < result.Columns; j++)
             {
                 result[i, j] = firstMatrix[i, j] - secondMatrix[i, j];
             }
@@ -218,11 +218,11 @@ public class Matrix : ICloneable
 
         Matrix result = new(firstMatrix.Rows, secondMatrix.Columns);
 
-        for (int i = 0; i < result.Rows; i++)
+        for (var i = 0; i < result.Rows; i++)
         {
-            for (int j = 0; j < result.Columns; j++)
+            for (var j = 0; j < result.Columns; j++)
             {
-                for (int k = 0; k < secondMatrix.Rows; k++)
+                for (var k = 0; k < secondMatrix.Rows; k++)
                 {
                     result[i, j] += firstMatrix[i, k] * secondMatrix[k, j];
                 }

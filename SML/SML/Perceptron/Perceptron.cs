@@ -50,9 +50,9 @@ public class Perceptron
     private void SetWeights(double[,] weights,
         int firstLayerLength, int secondLayerLength = 1)
     {
-        for (int i = 0; i < firstLayerLength; i++)
+        for (var i = 0; i < firstLayerLength; i++)
         {
-            for (int j = 0; j < secondLayerLength; j++)
+            for (var j = 0; j < secondLayerLength; j++)
             {
                 weights[i, j] = GetRandomDouble();
             }
