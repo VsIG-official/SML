@@ -182,7 +182,7 @@ public class CircularLinkedList<T> : ICollection<T>, IEnumerable<T>, ICloneable
     {
         CheckNull(item);
 
-        for (int i = Count; i > 0; i--)
+        for (var i = Count; i > 0; i--)
         {
             Remove(item);
         }
@@ -239,7 +239,7 @@ public class CircularLinkedList<T> : ICollection<T>, IEnumerable<T>, ICloneable
     private static CircularLinkedListNode<T> GetNodeInRange
         (CircularLinkedListNode<T> startingNode, int position)
     {
-        for (int i = 0; i < position; i++)
+        for (var i = 0; i < position; i++)
         {
             startingNode = startingNode.Next;
         }
@@ -325,7 +325,7 @@ public class CircularLinkedList<T> : ICollection<T>, IEnumerable<T>, ICloneable
 
         var current = Head;
 
-        for (int i = 0; i < Count; i++)
+        for (var i = 0; i < Count; i++)
         {
             list.Append(current.Data.ToString());
             list.Append(Environment.NewLine + Environment.NewLine);
@@ -341,7 +341,7 @@ public class CircularLinkedList<T> : ICollection<T>, IEnumerable<T>, ICloneable
         CircularLinkedList<T> list = new();
         var current = Head;
 
-        for (int i = 0; i < Count; i++)
+        for (var i = 0; i < Count; i++)
         {
             list.Add(current.Data);
             current = current.Next;

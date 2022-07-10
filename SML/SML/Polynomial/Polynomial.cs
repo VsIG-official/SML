@@ -7,11 +7,6 @@ public sealed class Polynomial
     #region Fields
 
     private readonly List<PolynomialMember> _monomials;
-    private const string NullMemberMessage = "Member is null";
-    private const string ExistingMemberMessage =
-        "Member with such degree already exist in polynomial";
-    private const string MeaninglessMemberMessage =
-        "Don't need to add this member";
 
     public int Count
     {
@@ -102,7 +97,9 @@ public sealed class Polynomial
     {
         if (member == null)
         {
-            throw new PolynomialArgumentNullException(NullMemberMessage);
+            throw new PolynomialArgumentNullException(
+                PolynomialExceptionDescription.
+                    NullMemberMessage);
         }
     }
 
@@ -111,7 +108,8 @@ public sealed class Polynomial
         if (ContainsMember(member.Degree))
         {
             throw new PolynomialArgumentException
-                (ExistingMemberMessage);
+                (PolynomialExceptionDescription.
+                ExistingMemberMessage);
         }
     }
 
@@ -119,7 +117,9 @@ public sealed class Polynomial
     {
         if (member.Coefficient == 0 && member.Degree != 0)
         {
-            throw new PolynomialArgumentException(MeaninglessMemberMessage);
+            throw new PolynomialArgumentException(
+                PolynomialExceptionDescription.
+                    MeaninglessMemberMessage);
         }
     }
 
@@ -135,7 +135,8 @@ public sealed class Polynomial
         if (ContainsMember(member.degree) || member.coefficient == 0)
         {
             throw new PolynomialArgumentException
-                (ExistingMemberMessage);
+                (PolynomialExceptionDescription.
+                ExistingMemberMessage);
         }
     }
 
@@ -252,43 +253,48 @@ public sealed class Polynomial
 
     #region Operators
 
-    public static Polynomial operator +(Polynomial a, Polynomial b)
+    public static Polynomial operator +(Polynomial firstPolynomial,
+        Polynomial secondPolynomial)
     {
-        CheckPolynomials(a, b);
+        CheckPolynomials(firstPolynomial, secondPolynomial);
 
-        var result = new Polynomial(a._monomials);
+        var result = new Polynomial(firstPolynomial._monomials);
 
-        foreach (PolynomialMember item in b._monomials)
+        foreach (PolynomialMember member in secondPolynomial._monomials)
         {
-            result[item.Degree] += item.Coefficient;
+            result[member.Degree] += member.Coefficient;
         }
 
         return result;
     }
 
-    private static void CheckPolynomials(Polynomial a, Polynomial b)
+    private static void CheckPolynomials(Polynomial firstPolynomial,
+        Polynomial secondPolynomial)
     {
-        if (a == null || b == null)
+        if (firstPolynomial == null || secondPolynomial == null)
         {
-            throw new PolynomialArgumentNullException(NullMemberMessage);
+            throw new PolynomialArgumentNullException(
+                PolynomialExceptionDescription.
+                    NullMemberMessage);
         }
     }
 
-    public static Polynomial operator -(Polynomial a, Polynomial b)
+    public static Polynomial operator -(Polynomial firstPolynomial,
+        Polynomial secondPolynomial)
     {
-        CheckPolynomials(a, b);
+        CheckPolynomials(firstPolynomial, secondPolynomial);
 
-        var result = new Polynomial(a._monomials);
+        var result = new Polynomial(firstPolynomial._monomials);
 
-        for (var i = 0; i < a._monomials.Count; ++i)
+        for (var i = 0; i < firstPolynomial._monomials.Count; ++i)
         {
-            if (a._monomials[i].Coefficient == 0)
+            if (firstPolynomial._monomials[i].Coefficient == 0)
             {
                 return new Polynomial();
             }
         }
 
-        foreach (PolynomialMember member in b._monomials)
+        foreach (PolynomialMember member in secondPolynomial._monomials)
         {
             result[member.Degree] -= member.Coefficient;
         }
@@ -296,18 +302,21 @@ public sealed class Polynomial
         return result;
     }
 
-    public static Polynomial operator *(Polynomial a, Polynomial b)
+    public static Polynomial operator *(Polynomial firstPolynomial,
+        Polynomial secondPolynomial)
     {
-        CheckPolynomials(a, b);
+        CheckPolynomials(firstPolynomial, secondPolynomial);
 
         var result = new Polynomial();
 
-        foreach (PolynomialMember memberA in a._monomials)
+        foreach (PolynomialMember firstMember in firstPolynomial._monomials)
         {
-            foreach (PolynomialMember memberB in b._monomials)
+            foreach (PolynomialMember secondMember in secondPolynomial._monomials)
             {
-                double degreeSum = memberA.Degree + memberB.Degree;
-                double coefficientMul = memberA.Coefficient * memberB.Coefficient;
+                double degreeSum = firstMember.Degree +
+                    secondMember.Degree;
+                double coefficientMul = firstMember.Coefficient *
+                    secondMember.Coefficient;
 
                 if (coefficientMul != 0)
                 {
@@ -327,22 +336,22 @@ public sealed class Polynomial
         return result;
     }
 
-    public static Polynomial operator +(Polynomial a,
-        (double degree, double coefficient) b)
+    public static Polynomial operator +(Polynomial firstPolynomial,
+        (double degree, double coefficient) secondPolynomial)
     {
-        return a + new Polynomial(b);
+        return firstPolynomial + new Polynomial(secondPolynomial);
     }
 
-    public static Polynomial operator -(Polynomial a,
-        (double degree, double coefficient) b)
+    public static Polynomial operator -(Polynomial firstPolynomial,
+        (double degree, double coefficient) secondPolynomial)
     {
-        return a - new Polynomial(b);
+        return firstPolynomial - new Polynomial(secondPolynomial);
     }
 
-    public static Polynomial operator *(Polynomial a,
-        (double degree, double coefficient) b)
+    public static Polynomial operator *(Polynomial firstPolynomial,
+        (double degree, double coefficient) secondPolynomial)
     {
-        return a * new Polynomial(b);
+        return firstPolynomial * new Polynomial(secondPolynomial);
     }
 
     #endregion Operators

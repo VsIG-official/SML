@@ -7,7 +7,7 @@ public class Perceptron
     #region Fields
 
     public double[,] Input { get; set; }
-    public int Iterations { get; set; } = 10000;
+    private const int Epochs = 10000;
 
     private readonly double _bias = 0.03;
 
@@ -44,15 +44,15 @@ public class Perceptron
         SetWeights(_firstLayerWeights, secondLayerLength, firstLayerLength);
 
         _secondLayerWeights = new double[firstLayerLength, 1];
-        SetWeights(_secondLayerWeights, firstLayerLength, 1);
+        SetWeights(_secondLayerWeights, firstLayerLength);
     }
 
     private void SetWeights(double[,] weights,
-        int firstLayerLength, int secondLayerLength)
+        int firstLayerLength, int secondLayerLength = 1)
     {
-        for (int i = 0; i < firstLayerLength; i++)
+        for (var i = 0; i < firstLayerLength; i++)
         {
-            for (int j = 0; j < secondLayerLength; j++)
+            for (var j = 0; j < secondLayerLength; j++)
             {
                 weights[i, j] = GetRandomDouble();
             }
@@ -128,9 +128,9 @@ public class Perceptron
         }
     }
 
-    public void Train(double[,] xTrain, double[,] yTrain, int iterations)
+    public void Train(double[,] xTrain, double[,] yTrain, int epochs = Epochs)
     {
-        for (var i = 0; i < iterations; i++)
+        for (var i = 0; i < epochs; i++)
         {
             (double[,] firstLayer, _) = ActivateSigmoid(xTrain,
                 _firstLayerWeights, true);

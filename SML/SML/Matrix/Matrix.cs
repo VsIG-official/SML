@@ -15,14 +15,7 @@ public class Matrix : ICloneable
 
     #region Consts
 
-    private const string MatricesDifferentDimensionsExceptionMessage =
-        "Matrices should have same dimensions";
-    private const string NullMatrixExceptionMessage =
-        "Matrix shouldn't be null";
-    private const string RowsLessThanZeroExceptionMessage =
-        "Rows should be more than 0";
-    private const string ColumnsLessThanZeroExceptionMessage =
-        "Columns should be more than 0";
+    private const char StringDelimiter = ' ';
 
     #endregion Consts
 
@@ -96,9 +89,9 @@ public class Matrix : ICloneable
 
         Matrix result = new(Rows, matrix.Columns);
 
-        for (int i = 0; i < result.Rows; i++)
+        for (var i = 0; i < result.Rows; i++)
         {
-            for (int j = 0; j < result.Columns; j++)
+            for (var j = 0; j < result.Columns; j++)
             {
                 result[i, j] = Array[i, j] * matrix[i, j];
             }
@@ -117,9 +110,9 @@ public class Matrix : ICloneable
     {
         Matrix matrix = new(Columns, Rows);
 
-        for (int i = 0; i < Columns; i++)
+        for (var i = 0; i < Columns; i++)
         {
-            for (int j = 0; j < Rows; j++)
+            for (var j = 0; j < Rows; j++)
             {
                 matrix[i, j] = Array[j, i];
             }
@@ -136,9 +129,9 @@ public class Matrix : ICloneable
             Rows == matrix.Rows &&
             Columns == matrix.Columns)
         {
-            for (int i = 0; i < matrix.Rows; i++)
+            for (var i = 0; i < matrix.Rows; i++)
             {
-                for (int j = 0; j < matrix.Columns; j++)
+                for (var j = 0; j < matrix.Columns; j++)
                 {
                     if (Array[i, j] == matrix[i, j])
                     {
@@ -160,12 +153,12 @@ public class Matrix : ICloneable
     {
         StringBuilder matrix = new();
 
-        for (int i = 0; i < Rows; i++)
+        for (var i = 0; i < Rows; i++)
         {
-            for (int j = 0; j < Columns; j++)
+            for (var j = 0; j < Columns; j++)
             {
                 matrix.Append(Array[i, j]);
-                matrix.Append(' ');
+                matrix.Append(StringDelimiter);
             }
             matrix.Append(Environment.NewLine);
         }
@@ -177,60 +170,61 @@ public class Matrix : ICloneable
 
     #region Operators
 
-    public static Matrix operator +(Matrix matrix1, Matrix matrix2)
+    public static Matrix operator +(Matrix firstMatrix, Matrix secondMatrix)
     {
-        CheckForAddOrSubOperations(matrix1, matrix2);
+        CheckForAddOrSubOperations(firstMatrix, secondMatrix);
 
-        Matrix result = new(matrix1.Rows, matrix1.Columns);
+        Matrix result = new(firstMatrix.Rows, firstMatrix.Columns);
 
-        for (int i = 0; i < result.Rows; i++)
+        for (var i = 0; i < result.Rows; i++)
         {
-            for (int j = 0; j < result.Columns; j++)
+            for (var j = 0; j < result.Columns; j++)
             {
-                result[i, j] = matrix1[i, j] + matrix2[i, j];
+                result[i, j] = firstMatrix[i, j] + secondMatrix[i, j];
             }
         }
 
         return result;
     }
 
-    public static Matrix operator -(Matrix matrix1, Matrix matrix2)
+    public static Matrix operator -(Matrix firstMatrix, Matrix secondMatrix)
     {
-        CheckForAddOrSubOperations(matrix1, matrix2);
+        CheckForAddOrSubOperations(firstMatrix, secondMatrix);
 
-        Matrix result = new(matrix1.Rows, matrix1.Columns);
+        Matrix result = new(firstMatrix.Rows, firstMatrix.Columns);
 
-        for (int i = 0; i < result.Rows; i++)
+        for (var i = 0; i < result.Rows; i++)
         {
-            for (int j = 0; j < result.Columns; j++)
+            for (var j = 0; j < result.Columns; j++)
             {
-                result[i, j] = matrix1[i, j] - matrix2[i, j];
+                result[i, j] = firstMatrix[i, j] - secondMatrix[i, j];
             }
         }
 
         return result;
     }
 
-    private static void CheckForAddOrSubOperations(Matrix matrix1, Matrix matrix2)
+    private static void CheckForAddOrSubOperations(Matrix firstMatrix,
+        Matrix secondMatrix)
     {
-        CheckNullMatrix(matrix1);
-        CheckNullMatrix(matrix2);
-        CheckSameDimensionsMatrix(matrix1, matrix2);
+        CheckNullMatrix(firstMatrix);
+        CheckNullMatrix(secondMatrix);
+        CheckSameDimensionsMatrix(firstMatrix, secondMatrix);
     }
 
-    public static Matrix operator *(Matrix matrix1, Matrix matrix2)
+    public static Matrix operator *(Matrix firstMatrix, Matrix secondMatrix)
     {
-        CheckForMultiplyOperation(matrix1, matrix2);
+        CheckForMultiplyOperation(firstMatrix, secondMatrix);
 
-        Matrix result = new(matrix1.Rows, matrix2.Columns);
+        Matrix result = new(firstMatrix.Rows, secondMatrix.Columns);
 
-        for (int i = 0; i < result.Rows; i++)
+        for (var i = 0; i < result.Rows; i++)
         {
-            for (int j = 0; j < result.Columns; j++)
+            for (var j = 0; j < result.Columns; j++)
             {
-                for (int k = 0; k < matrix2.Rows; k++)
+                for (var k = 0; k < secondMatrix.Rows; k++)
                 {
-                    result[i, j] += matrix1[i, k] * matrix2[k, j];
+                    result[i, j] += firstMatrix[i, k] * secondMatrix[k, j];
                 }
             }
         }
@@ -238,11 +232,12 @@ public class Matrix : ICloneable
         return result;
     }
 
-    private static void CheckForMultiplyOperation(Matrix matrix1, Matrix matrix2)
+    private static void CheckForMultiplyOperation(Matrix firstMatrix,
+        Matrix secondMatrix)
     {
-        CheckNullMatrix(matrix1);
-        CheckNullMatrix(matrix2);
-        CheckMultiplyAvailability(matrix1, matrix2);
+        CheckNullMatrix(firstMatrix);
+        CheckNullMatrix(secondMatrix);
+        CheckMultiplyAvailability(firstMatrix, secondMatrix);
     }
 
     #endregion Operators
@@ -260,7 +255,8 @@ public class Matrix : ICloneable
         if (rows < 0)
         {
             throw new ArgumentOutOfRangeException
-                (RowsLessThanZeroExceptionMessage);
+                (MatrixExceptionDescription.
+                RowsLessThanZeroExceptionMessage);
         }
     }
 
@@ -269,7 +265,8 @@ public class Matrix : ICloneable
         if (columns < 0)
         {
             throw new ArgumentOutOfRangeException
-                (ColumnsLessThanZeroExceptionMessage);
+                (MatrixExceptionDescription.
+                ColumnsLessThanZeroExceptionMessage);
         }
     }
 
@@ -278,16 +275,19 @@ public class Matrix : ICloneable
         if (Rows != matrix.Rows ||
             Columns != matrix.Columns)
         {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+            throw new MatrixException(MatrixExceptionDescription.
+                MatricesDifferentDimensionsExceptionMessage);
         }
     }
 
-    private static void CheckSameDimensionsMatrix(Matrix matrix1, Matrix matrix2)
+    private static void CheckSameDimensionsMatrix(Matrix firstMatrix,
+        Matrix secondMatrix)
     {
-        if (matrix1.Rows != matrix2.Rows ||
-            matrix1.Columns != matrix2.Columns)
+        if (firstMatrix.Rows != secondMatrix.Rows ||
+            firstMatrix.Columns != secondMatrix.Columns)
         {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+            throw new MatrixException(MatrixExceptionDescription.
+                MatricesDifferentDimensionsExceptionMessage);
         }
     }
 
@@ -296,15 +296,18 @@ public class Matrix : ICloneable
         if (matrix == null)
         {
             throw new ArgumentNullException(nameof(matrix),
-                NullMatrixExceptionMessage);
+                MatrixExceptionDescription.
+                    NullMatrixExceptionMessage);
         }
     }
 
-    private static void CheckMultiplyAvailability(Matrix matrix1, Matrix matrix2)
+    private static void CheckMultiplyAvailability(Matrix firstMatrix,
+        Matrix secondMatrix)
     {
-        if (matrix1.Columns != matrix2.Rows)
+        if (firstMatrix.Columns != secondMatrix.Rows)
         {
-            throw new MatrixException(MatricesDifferentDimensionsExceptionMessage);
+            throw new MatrixException(MatrixExceptionDescription.
+                MatricesDifferentDimensionsExceptionMessage);
         }
     }
 

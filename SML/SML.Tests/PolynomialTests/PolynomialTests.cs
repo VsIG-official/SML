@@ -110,7 +110,7 @@ public class PolynomialTests
         List<PolynomialMember> members = new();
         PolynomialMember member = new(expected, expected);
 
-        for (int i = 0; i < expectedMembersCount; i++)
+        for (var i = 0; i < expectedMembersCount; i++)
         {
             members.Add(member);
         }
@@ -147,7 +147,7 @@ public class PolynomialTests
         List<(double, double)> members = new();
         (double, double) member = (expected, expected);
 
-        for (int i = 0; i < expectedMembersCount; i++)
+        for (var i = 0; i < expectedMembersCount; i++)
         {
             members.Add(member);
         }
